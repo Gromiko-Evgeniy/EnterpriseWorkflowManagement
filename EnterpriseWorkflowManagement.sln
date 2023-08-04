@@ -1,0 +1,116 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77FFCB15-6F84-4316-A3C6-C2500B39F81A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HiringService", "HiringService", "{BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{84E1F0B4-AE6F-4479-B703-1FDF84E427AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Domain", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Domain\EnterpriseWorkflowManagement.IdentityService.Domain.csproj", "{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Application", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Application\EnterpriseWorkflowManagement.IdentityService.Application.csproj", "{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Infrastructure", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Infrastructure\EnterpriseWorkflowManagement.IdentityService.Infrastructure.csproj", "{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.API", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.API\EnterpriseWorkflowManagement.IdentityService.API.csproj", "{9443F5FC-1918-4237-96BA-DAFB7BB617E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Domain", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Domain\EnterpriseWorkflowManagement.HiringService.Domain.csproj", "{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Application", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Application\EnterpriseWorkflowManagement.HiringService.Application.csproj", "{6139185F-B4E6-424C-B00D-A4269443D67D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Infrastructure", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Infrastructure\EnterpriseWorkflowManagement.HiringService.Infrastructure.csproj", "{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.API", "src\HiringService\EnterpriseWorkflowManagement.HiringService.API\EnterpriseWorkflowManagement.HiringService.API.csproj", "{B93F4477-3D43-4CF5-9926-7E8155691169}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectManagementService", "ProjectManagementService", "{45342DF7-0111-413B-9753-1823A3479114}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.ProjectManagementService.Domain", "src\ProjectManagementService\EnterpriseWorkflowManagement.ProjectManagementService.Domain\EnterpriseWorkflowManagement.ProjectManagementService.Domain.csproj", "{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.ProjectManagementService.API", "src\ProjectManagementService\EnterpriseWorkflowManagement.ProjectManagementService.API\EnterpriseWorkflowManagement.ProjectManagementService.API.csproj", "{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.ProjectManagementService.Infrastucture", "src\ProjectManagementService\EnterpriseWorkflowManagement.ProjectManagementService.Infrastructure\EnterpriseWorkflowManagement.ProjectManagementService.Infrastucture.csproj", "{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseWorkflowManagement.ProjectManagementService.Applicatio", "src\ProjectManagementService\EnterpriseWorkflowManagement.ProjectManagementService.Application\EnterpriseWorkflowManagement.ProjectManagementService.Applicatio.csproj", "{2B4B5061-F246-483E-8C82-B87970EEFC0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9443F5FC-1918-4237-96BA-DAFB7BB617E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9443F5FC-1918-4237-96BA-DAFB7BB617E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9443F5FC-1918-4237-96BA-DAFB7BB617E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9443F5FC-1918-4237-96BA-DAFB7BB617E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6139185F-B4E6-424C-B00D-A4269443D67D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6139185F-B4E6-424C-B00D-A4269443D67D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6139185F-B4E6-424C-B00D-A4269443D67D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6139185F-B4E6-424C-B00D-A4269443D67D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B93F4477-3D43-4CF5-9926-7E8155691169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B93F4477-3D43-4CF5-9926-7E8155691169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B93F4477-3D43-4CF5-9926-7E8155691169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B93F4477-3D43-4CF5-9926-7E8155691169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0} = {77FFCB15-6F84-4316-A3C6-C2500B39F81A}
+		{84E1F0B4-AE6F-4479-B703-1FDF84E427AD} = {77FFCB15-6F84-4316-A3C6-C2500B39F81A}
+		{276A1C97-9BBE-410B-AEA2-14CB303F5BA8} = {84E1F0B4-AE6F-4479-B703-1FDF84E427AD}
+		{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9} = {84E1F0B4-AE6F-4479-B703-1FDF84E427AD}
+		{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8} = {84E1F0B4-AE6F-4479-B703-1FDF84E427AD}
+		{9443F5FC-1918-4237-96BA-DAFB7BB617E2} = {84E1F0B4-AE6F-4479-B703-1FDF84E427AD}
+		{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6} = {BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0}
+		{6139185F-B4E6-424C-B00D-A4269443D67D} = {BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0}
+		{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56} = {BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0}
+		{B93F4477-3D43-4CF5-9926-7E8155691169} = {BA6FA2D8-D4E7-481E-B3AB-E798EF165FD0}
+		{45342DF7-0111-413B-9753-1823A3479114} = {77FFCB15-6F84-4316-A3C6-C2500B39F81A}
+		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26} = {45342DF7-0111-413B-9753-1823A3479114}
+		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9} = {45342DF7-0111-413B-9753-1823A3479114}
+		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660} = {45342DF7-0111-413B-9753-1823A3479114}
+		{2B4B5061-F246-483E-8C82-B87970EEFC0E} = {45342DF7-0111-413B-9753-1823A3479114}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {302413E0-FB41-45BA-A889-349BF95B0ACB}
+	EndGlobalSection
+EndGlobal
