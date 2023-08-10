@@ -1,4 +1,4 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Domain.DTOs.ProjectDTOs;
+﻿namespace ProjectManagementService.Application.ProjectDTOs;
 
 public class AddProjectDTO
 {

@@ -1,3 +1,6 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Queries.Project; 
+﻿using MediatR;
+using ProjectManagementService.Domain.Entities;
 
-public class GetProjectByIdQuery { }
+namespace ProjectManagementService.Application.CQRS.ProjectQueries;
+
+public sealed record GetProjectByIdQuery(string Id) : IRequest<Project> { }

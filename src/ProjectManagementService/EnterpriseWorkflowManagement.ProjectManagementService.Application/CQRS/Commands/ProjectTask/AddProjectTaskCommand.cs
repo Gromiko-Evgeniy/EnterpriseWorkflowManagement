@@ -1,3 +1,7 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Commands.ProjectTask;
+﻿using MediatR;
+using ProjectManagementService.Application.ProjectTaskDTOs;
 
-public class AddProjectTaskCommand { }
+namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
+
+public sealed record AddProjectTaskCommand(AddProjectTaskDTO ProjectTaskDTO) : IRequest<string> { }
+

@@ -1,3 +1,5 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Commands.ProjectTask;
+﻿using MediatR;
 
-public class MarkProjectTaskAsReadyToApproveCommand { }
+namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
+
+public sealed record MarkProjectTaskAsReadyToApproveCommand(string ProjectTaskId, string WorkerId) : IRequest { }

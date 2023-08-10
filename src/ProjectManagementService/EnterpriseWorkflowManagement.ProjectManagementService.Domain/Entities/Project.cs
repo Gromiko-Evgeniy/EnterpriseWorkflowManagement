@@ -1,27 +1,28 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Domain.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using ProjectManagementService.Domain.Enumerations;
 
+namespace ProjectManagementService.Domain.Entities;
+
+[BsonIgnoreExtraElements]
 public class Project
 {
-    public int Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
+    [BsonElement("objective")]
     public string Objective { get; set; } = string.Empty;
 
+    [BsonElement("description")]
     public string Description { get; set; } = string.Empty;
 
-    public ProjectStatuses Status { get; set; }
+    [BsonElement("customerId")]
+    public string CustomerId { get; set; }
 
-    public Customer Customer { get; set; } 
+    [BsonElement("leadWorkerId")]
+    public string LeadWorkerId { get; set; }
 
-    public int CustomerId { get; set; }
-
-    public Worker LeadWorker { get; set; }
-
-    public int LeadWorkerId { get; set; }
-}
-
-public enum ProjectStatuses
-{
-    WaitingToStart = 1,
-    InProgress, 
-    Done
+    [BsonElement("status")]
+    public ProjectStatus Status { get; set; } = ProjectStatus.WaitingToStart;
 }

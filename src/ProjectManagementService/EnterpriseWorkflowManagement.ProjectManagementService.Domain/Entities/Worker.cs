@@ -1,18 +1,24 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Domain.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
+namespace ProjectManagementService.Domain.Entities;
+
+[BsonIgnoreExtraElements]
 public class Worker
 {
-    public int Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
+    [BsonElement("name")]
     public string Name { get; set; } = string.Empty;
 
+    [BsonElement("email")]
     public string Email { get; set; } = string.Empty;
 
-    public ProjectTask CurrentTask { get; set; }
+    [BsonElement("currentTaskId")]
+    public string? CurrentTaskId { get; set; } = null;
 
-    public int CurrentTaskId { get; set; }
-
-    public Project CurrentProject { get; set; }
-
-    public int CurrentProjectId { get; set; }
+    [BsonElement("currentProjectId")]
+    public string? CurrentProjectId { get; set; }
 }

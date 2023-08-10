@@ -1,4 +1,6 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Domain.Entities;
+﻿using ProjectManagementService.Domain.Enumerations;
+
+namespace ProjectManagementService.Domain.Entities;
 
 public class Edit
 {

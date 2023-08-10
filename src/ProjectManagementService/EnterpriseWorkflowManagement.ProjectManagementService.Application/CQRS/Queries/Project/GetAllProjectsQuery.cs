@@ -1,8 +1,6 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Queries.Project;
+﻿using ProjectManagementService.Domain.Entities;
+using MediatR;
 
-public class GetAllProjectsQuery
-{
-}
+namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 
-
-      
+public sealed record GetAllProjectsQuery : IRequest<List<Project>> { }

@@ -1,5 +1,6 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Commands.Project;
-public class AddProjectCommand
-{
-}
+﻿using MediatR;
+using ProjectManagementService.Application.ProjectDTOs;
 
+namespace ProjectManagementService.Application.CQRS.ProjectCommands;
+
+public sealed record AddProjectCommand(AddProjectDTO ProjectDTO, string CustomerId) : IRequest<string> { }

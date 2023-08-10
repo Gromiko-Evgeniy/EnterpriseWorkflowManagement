@@ -1,3 +1,5 @@
-﻿namespace EnterpriseWorkflowManagement.ProjectManagementService.Application.CQRS.Commands.ProjectTask; 
+﻿using MediatR;
 
-public class CancelProjectTaskByIdCommand { }
+namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
+
+public sealed record CancelProjectTaskByIdCommand(string ProjectTaskId, string CustomerId) : IRequest{ } 

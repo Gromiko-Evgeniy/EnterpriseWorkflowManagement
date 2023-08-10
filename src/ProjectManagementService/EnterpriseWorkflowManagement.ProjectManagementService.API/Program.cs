@@ -1,9 +1,22 @@
+using MediatR;
+using MongoDB.Driver;
+using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.CQRS.ProjectQueries;
+using ProjectManagementService.Infrastucture.Data.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connetionString = builder.Configuration.GetSection("DBConnectionSettings:ConnetionString").Get<string>();
+builder.Services.AddSingleton<IMongoClient>(service => new MongoClient(connetionString));
+
+builder.Services.AddSingleton<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddSingleton<IProjectTasksRepository, ProjectTasksRepository>();
+builder.Services.AddSingleton<IWorkersRepository, WorkersRepository>();
+
+builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
