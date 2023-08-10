@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnterpriseWorkflowManagement.ProjectManagementService.Application\ProjectManagementService.Application.csproj" />
+    <ProjectReference Include="..\ProjectManagementService.Application\ProjectManagementService.Application.csproj" />
   </ItemGroup>
 
 </Project>
