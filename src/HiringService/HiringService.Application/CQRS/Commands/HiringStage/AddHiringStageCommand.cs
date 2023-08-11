@@ -1,6 +1,6 @@
-﻿namespace HiringService.Application.CQRS.HiringStageCommands;
+﻿using HiringService.Application.DTOs.HiringStageDTOs;
+using MediatR;
 
-public class AddHiringStageCommand
-{
+namespace HiringService.Application.CQRS.HiringStageCommands;
 
-}
+public sealed record AddHiringStageCommand(AddHiringStageDTO StageDTO) : IRequest<int> { }

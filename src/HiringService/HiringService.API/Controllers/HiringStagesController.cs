@@ -1,36 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HiringService.Application.CQRS.HiringStageCommands;
+using HiringService.Application.CQRS.StageQueries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
 {
-    [Route("hiring-stages")]
+    [Route("passed-hiring-stages")]
     [ApiController]
     public class HiringStagesController : ControllerBase
     {
+        private readonly IMediator mediator;
+
+        public HiringStagesController(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
         [HttpGet]
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok();
+            var stages = await mediator.Send(new GetHiringStagesQuery());
+
+            return Ok(stages);
         }
 
         [HttpGet("{id}")]
         //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+        public async Task<IActionResult> GetByIdAsync(int id) 
         {
-            return Ok();
+            var stage = await mediator.Send(new GetHiringStageByIdQuery(id));
+
+            return Ok(stage);
         }
 
-        [HttpPost]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> AddAsync(string name)
+        [HttpGet("current")]
+        //[Authorize(Roles = "ProjectLeader,Worker")]
+        public async Task<IActionResult> GetCurrentAsync(int intervierId) // remove intervierId from parameters
         {
-            return Ok();
+            //IntervierId will be extracted from JWT
+            var stages = await mediator.Send(new GetHiringStageByIntervierIdQuery(intervierId));
+
+            return Ok(stages);
         }
 
-        [HttpDelete("{id}")]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> UpdateAsync([FromRoute] int id)
+        [HttpPut("{id}")]
+        //[Authorize(Roles = "ProjectLeader,Worker")]
+        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync(int intervierId, int id) // remove intervierId
         {
+            await mediator.Send(new MarkStageAsPassedSuccessfullyCommand(intervierId, id));
+
             return Ok();
         }
     }

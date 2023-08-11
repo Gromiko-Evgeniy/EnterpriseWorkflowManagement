@@ -1,7 +1,6 @@
-﻿namespace HiringService.Application.CQRS.HiringStageQueries;
+﻿using HiringService.Domain.Entities;
+using MediatR;
 
-public class GetHiringStagesQuery
-{
+namespace HiringService.Application.CQRS.StageQueries;
 
-}
-
+public sealed record GetHiringStagesQuery : IRequest<List<HiringStage>> { }

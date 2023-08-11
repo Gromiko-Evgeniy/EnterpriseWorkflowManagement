@@ -3,4 +3,5 @@ using MediatR;
 
 namespace HiringService.Application.CQRS.StageQueries;
 
-public sealed record GetHiringStageByIdQuery(int Id) : IRequest<HiringStage> { }
+public sealed record GetHiringStageByIntervierIdQuery(int IntervierId) : IRequest<List<HiringStage>> { }
+

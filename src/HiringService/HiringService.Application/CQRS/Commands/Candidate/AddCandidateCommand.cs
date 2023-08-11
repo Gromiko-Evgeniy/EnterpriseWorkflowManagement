@@ -1,6 +1,6 @@
-﻿namespace HiringService.Application.CQRS.CandidateCommands;
+﻿using HiringService.Domain.DTOs.CandidateDTOs;
+using MediatR;
 
-public class AddCandidateCommand
-{
+namespace HiringService.Application.CQRS.CandidateCommands;
 
-}
+public sealed record AddCandidateCommand(AddCandidateDTO CandidateDTO) : IRequest<int> { }

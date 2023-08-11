@@ -1,6 +1,6 @@
-﻿namespace HiringService.Application.CQRS.CandidateQueries;
+﻿using HiringService.Domain.Entities;
+using MediatR;
 
-public class GetCandidateByIdQuery
-{
+namespace HiringService.Application.CQRS.CandidateQueries;
 
-}
+public sealed record GetCandidateByIdQuery(int Id) : IRequest<Candidate> { }
