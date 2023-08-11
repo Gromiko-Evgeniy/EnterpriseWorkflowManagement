@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HiringService", "HiringServ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{84E1F0B4-AE6F-4479-B703-1FDF84E427AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Domain", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Domain\EnterpriseWorkflowManagement.IdentityService.Domain.csproj", "{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Domain", "src\IdentityService\IdentityService.Domain\IdentityService.Domain.csproj", "{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Application", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Application\EnterpriseWorkflowManagement.IdentityService.Application.csproj", "{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Application", "src\IdentityService\IdentityService.Application\IdentityService.Application.csproj", "{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Infrastructure", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Infrastructure\EnterpriseWorkflowManagement.IdentityService.Infrastructure.csproj", "{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Infrastructure", "src\IdentityService\IdentityService.Infrastructure\IdentityService.Infrastructure.csproj", "{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.API", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.API\EnterpriseWorkflowManagement.IdentityService.API.csproj", "{9443F5FC-1918-4237-96BA-DAFB7BB617E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.API", "src\IdentityService\IdentityService.API\IdentityService.API.csproj", "{9443F5FC-1918-4237-96BA-DAFB7BB617E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Domain", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Domain\EnterpriseWorkflowManagement.HiringService.Domain.csproj", "{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}"
 EndProject
