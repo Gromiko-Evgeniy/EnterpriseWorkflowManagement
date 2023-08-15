@@ -2,26 +2,25 @@
 using HiringService.Application.CQRS.StageNameQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.API.Controllers
 {
-    [Route("hiring-stages")]
+    [Route("hiring-stage-names")]
     [ApiController]
     public class HiringStageNamesController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public HiringStageNamesController(IMediator mediator)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
         }
 
         [HttpGet]
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var stageNames = await mediator.Send(new GetHiringStageNamesQuery());
+            var stageNames = await _mediator.Send(new GetHiringStageNamesQuery());
 
             return Ok(stageNames);
         }
@@ -30,7 +29,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
-            var stageName = await mediator.Send(new GetHiringStageNameByIdQuery(id));
+            var stageName = await _mediator.Send(new GetHiringStageNameByIdQuery(id));
 
             return Ok(stageName);
         }
@@ -39,7 +38,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] string name)
         {
-            var stageName = await mediator.Send(new GetHiringStageNameByNameQuery(name));
+            var stageName = await _mediator.Send(new GetHiringStageNameByNameQuery(name));
 
             return Ok(stageName);
         }
@@ -48,7 +47,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> AddAsync(string name)
         {
-            var id = await mediator.Send(new AddStageNameCommand(name));
+            var id = await _mediator.Send(new AddStageNameCommand(name));
 
             return Ok(id);
         }
@@ -57,9 +56,9 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> RemoveAsync([FromRoute] int id)
         {
-            await mediator.Send(new RemoveStageNameCommand(id));
+            await _mediator.Send(new RemoveStageNameCommand(id));
 
-            return Ok();
+            return NoContent();
         }
     }
 }

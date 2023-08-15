@@ -10,18 +10,18 @@ namespace HiringService.API.Controllers
     [ApiController]
     public class CandidatesController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public CandidatesController(IMediator mediator)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
         }
 
         [HttpGet]
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var candidates = await mediator.Send(new GetCandidatesQuery());
+            var candidates = await _mediator.Send(new GetCandidatesQuery());
 
             return Ok(candidates);
         }
@@ -30,7 +30,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id) 
         {
-            var candidate = await mediator.Send(new GetCandidateByIdQuery(id));
+            var candidate = await _mediator.Send(new GetCandidateByIdQuery(id));
 
             return Ok(candidate);
         }
@@ -39,7 +39,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
         {
-            var candidate = await mediator.Send(new GetCandidateByEmailQuery(email));
+            var candidate = await _mediator.Send(new GetCandidateByEmailQuery(email));
 
             return Ok(candidate);
         }
@@ -48,7 +48,7 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "Candidate")]
         public async Task<IActionResult> GetCurrentAsync(int candidateId) //remove candidateId
         {
-            var candidate = await mediator.Send(new GetCandidateByIdQuery(candidateId));
+            var candidate = await _mediator.Send(new GetCandidateByIdQuery(candidateId));
 
             return Ok(candidate);
         }
@@ -56,7 +56,7 @@ namespace HiringService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(AddCandidateDTO candidate)
         {
-            var id = await mediator.Send(new AddCandidateCommand(candidate));
+            var id = await _mediator.Send(new AddCandidateCommand(candidate));
             
             return Ok(id);
         }
@@ -65,16 +65,16 @@ namespace HiringService.API.Controllers
         //[Authorize(Roles = "Candidate")]
         public async Task<IActionResult> UpdateNameAsync(int candidateId, string name) //remove candidateId
         {
-            await mediator.Send(new UpdateCandidateNameCommand(candidateId, name));
-            return Ok();
+            await _mediator.Send(new UpdateCandidateNameCommand(candidateId, name));
+            return NoContent();
         }
 
         [HttpPut("new-cv")]
         //[Authorize(Roles = "Candidate")]
         public async Task<IActionResult> UpdateCVAsync(int candidateId, string CV) //remove candidateId
         {
-            await mediator.Send(new UpdateCandidateCVCommand(candidateId, CV));
-            return Ok();
+            await _mediator.Send(new UpdateCandidateCVCommand(candidateId, CV));
+            return NoContent();
         }
     }
 }

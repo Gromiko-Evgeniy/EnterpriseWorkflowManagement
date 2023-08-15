@@ -1,17 +1,10 @@
 ﻿using HiringService.Domain.Entities;
 
 namespace HiringService.Application.Abstractions;
-public interface ICandidateRepository
+
+public interface ICandidateRepository : IGenericRepository<Candidate>
 {
-    public Task<List<Candidate>> GetAllAsync();
+    public Task<Candidate?> GetByEmailAsync(string email);
 
-    public Task<Candidate> GetByIdAsync(int id);
-
-    public Task<Candidate> GetByEmailAsync(string email);
-
-    public Task AddAsync(Candidate candidate);
-
-    public Task UpdateNameAsync(int id, string name);
-
-    public Task UpdateCVAsync(int id, string CV);
+    public new Task<int> AddAsync(Candidate candidate);
 }
