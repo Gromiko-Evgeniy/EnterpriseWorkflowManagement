@@ -2,13 +2,4 @@
 
 namespace HiringService.Application.Abstractions;
 
-public interface IWorkerRepository
-{
-    public Task<List<Worker>> GetAllAsync();
-
-    public Task<Worker> GetByIdAsync(int workerId);
-
-    public Task AddAsync(Worker worker);
-
-    public Task RemoveAsync(int workerId);
-}
+public interface IWorkerRepository : IGenericRepository<Worker> { }
