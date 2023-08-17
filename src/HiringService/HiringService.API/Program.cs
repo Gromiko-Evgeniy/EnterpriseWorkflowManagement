@@ -1,5 +1,6 @@
-using HiringService.Application.Abstractions;
 using HiringService.Application.CQRS.CandidateCommands;
+using HiringService.Application.Mapping;
+using HiringService.Application.Validation;
 using HiringService.Infrastructure.Data.Extensions;
 using MediatR;
 
@@ -9,12 +10,16 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 builder.Services.AddRepositories();
 
+builder.Services.AddValidation();
+
+builder.Services.AddMapping();
+
 builder.Services.AddMediatR(typeof(AddCandidateCommand).Assembly);
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(); 
 
  var app = builder.Build();
 

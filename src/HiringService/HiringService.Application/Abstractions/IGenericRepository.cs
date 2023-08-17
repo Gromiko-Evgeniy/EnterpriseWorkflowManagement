@@ -11,9 +11,11 @@ public interface IGenericRepository<T> where T : class
 
     public Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
 
-    public Task<T> AddAsync(T item);
+    public T AddAsync(T item);
 
-    public Task RemoveAsync(T item);
+    public void RemoveAsync(T item);
 
-    public Task UpdateAsync(T item);
+    public void UpdateAsync(T item);
+
+    public Task SaveChangesAsync();
 }

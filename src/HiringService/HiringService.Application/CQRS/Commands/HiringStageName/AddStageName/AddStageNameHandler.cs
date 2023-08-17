@@ -22,9 +22,11 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
 
         var newtageName = new HiringStageName() { Name = request.Name };
 
-        var id = await _nameRepository.AddAsync(newtageName);
+        newtageName = _nameRepository.AddAsync(newtageName);
 
-        return id;
+        await _nameRepository.SaveChangesAsync();
+
+        return newtageName.Id;
     }
 }
 

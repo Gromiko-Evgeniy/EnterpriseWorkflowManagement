@@ -34,23 +34,25 @@ public class GenericRepository<T> where T : class
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<T> AddAsync(T item)
+    public T AddAsync(T item)
     {
         _dbSet.Add(item);
-        await _context.SaveChangesAsync();
 
         return item;
     }
 
-    public async Task RemoveAsync(T item)
+    public void RemoveAsync(T item)
     {
         _dbSet.Remove(item);
-        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(T item)
+    public void UpdateAsync(T item)
     {
         _dbSet.Update(item);
+    }
+
+    public async Task SaveChangesAsync() 
+    {
         await _context.SaveChangesAsync();
     }
 }

@@ -11,11 +11,4 @@ public class HiringStageNameRepository : GenericRepository<HiringStageName>, IHi
     {
         return await GetFirstAsync(s => s.Name == name);
     }
-
-    public async new Task<int> AddAsync(HiringStageName stageName)
-    {
-        var newStageName = await base.AddAsync(stageName);
-
-        return newStageName.Id;
-    }
 }

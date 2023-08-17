@@ -30,14 +30,16 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
         if (stageName is null) throw new NoStageNameWithSuchIdException();
         if (candidate is null) throw new NoCandidateWithSuchIdException();
 
-        var stage = new HiringStage() // use automapper
+        var stage = new HiringStage()
         {
             HiringStageName = stageName,
             Candidate = candidate
         };
 
-        var id = await _stageRepository.AddAsync(stage);
+        stage = _stageRepository.AddAsync(stage);
 
-        return id;
+        await _stageRepository.SaveChangesAsync();
+
+        return stage.Id;
     }
 }

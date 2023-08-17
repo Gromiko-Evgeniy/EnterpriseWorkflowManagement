@@ -29,7 +29,9 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
 
         stage.PassedSuccessfully = true;
 
-        await _stageRepository.UpdateAsync(stage);
+        _stageRepository.UpdateAsync(stage);
+
+        await _stageRepository.SaveChangesAsync();
 
         return Unit.Value;
     }

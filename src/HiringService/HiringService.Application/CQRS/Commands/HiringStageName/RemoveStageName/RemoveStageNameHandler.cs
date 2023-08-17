@@ -19,7 +19,9 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 
         if (stageName is null) throw new NoStageNameWithSuchIdException();
 
-        await _nameRepository.RemoveAsync(stageName);
+        _nameRepository.RemoveAsync(stageName);
+
+        await _nameRepository.SaveChangesAsync();
 
         return Unit.Value;
     }

@@ -26,7 +26,9 @@ public class AddHiringStageIntervierHandler : IRequestHandler<AddHiringStageInte
 
         stage.Intervier = worker;
 
-        await _stageRepository.UpdateAsync(stage);
+        _stageRepository.UpdateAsync(stage);
+
+        await _stageRepository.SaveChangesAsync();
 
         return Unit.Value;
     }

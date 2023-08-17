@@ -1,4 +1,4 @@
-﻿using HiringService.Domain.DTOs.CandidateDTOs;
+﻿using HiringService.Application.DTOs.CandidateDTOs;
 using MediatR;
 
 namespace HiringService.Application.CQRS.CandidateCommands;

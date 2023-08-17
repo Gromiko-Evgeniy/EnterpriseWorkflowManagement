@@ -1,4 +1,4 @@
-﻿namespace HiringService.Domain.DTOs.CandidateDTOs;
+﻿namespace HiringService.Application.DTOs.CandidateDTOs;
 
 public class AddCandidateDTO
 {

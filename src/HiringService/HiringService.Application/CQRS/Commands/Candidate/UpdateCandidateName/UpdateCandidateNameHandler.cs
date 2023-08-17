@@ -21,7 +21,9 @@ public class UpdateCandidateNameHandler : IRequestHandler<UpdateCandidateNameCom
 
         candidate.Name = request.Name;
 
-        await _candidateRepository.UpdateAsync(candidate);
+        _candidateRepository.UpdateAsync(candidate);
+
+        await _candidateRepository.SaveChangesAsync();
 
         return Unit.Value; //fake empty value
     }

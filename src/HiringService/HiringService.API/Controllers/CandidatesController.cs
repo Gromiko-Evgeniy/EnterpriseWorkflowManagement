@@ -1,6 +1,6 @@
 ﻿using HiringService.Application.CQRS.CandidateCommands;
 using HiringService.Application.CQRS.CandidateQueries;
-using HiringService.Domain.DTOs.CandidateDTOs;
+using HiringService.Application.DTOs.CandidateDTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,6 +66,7 @@ namespace HiringService.API.Controllers
         public async Task<IActionResult> UpdateNameAsync(int candidateId, string name) //remove candidateId
         {
             await _mediator.Send(new UpdateCandidateNameCommand(candidateId, name));
+
             return NoContent();
         }
 
@@ -74,6 +75,7 @@ namespace HiringService.API.Controllers
         public async Task<IActionResult> UpdateCVAsync(int candidateId, string CV) //remove candidateId
         {
             await _mediator.Send(new UpdateCandidateCVCommand(candidateId, CV));
+
             return NoContent();
         }
     }

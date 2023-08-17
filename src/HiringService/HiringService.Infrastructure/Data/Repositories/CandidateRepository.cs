@@ -11,11 +11,4 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
     {
         return await GetFirstAsync(s => s.Email == email);
     }
-
-    public async new Task<int> AddAsync(Candidate candidate)
-    {
-        var newCandidate = await base.AddAsync(candidate);
-
-        return newCandidate.Id;
-    }
 }

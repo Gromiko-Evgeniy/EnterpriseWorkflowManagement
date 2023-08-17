@@ -21,7 +21,9 @@ public class UpdateCandidateCVHandler : IRequestHandler<UpdateCandidateCVCommand
 
         candidate.CV = request.CV;
 
-        await _candidateRepository.UpdateAsync(candidate);
+        _candidateRepository.UpdateAsync(candidate);
+
+        await _candidateRepository.SaveChangesAsync();
 
         return Unit.Value; //fake empty value
     }
