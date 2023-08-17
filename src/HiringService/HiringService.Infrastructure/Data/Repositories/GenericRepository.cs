@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HiringService.Application.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 
 namespace HiringService.Infrastructure.Data.Repositories;
 
-public class GenericRepository<T> where T : class
+public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     DbContext _context;
     DbSet<T> _dbSet;
