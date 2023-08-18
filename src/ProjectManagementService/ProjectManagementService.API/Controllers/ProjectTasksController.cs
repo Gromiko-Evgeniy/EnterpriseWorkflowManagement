@@ -63,7 +63,8 @@ public class ProjectTasksController : ControllerBase
     {
         //Customer id will be extracted from JWT
         await _mediator.Send(new CancelProjectTaskByIdCommand(id, customerId));
-        return Ok();
+
+        return NoContent();
     }
 
     [HttpPut("set-current-approvable")]
@@ -73,7 +74,8 @@ public class ProjectTasksController : ControllerBase
         //Worker id will be extracted from JWT
 
         await _mediator.Send(new MarkProjectTaskAsReadyToApproveCommand(workerId));
-        return Ok();
+
+        return NoContent();
     }
 
     [HttpPut("aprove/{id}")]
@@ -82,7 +84,8 @@ public class ProjectTasksController : ControllerBase
     {
         //ProjectLeader id will be extracted from JWT
         await _mediator.Send(new MarkProjectTaskAsApprovedCommand(id, projectLeaderId));
-        return Ok();
+
+        return NoContent();
     }
 
     [HttpPut("start-current")]
@@ -90,7 +93,8 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> StartWorkingOnTask(string workerId)// remove workerId from parameters
     {
         await _mediator.Send(new StartWorkingOnTaskCommand(workerId));
-        return Ok();
+
+        return NoContent();
     }
 
     [HttpPut("finish-current")]
@@ -101,6 +105,6 @@ public class ProjectTasksController : ControllerBase
 
         await _mediator.Send(new FinishWorkingOnTaskCommand(workerId));
 
-        return Ok();
+        return NoContent();
     }
 }
