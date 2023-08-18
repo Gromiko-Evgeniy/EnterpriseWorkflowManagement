@@ -9,6 +9,4 @@ public class Edit
     public string Text { get; set; } = string.Empty;
 
     public ProjectTaskStatus Status { get; set; }
-
-    public int StatusId { get; set; }
 }

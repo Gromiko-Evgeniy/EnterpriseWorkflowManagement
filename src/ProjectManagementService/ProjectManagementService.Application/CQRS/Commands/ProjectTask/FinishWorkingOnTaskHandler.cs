@@ -1,26 +1,29 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Worker;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class FinishWorkingOnTaskHandler : IRequestHandler<FinishWorkingOnTaskCommand>
 {
-    private readonly IWorkersRepository workersRepository;
-    private readonly IProjectTasksRepository tasksRepository;
+    private readonly IWorkerRepository _workerRepository;
+    private readonly IProjectTaskRepository _taskRepository;
 
-    public FinishWorkingOnTaskHandler(IWorkersRepository workersRepository, IProjectTasksRepository tasksRepository)
+    public FinishWorkingOnTaskHandler(IWorkerRepository workersRepository, IProjectTaskRepository taskRepository)
     {
-        this.workersRepository = workersRepository;
-        this.tasksRepository = tasksRepository;
+        _workerRepository = workersRepository;
+        _taskRepository = taskRepository;
     }
 
     async Task<Unit> IRequestHandler<FinishWorkingOnTaskCommand, Unit>.Handle(FinishWorkingOnTaskCommand request, CancellationToken cancellationToken)
-    {
-        //check if task was starded
-        
-        var worker = await workersRepository.GetByIdAsync(request.WorkerId);
+    {        
+        var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 
-        await tasksRepository.FinishWorkingOnTask(worker.CurrentTaskId);
+        if (worker is null) throw new NoWorkerWithSuchIdException();
+
+        if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
+
+        await _taskRepository.FinishWorkingOnTask(worker.CurrentTaskId);
 
         return Unit.Value; //fake empty value
     }

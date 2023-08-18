@@ -1,28 +1,33 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Project;
+using ProjectManagementService.Application.Exceptions.ProjectTask;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskAsApprovedCommand>
 {
-    private readonly IProjectTasksRepository tasksRepository;
-    private readonly IProjectsRepository projectsRepository;
+    private readonly IProjectTaskRepository _taskRepository;
+    private readonly IProjectRepository _projectRepository;
 
-    public MarkProjectTaskAsApprovedHandler(IProjectTasksRepository tasksRepository, IProjectsRepository projectsRepository)
+    public MarkProjectTaskAsApprovedHandler(IProjectTaskRepository tasksRepository, IProjectRepository projectRepository)
     {
-        this.tasksRepository = tasksRepository;
-        this.projectsRepository = projectsRepository;
+        _taskRepository = tasksRepository;
+        _projectRepository = projectRepository;
     }
 
     async Task<Unit> IRequestHandler<MarkProjectTaskAsApprovedCommand, Unit>.Handle(MarkProjectTaskAsApprovedCommand request, CancellationToken cancellationToken)
     {
-        var task = await tasksRepository.GetByIdAsync(request.ProjectTaskId);
+        var task = await _taskRepository.GetByIdAsync(request.ProjectTaskId);
 
-        var projectLeaderProject = await projectsRepository.GetProjectLeaderProject(request.ProjectLeaderId);
+        if (task is null) throw new NoProjectTaskWithSuchIdException();
 
-        if (task.ProjectId != projectLeaderProject.Id) return Unit.Value; // throw ex "ProjectLeader can only approve tasks of his project"
+        var projectLeaderProject = await _projectRepository.GetProjectLeaderProject(request.ProjectLeaderId);
 
-        await tasksRepository.MarkAsApproved(request.ProjectTaskId);
+        if (projectLeaderProject is null) throw new NoProjectWithSuchIdException();
+        if (task.ProjectId != projectLeaderProject.Id) throw new AccessToApproveProjecTaskDeniedException();
+
+        await _taskRepository.MarkAsApproved(request.ProjectTaskId);
 
         return Unit.Value; //fake empty value
     }

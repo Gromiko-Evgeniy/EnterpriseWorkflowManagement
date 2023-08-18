@@ -10,18 +10,18 @@ namespace ProjectManagementService.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public ProjectsController(IMediator mediator)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
         }
 
         [HttpGet]
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetAllAsync() 
         {
-            var projects = await mediator.Send(new GetAllProjectsQuery());
+            var projects = await _mediator.Send(new GetAllProjectsQuery());
             return Ok(projects);
         }
 
@@ -29,7 +29,7 @@ namespace ProjectManagementService.API.Controllers
         //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
         {
-            var project = await mediator.Send(new GetProjectByIdQuery(id));
+            var project = await _mediator.Send(new GetProjectByIdQuery(id));
             return Ok(project);
         }
 
@@ -40,7 +40,7 @@ namespace ProjectManagementService.API.Controllers
             //Customer id will be extracted from JWT
             //var customerId = "";
 
-            var project = await mediator.Send(new GetAllCustomerProjectsQuery(customerId));
+            var project = await _mediator.Send(new GetAllCustomerProjectsQuery(customerId));
             return Ok(project); 
         }
 
@@ -48,7 +48,7 @@ namespace ProjectManagementService.API.Controllers
         //[Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetCustomerProjectByIdAsync([FromRoute] string id, string customerId)// remove customerId from parameters
         {
-            var project = await mediator.Send(new GetCustomerProjectByIdQuery(customerId, id));
+            var project = await _mediator.Send(new GetCustomerProjectByIdQuery(customerId, id));
             return Ok(project);
         }
 
@@ -58,7 +58,7 @@ namespace ProjectManagementService.API.Controllers
         {
             // ProjectLeader id will be extracted from JWT
 
-            var project = await mediator.Send(new GetProjectLeaderProjectQuery(projectLeaderId));
+            var project = await _mediator.Send(new GetProjectLeaderProjectQuery(projectLeaderId));
 
             return Ok(project);
         }
@@ -68,7 +68,7 @@ namespace ProjectManagementService.API.Controllers
         public async Task<IActionResult> AddAsync(AddProjectDTO addProjectDTO, string customerId)// remove customerId from parameters
         {
             //Customer id will be extracted from JWT
-            string id = await mediator.Send(new AddProjectCommand(addProjectDTO, customerId));
+            string id = await _mediator.Send(new AddProjectCommand(addProjectDTO, customerId));
 
             return Ok(id);
         }

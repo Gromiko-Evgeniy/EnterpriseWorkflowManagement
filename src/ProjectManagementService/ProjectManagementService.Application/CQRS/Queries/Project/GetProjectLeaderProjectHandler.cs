@@ -1,20 +1,28 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Worker;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 
 public class GetProjectLeaderProjectHandler : IRequestHandler<GetProjectLeaderProjectQuery, Project>
 {
-    private readonly IProjectsRepository projectRepository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IWorkerRepository _workerRepository;
 
-    public GetProjectLeaderProjectHandler(IProjectsRepository repository)
+
+    public GetProjectLeaderProjectHandler(IProjectRepository repository, IWorkerRepository workerRepository)
     {
-        projectRepository = repository;
+        _projectRepository = repository;
+        _workerRepository = workerRepository;
     }
 
     public async Task<Project> Handle(GetProjectLeaderProjectQuery request, CancellationToken cancellationToken)
     {
-        return await projectRepository.GetProjectLeaderProject(request.ProjectLeaderId);
+        var projectLeader = await _workerRepository.GetByIdAsync(request.ProjectLeaderId);
+
+        if (projectLeader is null) throw new NoWorkerWithSuchIdException();
+
+        return await _projectRepository.GetProjectLeaderProject(request.ProjectLeaderId);
     }
 }

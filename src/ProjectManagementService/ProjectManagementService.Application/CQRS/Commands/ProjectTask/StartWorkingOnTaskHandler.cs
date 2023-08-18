@@ -1,24 +1,29 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Worker;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskCommand>
 {
-    private readonly IWorkersRepository workersRepository;
-    private readonly IProjectTasksRepository tasksRepository;
+    private readonly IWorkerRepository _workerRepository;
+    private readonly IProjectTaskRepository _taskRepository;
 
-    public StartWorkingOnTaskHandler(IWorkersRepository workersRepository, IProjectTasksRepository tasksRepository)
+    public StartWorkingOnTaskHandler(IWorkerRepository workersRepository, IProjectTaskRepository taskRepository)
     {
-        this.workersRepository = workersRepository;
-        this.tasksRepository = tasksRepository;
+        _workerRepository = workersRepository;
+        _taskRepository = taskRepository;
     }
 
     async Task<Unit> IRequestHandler<StartWorkingOnTaskCommand, Unit>.Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
     {
-        var worker = await workersRepository.GetByIdAsync(request.WorkerId);
+        var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 
-        await tasksRepository.StartWorkingOnTask(worker.CurrentTaskId);
+        if (worker is null) throw new NoWorkerWithSuchIdException();
+
+        if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
+
+        await _taskRepository.StartWorkingOnTask(worker.CurrentTaskId);
 
         return Unit.Value; //fake empty value
     }

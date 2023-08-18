@@ -3,25 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 using ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 using ProjectManagementService.Application.ProjectTaskDTOs;
-using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.API.Controllers;
 [Route("psroject-tasks")]
 [ApiController]
 public class ProjectTasksController : ControllerBase
 {
-    private readonly IMediator mediator;
+    private readonly IMediator _mediator;
 
     public ProjectTasksController(IMediator mediator)
     {
-        this.mediator = mediator;
+        _mediator = mediator;
     }
 
     [HttpGet]
     //[Authorize(Roles = "DepartmentHead")]
     public async Task<IActionResult> GetAllAsync()
     {
-        var tasks = await mediator.Send(new GetAllProjectTasksQuery());
+        var tasks = await _mediator.Send(new GetAllProjectTasksQuery());
         return Ok(tasks);
     }
 
@@ -29,7 +28,7 @@ public class ProjectTasksController : ControllerBase
     //[Authorize(Roles = "DepartmentHead")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
     {
-        var task = await mediator.Send(new GetProjectTaskByIdQuery(id));
+        var task = await _mediator.Send(new GetProjectTaskByIdQuery(id));
         return Ok(task);
     }
 
@@ -37,7 +36,7 @@ public class ProjectTasksController : ControllerBase
     //[Authorize(Roles = "DepartmentHead")]
     public async Task<IActionResult> GetByProjectIdAsync([FromRoute(Name = "id")] string projectId)
     {
-        var tasks = await mediator.Send(new GetProjectTasksByProjectIdQuery(projectId));
+        var tasks = await _mediator.Send(new GetProjectTasksByProjectIdQuery(projectId));
         return Ok(tasks);
     }
 
@@ -53,7 +52,7 @@ public class ProjectTasksController : ControllerBase
     //[Authorize(Roles = "Customer")]
     public async Task<IActionResult> AddAsync(AddProjectTaskDTO taskDTO)
     {        
-        string id = await mediator.Send(new AddProjectTaskCommand(taskDTO)); 
+        string id = await _mediator.Send(new AddProjectTaskCommand(taskDTO)); 
 
         return Ok(id);
     }
@@ -63,17 +62,17 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> CancelAsync([FromRoute] string id, string customerId)// remove customerId from parameters
     {
         //Customer id will be extracted from JWT
-        await mediator.Send(new CancelProjectTaskByIdCommand(id, customerId));
+        await _mediator.Send(new CancelProjectTaskByIdCommand(id, customerId));
         return Ok();
     }
 
-    [HttpPut("set-approvable/{id}")]
+    [HttpPut("set-current-approvable")]
     //[Authorize(Roles = "Worker,ProjectLeader")]
-    public async Task<IActionResult> MarkAsReadyToApproveAsync([FromRoute] string id, string workerId)// remove workerId from parameters
+    public async Task<IActionResult> MarkAsReadyToApproveAsync(string workerId)// remove workerId from parameters
     {
         //Worker id will be extracted from JWT
 
-        await mediator.Send(new MarkProjectTaskAsReadyToApproveCommand(id, workerId));
+        await _mediator.Send(new MarkProjectTaskAsReadyToApproveCommand(workerId));
         return Ok();
     }
 
@@ -82,7 +81,7 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> MarkAsApproved([FromRoute] string id, string projectLeaderId) // remove projectLeaderId from parameters
     {
         //ProjectLeader id will be extracted from JWT
-        await mediator.Send(new MarkProjectTaskAsApprovedCommand(id, projectLeaderId));
+        await _mediator.Send(new MarkProjectTaskAsApprovedCommand(id, projectLeaderId));
         return Ok();
     }
 
@@ -90,7 +89,7 @@ public class ProjectTasksController : ControllerBase
     //[Authorize(Roles = "Worker")]
     public async Task<IActionResult> StartWorkingOnTask(string workerId)// remove workerId from parameters
     {
-        await mediator.Send(new StartWorkingOnTaskCommand(workerId));
+        await _mediator.Send(new StartWorkingOnTaskCommand(workerId));
         return Ok();
     }
 
@@ -100,7 +99,7 @@ public class ProjectTasksController : ControllerBase
     {
         //Worker id will be extracted from JWT
 
-        await mediator.Send(new FinishWorkingOnTaskCommand(workerId));
+        await _mediator.Send(new FinishWorkingOnTaskCommand(workerId));
 
         return Ok();
     }

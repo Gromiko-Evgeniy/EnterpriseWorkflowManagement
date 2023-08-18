@@ -1,20 +1,25 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Project;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
 public class GetProjectTaskByIdHandler : IRequestHandler<GetProjectTaskByIdQuery, ProjectTask>
 {
-    private readonly IProjectTasksRepository projectTasksRepository;
+    private readonly IProjectTaskRepository _projectTaskRepository;
 
-    public GetProjectTaskByIdHandler(IProjectTasksRepository repository)
+    public GetProjectTaskByIdHandler(IProjectTaskRepository repository)
     {
-        projectTasksRepository = repository;
+        _projectTaskRepository = repository;
     }
 
     public async Task<ProjectTask> Handle(GetProjectTaskByIdQuery request, CancellationToken cancellationToken)
     {
-        return await projectTasksRepository.GetByIdAsync(request.Id);
+        var task = await _projectTaskRepository.GetByIdAsync(request.Id);
+
+        if (task == null) throw new NoProjectWithSuchIdException();
+
+        return task;
     }
 }

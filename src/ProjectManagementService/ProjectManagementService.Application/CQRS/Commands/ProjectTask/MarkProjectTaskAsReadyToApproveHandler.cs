@@ -1,26 +1,29 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Worker;
+using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjectTaskAsReadyToApproveCommand>
 {
-    private readonly IWorkersRepository workersRepository;
-    private readonly IProjectTasksRepository tasksRepository;
+    private readonly IWorkerRepository _workerRepository;
+    private readonly IProjectTaskRepository _taskRepository;
 
-    public MarkProjectTaskAsReadyToApproveHandler(IWorkersRepository workersRepository, IProjectTasksRepository tasksRepository)
+    public MarkProjectTaskAsReadyToApproveHandler(IWorkerRepository workersRepository, IProjectTaskRepository taskRepository)
     {
-        this.workersRepository = workersRepository;
-        this.tasksRepository = tasksRepository;
+        _workerRepository = workersRepository;
+        _taskRepository = taskRepository;
     }
 
     async Task<Unit> IRequestHandler<MarkProjectTaskAsReadyToApproveCommand, Unit>.Handle(MarkProjectTaskAsReadyToApproveCommand request, CancellationToken cancellationToken)
     {
-        var woeker = await workersRepository.GetByIdAsync(request.WorkerId);
+        var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 
-        if (woeker.CurrentTaskId != request.ProjectTaskId) return Unit.Value; // throw ex "WorkerId can mark ReadyToApprove only his own task"
+        if (worker is null) throw new NoWorkerWithSuchIdException();
+        if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
 
-        await tasksRepository.MarkAsReadyToApproveAsync(request.ProjectTaskId);
+        await _taskRepository.MarkAsReadyToApproveAsync(worker.CurrentTaskId);
 
         return Unit.Value; //fake empty value
     }

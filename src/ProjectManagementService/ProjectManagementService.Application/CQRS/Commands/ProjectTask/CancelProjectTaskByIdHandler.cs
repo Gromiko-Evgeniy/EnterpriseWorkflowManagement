@@ -1,27 +1,32 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Project;
+using ProjectManagementService.Application.Exceptions.ProjectTask;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class CancelProjectTaskByIdHandler : IRequestHandler<CancelProjectTaskByIdCommand>
 {
-    private readonly IProjectTasksRepository tasksRepository;
-    private readonly IProjectsRepository projectsRepository;
+    private readonly IProjectTaskRepository _taskRepository;
+    private readonly IProjectRepository _projectRepository;
 
-    public CancelProjectTaskByIdHandler(IProjectTasksRepository tasksRepository, IProjectsRepository projectsRepository)
+    public CancelProjectTaskByIdHandler(IProjectTaskRepository taskRepository, IProjectRepository projectRepository)
     {
-        this.tasksRepository = tasksRepository;
-        this.projectsRepository = projectsRepository;
+        _taskRepository = taskRepository;
+        _projectRepository = projectRepository;
     }
 
     async Task<Unit> IRequestHandler<CancelProjectTaskByIdCommand, Unit>.Handle(CancelProjectTaskByIdCommand request, CancellationToken cancellationToken)
     {
-        var task = await tasksRepository.GetByIdAsync(request.ProjectTaskId);
-        var customerProjects = await projectsRepository.GetAllCustomerProjectsAsync(request.CustomerId);
+        var task = await _taskRepository.GetByIdAsync(request.ProjectTaskId);
 
-        if (!customerProjects.Any(p => p.Id == task.ProjectId)) return Unit.Value; // throw ex
+        if (task is null) throw new NoProjectTaskWithSuchIdException();
 
-        await tasksRepository.CancelAsync(request.ProjectTaskId);
+        var customerProjects = await _projectRepository.GetAllCustomerProjectsAsync(request.CustomerId);
+
+        if (!customerProjects.Any(p => p.Id == task.ProjectId)) throw new AccessToCancelProjecTaskDeniedException();
+
+        await _taskRepository.CancelAsync(request.ProjectTaskId);
 
         return Unit.Value; //fake empty value
     }

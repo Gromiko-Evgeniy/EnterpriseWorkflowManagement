@@ -5,15 +5,15 @@ using MediatR;
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 public class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, List<Project>>
 {
-    private readonly IProjectsRepository projectRepository;
+    private readonly IProjectRepository _projectRepository;
 
-    public GetAllProjectsHandler(IProjectsRepository repository)
+    public GetAllProjectsHandler(IProjectRepository repository)
     {
-        projectRepository = repository;
+        _projectRepository = repository;
     }
 
     public async Task<List<Project>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
     {
-        return await projectRepository.GetAllAsync();
+        return await _projectRepository.GetAllAsync();
     }
 }

@@ -6,15 +6,15 @@ namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
 public class GetAllProjectTasksHandler : IRequestHandler<GetAllProjectTasksQuery, List<ProjectTask>>
 {
-    private readonly IProjectTasksRepository projectTasksRepository;
+    private readonly IProjectTaskRepository _projectTaskRepository;
 
-    public GetAllProjectTasksHandler(IProjectTasksRepository repository)
+    public GetAllProjectTasksHandler(IProjectTaskRepository repository)
     {
-        projectTasksRepository = repository;
+        _projectTaskRepository = repository;
     }
 
     public async Task<List<ProjectTask>> Handle(GetAllProjectTasksQuery request, CancellationToken cancellationToken)
     {
-        return await projectTasksRepository.GetAllAsync();
+        return await _projectTaskRepository.GetAllAsync();
     }
 }

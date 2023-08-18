@@ -3,14 +3,15 @@ using ProjectManagementService.Application.Abstractions;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using HiringService.Infrastructure.Data.Repositories;
 
 namespace ProjectManagementService.Infrastucture.Data.Repositories;
-public class WorkersRepository : IWorkersRepository
+public class WorkerRepository : GenericRepository<Worker>, IWorkerRepository
 {
     private readonly IMongoCollection<Worker> workers;
-    private readonly IProjectTasksRepository tasksRepository;
+    private readonly IProjectTaskRepository tasksRepository;
 
-    public WorkersRepository(IProjectTasksRepository tasksRepository, IConfiguration configuration, IMongoClient mongoClient)
+    public WorkerRepository(IProjectTaskRepository tasksRepository, IConfiguration configuration, IMongoClient mongoClient) : base(configuration, mongoClient, "WorkerCollectionName")
     {
         this.tasksRepository = tasksRepository;
 
@@ -28,11 +29,13 @@ public class WorkersRepository : IWorkersRepository
         return await workers.Find(task => task.Id == id).FirstAsync();
     }
 
-    public async Task AddAsync(Worker worker)
+    public async Task<string> AddAsync(Worker worker)
     {
         await workers.InsertOneAsync(worker);
+
+        return worker.Id;
     }
-     
+
     public async Task ChangeTaskAsync(string workerId, string taskId)
     {
         var task = await tasksRepository.GetByIdAsync(taskId);
@@ -52,5 +55,5 @@ public class WorkersRepository : IWorkersRepository
     public async Task RemoveAsync(string workerId)
     {
         await workers.DeleteOneAsync(worker => worker.Id == workerId);
-    } 
+    }
 }

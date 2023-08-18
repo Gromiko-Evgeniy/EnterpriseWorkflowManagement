@@ -1,20 +1,20 @@
 using MediatR;
-using MongoDB.Driver;
-using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Mapping;
 using ProjectManagementService.Application.CQRS.ProjectQueries;
-using ProjectManagementService.Infrastucture.Data.Repositories;
+using ProjectManagementService.Infrastucture.Data.Extensions;
+using ProjectManagementService.Application.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connetionString = builder.Configuration.GetSection("DBConnectionSettings:ConnetionString").Get<string>();
-builder.Services.AddSingleton<IMongoClient>(service => new MongoClient(connetionString));
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
-builder.Services.AddSingleton<IProjectsRepository, ProjectsRepository>();
-builder.Services.AddSingleton<IProjectTasksRepository, ProjectTasksRepository>();
-builder.Services.AddSingleton<IWorkersRepository, WorkersRepository>();
+builder.Services.AddMapping();
+
+builder.Services.AddValidation();
+
+builder.Services.AddRepositories();
 
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

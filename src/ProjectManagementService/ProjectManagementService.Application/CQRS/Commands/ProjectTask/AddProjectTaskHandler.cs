@@ -1,30 +1,35 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Exceptions.Project;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class AddProjectTaskHandler : IRequestHandler<AddProjectTaskCommand, string>
 {
-    private readonly IProjectTasksRepository projectTasksRepository;
+    private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IMapper _mapper;
 
-    public AddProjectTaskHandler(IProjectTasksRepository repository)
+    public AddProjectTaskHandler(IProjectTaskRepository projectTaskRepository,
+        IProjectRepository projectRepository, IMapper mapper)
     {
-        projectTasksRepository = repository;
+        _projectTaskRepository = projectTaskRepository;
+        _projectRepository = projectRepository;
+        _mapper = mapper;
     }
 
     public async Task<string> Handle(AddProjectTaskCommand request, CancellationToken cancellationToken)
     {
         var projectTaskDTO = request.ProjectTaskDTO;
 
-        var newProjectTask = new ProjectTask() // use automapper
-        {
-            Name = projectTaskDTO.Name,
-            Description = projectTaskDTO.Description,
-            Priority = projectTaskDTO.Priority,
-            ProjectId = projectTaskDTO.ProjectId
-        };
+        var project = _projectRepository.GetByIdAsync(projectTaskDTO.ProjectId);
 
-        return await projectTasksRepository.AddAsync(newProjectTask);
+        if (project is null) throw new NoProjectWithSuchIdException();
+
+        var newProjectTask = _mapper.Map<ProjectTask>(projectTaskDTO);
+          
+        return await _projectTaskRepository.AddAsync(newProjectTask);
     }
 }
