@@ -1,6 +1,7 @@
-﻿namespace IdentityService.Application.ServiceAbstractions;
+﻿using IdentityService.Application.Abstractions.ServiceAbstractions;
+using IdentityService.Application.DTOs.CustomerDTOs;
+using IdentityService.Domain.Entities;
 
-public interface ICustomerService
-{
-}
+namespace IdentityService.Application.ServiceAbstractions;
 
+public interface ICustomerService : IGenericService<Customer, AddCustomerDTO> { }

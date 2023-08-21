@@ -1,9 +1,8 @@
-﻿namespace IdentityService.Domain.DTOs
-{
-    public class LogInData
-    {
-        public string Email { get; set; } = string.Empty;
+﻿namespace IdentityService.Application.DTOs;
 
-        public string Password { get; set; } = string.Empty;
-    }
+public class LogInData
+{
+    public string Email { get; set; } = string.Empty;
+
+    public string Password { get; set; } = string.Empty;
 }

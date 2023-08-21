@@ -14,5 +14,3 @@ public class Worker
 
     public Position Position { get; set; }
 }
-
- 
