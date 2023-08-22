@@ -1,6 +1,6 @@
-﻿using HiringService.Domain.Entities;
+﻿using HiringService.Application.DTOs.HiringStageDTOs;
 using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageQueries;
 
-public sealed record GetHiringStageByIdQuery(int Id) : IRequest<HiringStage> { }
+public sealed record GetHiringStageByIdQuery(int Id) : IRequest<HiringStageMainInfoDTO> { }

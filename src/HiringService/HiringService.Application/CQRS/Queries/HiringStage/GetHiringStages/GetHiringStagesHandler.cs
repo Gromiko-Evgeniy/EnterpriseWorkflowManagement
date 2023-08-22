@@ -1,21 +1,27 @@
-﻿using HiringService.Application.Abstractions;
-using HiringService.Domain.Entities;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions;
+using HiringService.Application.DTOs.HiringStageDTOs;
 using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageQueries;
 
-public class GetHiringStagesHandler : IRequestHandler<GetHiringStagesQuery, List<HiringStage>>
+public class GetHiringStagesHandler : IRequestHandler<GetHiringStagesQuery, List<HiringStageShortInfoDTO>>
 {
     private readonly IHiringStageRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public GetHiringStagesHandler(IHiringStageRepository stageRepository)
+    public GetHiringStagesHandler(IHiringStageRepository stageRepository, IMapper mapper)
     {
         _stageRepository = stageRepository;
+        _mapper = mapper;
     }
 
-    public async Task<List<HiringStage>> Handle(GetHiringStagesQuery request, CancellationToken cancellationToken)
+    public async Task<List<HiringStageShortInfoDTO>> Handle(GetHiringStagesQuery request, CancellationToken cancellationToken)
     {
-        return await _stageRepository.GetAllAsync();
+        var stages =  await _stageRepository.GetAllAsync();
+
+        var stageDTOs = stages.Select(_mapper.Map<HiringStageShortInfoDTO>).ToList();
+
+        return stageDTOs;
     }
 }
-

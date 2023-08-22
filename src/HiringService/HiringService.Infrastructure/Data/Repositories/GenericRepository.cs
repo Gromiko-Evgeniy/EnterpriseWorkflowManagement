@@ -7,8 +7,8 @@ namespace HiringService.Infrastructure.Data.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    DbContext _context;
-    DbSet<T> _dbSet;
+    protected readonly DbContext _context;
+    protected readonly DbSet<T> _dbSet;
 
     public GenericRepository(DbContext context)
     {

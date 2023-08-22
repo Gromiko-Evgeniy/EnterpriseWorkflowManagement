@@ -1,4 +1,6 @@
-﻿using HiringService.Application.Abstractions;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions;
+using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Application.Exceptions.Candidate;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
@@ -11,13 +13,18 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
     private readonly IHiringStageRepository _stageRepository;
     private readonly IHiringStageNameRepository _nameRepository;
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IWorkerRepository _workerRepository;
+    private readonly IMapper _mapper;
 
     public AddHiringStageHandler(IHiringStageRepository stageRepository,
+        IWorkerRepository workerRepository, IMapper mapper,
         ICandidateRepository candidateRepository, IHiringStageNameRepository nameRepository)
     {
         _candidateRepository = candidateRepository;
         _stageRepository = stageRepository;
         _nameRepository = nameRepository;
+        _workerRepository = workerRepository;
+        _mapper = mapper;
     }
 
     public async Task<int> Handle(AddHiringStageCommand request, CancellationToken cancellationToken)
@@ -26,15 +33,13 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
 
         var stageName = await _nameRepository.GetByIdAsync(stageDTO.HiringStageNameId);
         var candidate = await _candidateRepository.GetByIdAsync(stageDTO.CandidateId);
+        var intervier = await _workerRepository.GetByIdAsync(stageDTO.IntervierId);
 
         if (stageName is null) throw new NoStageNameWithSuchIdException();
         if (candidate is null) throw new NoCandidateWithSuchIdException();
+        if (intervier is null) throw new NoWorkerWithSuchIdException();
 
-        var stage = new HiringStage()
-        {
-            HiringStageName = stageName,
-            Candidate = candidate
-        };
+        var stage = _mapper.Map<HiringStage>(stageDTO);
 
         stage = _stageRepository.AddAsync(stage);
 

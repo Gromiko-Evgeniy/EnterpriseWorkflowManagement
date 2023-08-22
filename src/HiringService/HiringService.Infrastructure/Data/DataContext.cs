@@ -1,6 +1,7 @@
 ﻿using HiringService.Domain.Entities;
 using HiringService.Infrastructure.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace HiringService.Infrastructure.Data;
 
@@ -18,9 +19,6 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new CandidateEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new HiringStageEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new StageNameEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new WorkerEntityConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

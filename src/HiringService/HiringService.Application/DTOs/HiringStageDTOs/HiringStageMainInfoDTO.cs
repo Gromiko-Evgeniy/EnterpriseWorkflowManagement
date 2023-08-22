@@ -1,6 +1,6 @@
-﻿namespace HiringService.Domain.Entities;
+﻿namespace HiringService.Application.DTOs.HiringStageDTOs;
 
-public class HiringStage
+public class HiringStageMainInfoDTO
 {
     public int Id { get; set; }
 
@@ -10,15 +10,9 @@ public class HiringStage
 
     public DateTime DateTime { get; set; }
 
-    public Candidate Candidate { get; set; }
-
     public int CandidateId { get; set; }
 
-    public Worker Intervier { get; set; }
-
     public int IntervierId { get; set; }
-
-    public HiringStageName HiringStageName { get; set; }
 
     public int HiringStageNameId { get; set; }
 }

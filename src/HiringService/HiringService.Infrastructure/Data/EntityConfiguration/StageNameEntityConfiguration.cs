@@ -8,7 +8,7 @@ internal class StageNameEntityConfiguration : IEntityTypeConfiguration<HiringSta
 {
     public void Configure(EntityTypeBuilder<HiringStageName> builder)
     {
-        builder.ToTable("StageNames");
+        builder.ToTable("HiringStageNames");
 
         builder.HasKey(k => k.Id);
         builder.Property(p => p.Id).HasColumnName("Id");

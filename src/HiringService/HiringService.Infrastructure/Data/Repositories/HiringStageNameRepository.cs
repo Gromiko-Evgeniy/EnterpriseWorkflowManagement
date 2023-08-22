@@ -7,7 +7,7 @@ public class HiringStageNameRepository : GenericRepository<HiringStageName>, IHi
 {
     public HiringStageNameRepository(DataContext context) : base(context) { }
 
-    public async Task<HiringStageName> GetByNameAsync(string name)
+    public async Task<HiringStageName?> GetByNameAsync(string name)
     {
         return await GetFirstAsync(s => s.Name == name);
     }

@@ -9,5 +9,7 @@ public class CandidateMappingProfile : Profile
     public CandidateMappingProfile()
     {
         CreateMap<AddCandidateDTO, Candidate>();
+        CreateMap<Candidate, CandidateMainInfoDTO>();
+        CreateMap<Candidate, CandidateShortInfoDTO>();
     }
 }

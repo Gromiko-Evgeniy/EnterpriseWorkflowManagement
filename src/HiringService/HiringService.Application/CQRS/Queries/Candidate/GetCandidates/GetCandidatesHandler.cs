@@ -1,20 +1,27 @@
-﻿using HiringService.Application.Abstractions;
-using HiringService.Domain.Entities;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions;
+using HiringService.Application.DTOs.CandidateDTOs;
 using MediatR;
 
 namespace HiringService.Application.CQRS.CandidateQueries;
 
-public class GetCandidatesHandler : IRequestHandler<GetCandidatesQuery, List<Candidate>>
+public class GetCandidatesHandler : IRequestHandler<GetCandidatesQuery, List<CandidateShortInfoDTO>>
 {
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IMapper _mapper;
 
-    public GetCandidatesHandler(ICandidateRepository candidateRepository)
+    public GetCandidatesHandler(ICandidateRepository candidateRepository, IMapper mapper)
     {
         _candidateRepository = candidateRepository;
+        _mapper = mapper;
     }
 
-    public async Task<List<Candidate>> Handle(GetCandidatesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CandidateShortInfoDTO>> Handle(GetCandidatesQuery request, CancellationToken cancellationToken)
     {
-        return await _candidateRepository.GetAllAsync();
+        var candidates = await _candidateRepository.GetAllAsync();
+
+        var candidateDtos = candidates.Select(_mapper.Map<CandidateShortInfoDTO>).ToList();
+
+        return candidateDtos;
     }
 }
