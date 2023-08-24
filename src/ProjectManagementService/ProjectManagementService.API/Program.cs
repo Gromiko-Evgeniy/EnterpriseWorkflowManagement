@@ -2,7 +2,7 @@ using MediatR;
 using ProjectManagementService.Application.Mapping;
 using ProjectManagementService.Infrastucture.Data.Extensions;
 using ProjectManagementService.Application.Validation;
-using ProjectManagementService.Application.CQRS.Queries.Project.GetAllProjects;
+using ProjectManagementService.Application.CQRS.ProjectQueries;
 
 var builder = WebApplication.CreateBuilder(args);
 

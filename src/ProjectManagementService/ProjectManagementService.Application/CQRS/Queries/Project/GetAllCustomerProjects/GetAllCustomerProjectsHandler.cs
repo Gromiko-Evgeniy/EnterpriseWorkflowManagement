@@ -20,7 +20,7 @@ public class GetAllCustomerProjectsHandler : IRequestHandler<GetAllCustomerProje
     {
         var customer = _customerRepository.GetByIdAsync(request.CustomerId);
 
-        if (customer is null) throw new NoCandidateWithSuchIdException();
+        if (customer is null) throw new NoCustomerWithSuchIdException();
 
         return await _projectRepository.GetAllCustomerProjectsAsync(request.CustomerId);
     }
