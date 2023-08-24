@@ -5,7 +5,8 @@ using ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 using ProjectManagementService.Application.ProjectTaskDTOs;
 
 namespace ProjectManagementService.API.Controllers;
-[Route("psroject-tasks")]
+
+[Route("project-tasks")]
 [ApiController]
 public class ProjectTasksController : ControllerBase
 {
