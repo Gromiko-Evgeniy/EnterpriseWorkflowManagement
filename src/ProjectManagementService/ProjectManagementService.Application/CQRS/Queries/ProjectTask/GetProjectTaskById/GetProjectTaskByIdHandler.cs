@@ -1,25 +1,28 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
-using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
-public class GetProjectTaskByIdHandler : IRequestHandler<GetProjectTaskByIdQuery, ProjectTask>
+public class GetProjectTaskByIdHandler : IRequestHandler<GetProjectTaskByIdQuery, TaskMainInfoDTO>
 {
     private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IMapper _mapper;
 
-    public GetProjectTaskByIdHandler(IProjectTaskRepository repository)
+    public GetProjectTaskByIdHandler(IProjectTaskRepository repository, IMapper mapper)
     {
         _projectTaskRepository = repository;
+        _mapper = mapper;
     }
 
-    public async Task<ProjectTask> Handle(GetProjectTaskByIdQuery request, CancellationToken cancellationToken)
+    public async Task<TaskMainInfoDTO> Handle(GetProjectTaskByIdQuery request, CancellationToken cancellationToken)
     {
         var task = await _projectTaskRepository.GetByIdAsync(request.Id);
 
         if (task == null) throw new NoProjectTaskWithSuchIdException();
 
-        return task;
+        return _mapper.Map<TaskMainInfoDTO>(task);
     }
 }

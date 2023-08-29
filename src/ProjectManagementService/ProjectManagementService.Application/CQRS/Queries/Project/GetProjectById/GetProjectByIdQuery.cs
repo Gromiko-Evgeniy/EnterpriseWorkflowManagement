@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using ProjectManagementService.Domain.Entities;
+using ProjectManagementService.Application.DTOs.ProjectDTOs;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 
-public sealed record GetProjectByIdQuery(string Id) : IRequest<Project> { }
+public sealed record GetProjectByIdQuery(string Id) : IRequest<ProjectMainInfoDTO> { }

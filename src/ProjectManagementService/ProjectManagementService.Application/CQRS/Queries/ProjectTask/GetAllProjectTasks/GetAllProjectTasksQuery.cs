@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using ProjectManagementService.Domain.Entities;
+using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
-public sealed record GetAllProjectTasksQuery() : IRequest<List<ProjectTask>> { }
+public sealed record GetAllProjectTasksQuery() : IRequest<List<TaskShortInfoDTO>> { }

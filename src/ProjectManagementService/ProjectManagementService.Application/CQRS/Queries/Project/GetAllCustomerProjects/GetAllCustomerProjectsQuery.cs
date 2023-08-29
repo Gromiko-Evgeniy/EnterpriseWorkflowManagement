@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using ProjectManagementService.Domain.Entities;
+using ProjectManagementService.Application.DTOs.ProjectDTOs;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 
-public sealed record GetAllCustomerProjectsQuery(string CustomerId) : IRequest<List<Project>> { }
+public sealed record GetAllCustomerProjectsQuery(string CustomerId) : IRequest<List<ProjectShortInfoDTO>> { }

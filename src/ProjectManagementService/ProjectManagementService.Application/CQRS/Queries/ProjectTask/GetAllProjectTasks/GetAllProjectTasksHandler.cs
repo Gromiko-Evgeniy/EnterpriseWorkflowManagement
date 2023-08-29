@@ -1,20 +1,25 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ProjectManagementService.Application.Abstractions;
-using ProjectManagementService.Domain.Entities;
+using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
-public class GetAllProjectTasksHandler : IRequestHandler<GetAllProjectTasksQuery, List<ProjectTask>>
+public class GetAllProjectTasksHandler : IRequestHandler<GetAllProjectTasksQuery, List<TaskShortInfoDTO>>
 {
     private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IMapper _mapper;
 
-    public GetAllProjectTasksHandler(IProjectTaskRepository repository)
+    public GetAllProjectTasksHandler(IProjectTaskRepository repository, IMapper mapper)
     {
         _projectTaskRepository = repository;
+        _mapper = mapper;
     }
 
-    public async Task<List<ProjectTask>> Handle(GetAllProjectTasksQuery request, CancellationToken cancellationToken)
+    public async Task<List<TaskShortInfoDTO>> Handle(GetAllProjectTasksQuery request, CancellationToken cancellationToken)
     {
-        return await _projectTaskRepository.GetAllAsync();
+        var tasks = await _projectTaskRepository.GetAllAsync();
+
+        return tasks.Select(_mapper.Map<TaskShortInfoDTO>).ToList();
     }
 }

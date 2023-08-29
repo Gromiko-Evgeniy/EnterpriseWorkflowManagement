@@ -1,22 +1,26 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
 using ProjectManagementService.Application.Exceptions.Worker;
-using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 
-public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByWorkerIdQuery, ProjectTask>
+public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByWorkerIdQuery, TaskMainInfoDTO>
 {
     private readonly IWorkerRepository _workerRepository;
     private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IMapper _mapper;
 
-    public GetProjectTaskByWorkerIdHandler(IWorkerRepository repository, IProjectTaskRepository projectTaskRepository)
+    public GetProjectTaskByWorkerIdHandler(IWorkerRepository repository,
+        IProjectTaskRepository projectTaskRepository, IMapper mapper)
     {
         _workerRepository = repository;
         _projectTaskRepository = projectTaskRepository;
+        _mapper = mapper;
     }
 
-    public async Task<ProjectTask> Handle(GetProjectTaskByWorkerIdQuery request, CancellationToken cancellationToken)
+    public async Task<TaskMainInfoDTO> Handle(GetProjectTaskByWorkerIdQuery request, CancellationToken cancellationToken)
     {
         var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 
@@ -31,6 +35,6 @@ public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByW
             throw new WorkerHasNoTaskNowException();
         }
 
-        return task;
+        return _mapper.Map<TaskMainInfoDTO>(task);
     }
 }

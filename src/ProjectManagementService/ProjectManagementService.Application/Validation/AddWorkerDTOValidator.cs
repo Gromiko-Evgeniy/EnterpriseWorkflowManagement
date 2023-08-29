@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using ProjectManagementService.Application.WorkerDTOs;
+using ProjectManagementService.Application.DTOs.WorkerDTOs;
 
 namespace ProjectManagementService.Application.Validation;
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ProjectManagementService.Application.WorkerDTOs;
+using ProjectManagementService.Application.DTOs.WorkerDTOs;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.Mapping.Profiles;
