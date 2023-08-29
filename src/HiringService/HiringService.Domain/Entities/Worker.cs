@@ -1,4 +1,4 @@
-﻿namespace HiringService.Domain.Projects;
+﻿namespace HiringService.Domain.Entities;
 
 public class Worker
 {
@@ -8,7 +8,5 @@ public class Worker
 
     public string Email { get; set; } = string.Empty;
 
-    public PassedHiringStage PassedHiringStage { get; set; }
-
-    public int PassedHiringStageId { get; set; }
+    public List<HiringStage> HiringStages { get; set; }
 }

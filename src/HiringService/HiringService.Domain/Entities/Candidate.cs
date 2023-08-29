@@ -1,4 +1,4 @@
-﻿namespace HiringService.Domain.Projects;
+﻿namespace HiringService.Domain.Entities;
 
 public class Candidate
 {
@@ -12,5 +12,5 @@ public class Candidate
 
     public DateTime NextStageTime { get; set; }
 
-    public List<PassedHiringStage> PassedHiringStages { get; set; }
+    public List<HiringStage> HiringStages { get; set; }
 }
