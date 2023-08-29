@@ -5,7 +5,5 @@ namespace ProjectManagementService.Application.Abstractions;
 
 public interface IWorkerRepository : IGenericRepository<Worker>
 {
-    public Task<string> AddAsync(Worker worker);
-
-    public Task ChangeTaskAsync(string workerId, string taskId);
+    public new Task<string> AddAsync(Worker worker);
 }

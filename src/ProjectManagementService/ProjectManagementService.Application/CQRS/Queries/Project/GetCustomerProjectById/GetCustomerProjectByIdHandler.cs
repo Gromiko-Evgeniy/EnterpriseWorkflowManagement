@@ -20,7 +20,7 @@ public class GetCustomerProjectByIdHandler : IRequestHandler<GetCustomerProjectB
 
         if (project is null) throw new NoProjectWithSuchIdException();
 
-        if (project.CustomerId != request.CustomerId) throw new CustomerAccessToProjecDeniedException();
+        if (project.CustomerId != request.CustomerId) throw new CustomerAccessToProjectDeniedException();
 
         return project;
     }

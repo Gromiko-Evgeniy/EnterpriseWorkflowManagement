@@ -22,6 +22,7 @@ namespace ProjectManagementService.API.Controllers
         public async Task<IActionResult> GetAllAsync() 
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());
+
             return Ok(projects);
         }
 
@@ -30,6 +31,7 @@ namespace ProjectManagementService.API.Controllers
         public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
         {
             var project = await _mediator.Send(new GetProjectByIdQuery(id));
+
             return Ok(project);
         }
 
@@ -41,6 +43,7 @@ namespace ProjectManagementService.API.Controllers
             //var customerId = "";
 
             var project = await _mediator.Send(new GetAllCustomerProjectsQuery(customerId));
+
             return Ok(project); 
         }
 
@@ -49,6 +52,7 @@ namespace ProjectManagementService.API.Controllers
         public async Task<IActionResult> GetCustomerProjectByIdAsync([FromRoute] string id, string customerId)// remove customerId from parameters
         {
             var project = await _mediator.Send(new GetCustomerProjectByIdQuery(customerId, id));
+
             return Ok(project);
         }
 
@@ -58,7 +62,7 @@ namespace ProjectManagementService.API.Controllers
         {
             // ProjectLeader id will be extracted from JWT
 
-            var project = await _mediator.Send(new GetProjectLeaderProjectQuery(projectLeaderId));
+            var project = await _mediator.Send(new GetProjectByLeaderIdQuery(projectLeaderId));
 
             return Ok(project);
         }
@@ -68,7 +72,7 @@ namespace ProjectManagementService.API.Controllers
         public async Task<IActionResult> AddAsync(AddProjectDTO addProjectDTO, string customerId)// remove customerId from parameters
         {
             //Customer id will be extracted from JWT
-            string id = await _mediator.Send(new AddProjectCommand(addProjectDTO, customerId));
+            var id = await _mediator.Send(new AddProjectCommand(addProjectDTO, customerId));
 
             return Ok(id);
         }

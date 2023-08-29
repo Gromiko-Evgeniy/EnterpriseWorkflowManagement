@@ -22,7 +22,7 @@ public class AddProjectHandler : IRequestHandler<AddProjectCommand, string>
 
         var newProject = _mapper.Map<Project>(projectDTO);
 
-        string id = await _projectRepository.AddAsync(newProject);
+        var id = await _projectRepository.AddAsync(newProject);
 
         return id;
     }

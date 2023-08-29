@@ -15,7 +15,7 @@ public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskComma
         _taskRepository = taskRepository;
     }
 
-    async Task<Unit> IRequestHandler<StartWorkingOnTaskCommand, Unit>.Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
     {
         var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 

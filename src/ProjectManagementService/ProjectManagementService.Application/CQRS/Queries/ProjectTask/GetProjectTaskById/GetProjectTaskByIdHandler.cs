@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using ProjectManagementService.Application.Abstractions;
-using ProjectManagementService.Application.Exceptions.Project;
+using ProjectManagementService.Application.Exceptions.ProjectTask;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
@@ -18,7 +18,7 @@ public class GetProjectTaskByIdHandler : IRequestHandler<GetProjectTaskByIdQuery
     {
         var task = await _projectTaskRepository.GetByIdAsync(request.Id);
 
-        if (task == null) throw new NoProjectWithSuchIdException();
+        if (task == null) throw new NoProjectTaskWithSuchIdException();
 
         return task;
     }

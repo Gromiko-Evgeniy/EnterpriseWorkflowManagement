@@ -1,9 +1,10 @@
 ﻿using MongoDB.Bson;
+using ProjectManagementService.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace HiringService.Application.Abstractions;
 
-public interface IGenericRepository<T> where T : class
+public interface IGenericRepository<T> where T : EntityWithId
 {
     public Task<List<T>> GetAllAsync();
 
@@ -13,7 +14,7 @@ public interface IGenericRepository<T> where T : class
 
     public Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
 
-    public Task<T> AddAsync(T item);
+    public Task<string> AddAsync(T item);
 
     public Task RemoveAsync(string id);
 

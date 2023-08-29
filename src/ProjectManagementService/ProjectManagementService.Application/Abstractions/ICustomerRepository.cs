@@ -5,5 +5,5 @@ namespace ProjectManagementService.Application.Abstractions;
 
 public interface ICustomerRepository : IGenericRepository<Customer>
 {
-    public Task<string> AddAsync(Customer customer);
+    public new Task<string> AddAsync(Customer customer);
 }

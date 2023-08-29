@@ -5,12 +5,8 @@ using ProjectManagementService.Domain.Enumerations;
 namespace ProjectManagementService.Domain.Entities;
 
 [BsonIgnoreExtraElements]
-public class Project
+public class Project : EntityWithId
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
-
     [BsonElement("objective")]
     public string Objective { get; set; } = string.Empty;
 

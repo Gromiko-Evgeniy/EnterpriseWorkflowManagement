@@ -7,8 +7,7 @@ public interface IProjectRepository : IGenericRepository<Project>
 {
     public Task<List<Project>> GetAllCustomerProjectsAsync(string customerId);
 
-    public Task<Project> GetProjectLeaderProject(string projectLeaderId);
+    public Task<Project?> GetProjectByProjectLeaderId(string projectLeaderId);
 
-    public Task<string> AddAsync(Project project);
-
+    public new Task<string> AddAsync(Project project);
 }

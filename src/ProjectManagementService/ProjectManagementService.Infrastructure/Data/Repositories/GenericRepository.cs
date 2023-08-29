@@ -1,19 +1,25 @@
 ﻿using HiringService.Application.Abstractions;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using ProjectManagementService.Application.Configuration;
+using ProjectManagementService.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace HiringService.Infrastructure.Data.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 {
     private readonly IMongoCollection<T> _collection;
 
-    public GenericRepository(IConfiguration configuration, IMongoClient mongoClient, string collectionNameConfigName)
+    public GenericRepository(IMongoClient mongoClient,
+        IOptions<MongoDBConfiguration> DBConfigurationOptions)
     {
-        var databaseName = configuration["DBConnectionSettings:DatabaseName"];
-        var collectionName = configuration["DBConnectionSettings:Collections:" + collectionNameConfigName];
+        var DBConfiguration = DBConfigurationOptions.Value;
+        var collectionConfigName = typeof(T).Name + "CollectionName";
+
+        var databaseName = DBConfiguration.DatabaseName; 
+        var collectionName = DBConfiguration.Collections[collectionConfigName]; 
 
         var database = mongoClient.GetDatabase(databaseName);
         _collection = database.GetCollection<T>(collectionName);
@@ -41,11 +47,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _collection.Find(predicate).FirstAsync();
     }
 
-    public async Task<T> AddAsync(T item)
+    public async Task<string> AddAsync(T item)
     {
         await _collection.InsertOneAsync(item);
 
-        return item;
+        return item.Id;
     }
 
     public async Task RemoveAsync(string id)

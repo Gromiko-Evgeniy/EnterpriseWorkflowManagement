@@ -15,7 +15,7 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
         _taskRepository = taskRepository;
     }
 
-    async Task<Unit> IRequestHandler<MarkProjectTaskAsReadyToApproveCommand, Unit>.Handle(MarkProjectTaskAsReadyToApproveCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(MarkProjectTaskAsReadyToApproveCommand request, CancellationToken cancellationToken)
     {
         var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
 

@@ -22,6 +22,7 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> GetAllAsync()
     {
         var tasks = await _mediator.Send(new GetAllProjectTasksQuery());
+
         return Ok(tasks);
     }
 
@@ -30,6 +31,7 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
     {
         var task = await _mediator.Send(new GetProjectTaskByIdQuery(id));
+
         return Ok(task);
     }
 
@@ -38,6 +40,7 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> GetByProjectIdAsync([FromRoute(Name = "id")] string projectId)
     {
         var tasks = await _mediator.Send(new GetProjectTasksByProjectIdQuery(projectId));
+
         return Ok(tasks);
     }
 
@@ -46,6 +49,7 @@ public class ProjectTasksController : ControllerBase
     public async Task<IActionResult> GetCurrentAsync() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     {
         //Worker id will be extracted from JWT
+
         return Ok();
     }
 
@@ -53,7 +57,7 @@ public class ProjectTasksController : ControllerBase
     //[Authorize(Roles = "Customer")]
     public async Task<IActionResult> AddAsync(AddProjectTaskDTO taskDTO)
     {        
-        string id = await _mediator.Send(new AddProjectTaskCommand(taskDTO)); 
+        var id = await _mediator.Send(new AddProjectTaskCommand(taskDTO)); 
 
         return Ok(id);
     }
@@ -79,7 +83,7 @@ public class ProjectTasksController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("aprove/{id}")]
+    [HttpPut("approve/{id}")]
     //[Authorize(Roles = "ProjectLeader")]
     public async Task<IActionResult> MarkAsApproved([FromRoute] string id, string projectLeaderId) // remove projectLeaderId from parameters
     {

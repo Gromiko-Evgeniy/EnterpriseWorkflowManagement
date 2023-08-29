@@ -16,16 +16,16 @@ public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskA
         _projectRepository = projectRepository;
     }
 
-    async Task<Unit> IRequestHandler<MarkProjectTaskAsApprovedCommand, Unit>.Handle(MarkProjectTaskAsApprovedCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(MarkProjectTaskAsApprovedCommand request, CancellationToken cancellationToken)
     {
         var task = await _taskRepository.GetByIdAsync(request.ProjectTaskId);
 
         if (task is null) throw new NoProjectTaskWithSuchIdException();
 
-        var projectLeaderProject = await _projectRepository.GetProjectLeaderProject(request.ProjectLeaderId);
+        var projectLeaderProject = await _projectRepository.GetProjectByProjectLeaderId(request.ProjectLeaderId);
 
         if (projectLeaderProject is null) throw new NoProjectWithSuchIdException();
-        if (task.ProjectId != projectLeaderProject.Id) throw new AccessToApproveProjecTaskDeniedException();
+        if (task.ProjectId != projectLeaderProject.Id) throw new AccessToApproveProjectTaskDeniedException();
 
         await _taskRepository.MarkAsApproved(request.ProjectTaskId);
 

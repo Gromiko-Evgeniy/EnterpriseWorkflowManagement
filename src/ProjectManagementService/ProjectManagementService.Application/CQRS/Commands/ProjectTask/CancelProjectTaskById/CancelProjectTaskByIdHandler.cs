@@ -15,7 +15,7 @@ public class CancelProjectTaskByIdHandler : IRequestHandler<CancelProjectTaskByI
         _projectRepository = projectRepository;
     }
 
-    async Task<Unit> IRequestHandler<CancelProjectTaskByIdCommand, Unit>.Handle(CancelProjectTaskByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CancelProjectTaskByIdCommand request, CancellationToken cancellationToken)
     {
         var task = await _taskRepository.GetByIdAsync(request.ProjectTaskId);
 
@@ -23,7 +23,7 @@ public class CancelProjectTaskByIdHandler : IRequestHandler<CancelProjectTaskByI
 
         var customerProjects = await _projectRepository.GetAllCustomerProjectsAsync(request.CustomerId);
 
-        if (!customerProjects.Any(p => p.Id == task.ProjectId)) throw new AccessToCancelProjecTaskDeniedException();
+        if (!customerProjects.Any(p => p.Id == task.ProjectId)) throw new AccessToCancelProjectTaskDeniedException();
 
         await _taskRepository.CancelAsync(request.ProjectTaskId);
 
