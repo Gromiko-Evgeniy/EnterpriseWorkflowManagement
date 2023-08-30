@@ -1,5 +1,6 @@
-﻿namespace IdentityService.Application.RepositoryAbstractions;
+﻿using IdentityService.Application.Abstractions.RepositoryAbstractions;
+using IdentityService.Domain.Entities;
 
-public interface ICustomerRepository
-{
-}
+namespace IdentityService.Application.RepositoryAbstractions;
+
+public interface ICustomerRepository : IGenericRepository<Customer> { }

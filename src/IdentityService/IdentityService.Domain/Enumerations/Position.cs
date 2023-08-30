@@ -2,8 +2,7 @@
 
 public enum Position
 {
-    Candidate = 1,
-    Worker,
+    Worker = 1,
     ProjectLeader,
     DepartmentHead
 }

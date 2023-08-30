@@ -1,5 +1,10 @@
-﻿namespace IdentityService.Infrastructure.Data.Repositories;
+﻿using IdentityService.Application.RepositoryAbstractions;
+using IdentityService.Domain.Entities;
 
-public class CandidateRepository
+namespace IdentityService.Infrastructure.Data.Repositories;
+
+public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepository
 {
+    public CandidateRepository(DataContext context) : base(context) { }
 }
+ 

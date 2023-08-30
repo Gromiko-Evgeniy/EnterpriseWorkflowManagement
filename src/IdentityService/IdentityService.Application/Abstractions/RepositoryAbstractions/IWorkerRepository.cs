@@ -1,5 +1,6 @@
-﻿namespace IdentityService.Application.RepositoryAbstractions;
+﻿using IdentityService.Application.Abstractions.RepositoryAbstractions;
+using IdentityService.Domain.Entities;
 
-public interface IWorkerRepository
-{
-}
+namespace IdentityService.Application.RepositoryAbstractions;
+
+public interface IWorkerRepository : IGenericRepository<Worker> { }

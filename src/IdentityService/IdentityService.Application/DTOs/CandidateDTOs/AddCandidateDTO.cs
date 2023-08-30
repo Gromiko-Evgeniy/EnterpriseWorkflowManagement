@@ -1,9 +1,12 @@
-﻿namespace IdentityService.Domain.DTOs.WorkerDTOs;
-public class UpdateWorkerDTO
+﻿namespace IdentityService.Application.DTOs.CandidateDTO;
+
+public class AddCandidateDTO
 {
     public string Name { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
 
     public string Password { get; set; } = string.Empty;
+
+    public string CV { get; set; } = string.Empty;
 }

@@ -1,5 +1,9 @@
-﻿namespace IdentityService.Infrastructure.Data.Repositories;
+﻿using IdentityService.Application.RepositoryAbstractions;
+using IdentityService.Domain.Entities;
 
-public class CustomerRepository
+namespace IdentityService.Infrastructure.Data.Repositories;
+
+public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
 {
+    public CustomerRepository(DataContext context) : base(context) { }
 }

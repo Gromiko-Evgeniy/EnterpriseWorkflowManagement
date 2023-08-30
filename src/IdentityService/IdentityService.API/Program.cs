@@ -1,15 +1,31 @@
+using ProjectManagementService.Application.Mapping;
+using IdentityService.Application.Services.Extensions;
+using IdentityService.Infrastructure.Data.Extensions;
+using ProjectManagementService.Application.Validation;
+using IdentityService.Application.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
+builder.Services.AddMapping();
+
+builder.Services.AddValidation();
+
+builder.Services.AddRepositories();
+
+builder.Services.AddServices();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddAuthOptions(builder.Configuration);
+builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
