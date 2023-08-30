@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 using ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 using ProjectManagementService.Application.ProjectTaskDTOs;
+using ProjectManagementService.Domain.Enumerations;
 
 namespace ProjectManagementService.API.Controllers;
 
@@ -11,6 +13,10 @@ namespace ProjectManagementService.API.Controllers;
 public class ProjectTasksController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
+    private const string _workerRole = nameof(ApplicationRole.Worker);
+    private const string _customerRole = nameof(ApplicationRole.Customer);
+    private const string _leaderRole = nameof(ApplicationRole.ProjectLeader);
 
     public ProjectTasksController(IMediator mediator)
     {
@@ -18,7 +24,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize(Roles = "DepartmentHead")]
+    //[Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> GetAllAsync()
     {
         var tasks = await _mediator.Send(new GetAllProjectTasksQuery());
@@ -27,7 +33,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    //[Authorize(Roles = "DepartmentHead")]
+    //[Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
     {
         var task = await _mediator.Send(new GetProjectTaskByIdQuery(id));
@@ -36,7 +42,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet("projects/{id}")]
-    //[Authorize(Roles = "DepartmentHead")]
+    //[Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> GetByProjectIdAsync([FromRoute(Name = "id")] string projectId)
     {
         var tasks = await _mediator.Send(new GetProjectTasksByProjectIdQuery(projectId));
@@ -45,7 +51,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet("current")] 
-    //[Authorize(Roles = "Worker,ProjectLeader")]
+    //[Authorize(Roles = $"{_workerRole},{_leaderRole}")]
     public async Task<IActionResult> GetCurrentAsync() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     {
         //Worker id will be extracted from JWT
@@ -54,7 +60,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Customer")]
+    //[Authorize(Roles = _customerRole)]
     public async Task<IActionResult> AddAsync(AddProjectTaskDTO taskDTO)
     {        
         var id = await _mediator.Send(new AddProjectTaskCommand(taskDTO)); 
@@ -63,7 +69,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("cancel/{id}")]
-    //[Authorize(Roles = "Customer")]
+    //[Authorize(Roles = _customerRole)]
     public async Task<IActionResult> CancelAsync([FromRoute] string id, string customerId)// remove customerId from parameters
     {
         //Customer id will be extracted from JWT
@@ -73,7 +79,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("set-current-approvable")]
-    //[Authorize(Roles = "Worker,ProjectLeader")]
+    //[Authorize(Roles = $"{_workerRole},{_leaderRole}")]
     public async Task<IActionResult> MarkAsReadyToApproveAsync(string workerId)// remove workerId from parameters
     {
         //Worker id will be extracted from JWT
@@ -84,7 +90,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("approve/{id}")]
-    //[Authorize(Roles = "ProjectLeader")]
+    //[Authorize(Roles = _leaderRole)]
     public async Task<IActionResult> MarkAsApproved([FromRoute] string id, string projectLeaderId) // remove projectLeaderId from parameters
     {
         //ProjectLeader id will be extracted from JWT
@@ -94,7 +100,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("start-current")]
-    //[Authorize(Roles = "Worker")]
+    //[Authorize(Roles = _workerRole)]
     public async Task<IActionResult> StartWorkingOnTask(string workerId)// remove workerId from parameters
     {
         await _mediator.Send(new StartWorkingOnTaskCommand(workerId));
@@ -103,7 +109,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("finish-current")]
-    //[Authorize(Roles = "Worker")]
+    //[Authorize(Roles = _workerRole)]
     public async Task<IActionResult> FinishWorkingOnTask(string workerId)// remove workerId from parameters
     {
         //Worker id will be extracted from JWT
