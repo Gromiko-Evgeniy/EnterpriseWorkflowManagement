@@ -2,7 +2,7 @@
 
 public class NoCandidateWithSuchIdException : CustomException
 {
-    private const string _messageText = "Customer with such id not found";
+    private const string _messageText = "Candidate with such id not found";
 
     public NoCandidateWithSuchIdException() : base(_messageText) { }
 

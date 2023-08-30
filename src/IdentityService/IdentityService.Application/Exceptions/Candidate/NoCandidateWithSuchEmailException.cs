@@ -2,7 +2,7 @@
 
 public class NoCandidateWithSuchEmailException : CustomException
 {
-    private const string _messageText = "Customer with such e-mail not found";
+    private const string _messageText = "Candidate with such e-mail not found";
 
     public NoCandidateWithSuchEmailException() : base(_messageText) { }
 
