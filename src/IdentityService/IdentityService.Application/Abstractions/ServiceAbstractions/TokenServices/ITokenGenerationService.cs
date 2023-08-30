@@ -2,5 +2,5 @@
 
 public interface ITokenGenerationService
 {
-    public Task<string> GetTokenAsync(string role, string email);
+    public string GetToken(string role, string email);
 }

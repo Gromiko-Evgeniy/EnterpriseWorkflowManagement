@@ -1,4 +1,5 @@
-﻿using IdentityService.Application.DTOs;
+﻿using AutoMapper;
+using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.CustomerDTOs;
 using IdentityService.Application.Exceptions;
 using IdentityService.Application.Exceptions.Customer;
@@ -11,35 +12,35 @@ namespace IdentityService.Application.Services.EntityServices;
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IMapper _mapper;
 
-    public CustomerService(ICustomerRepository customerRepository)
+    public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
     {
         _customerRepository = customerRepository;
+        _mapper = mapper;
     }
 
     public async Task<LogInData> AddAsync(AddCustomerDTO customerDTO)
     {
-        var oldCustomer = await _customerRepository.GetByEmailAsync(customerDTO.Email);
+        var oldCustomer = await _customerRepository.
+            GetFirstAsync(customer => customer.Email == customerDTO.Email);
 
         if (oldCustomer is not null) throw new CustomerAlreadyExistsException();
 
         //send data to pm service?
 
-        var newCustomer = new Customer()
-        {
-            Email = customerDTO.Email,
-            Password = customerDTO.Password
-        };
+        var newCustomer = _mapper.Map<Customer>(customerDTO);
 
         _customerRepository.Add(newCustomer);
         await _customerRepository.SaveChangesAsync();
 
-        return new LogInData() { Email = newCustomer.Email, Password = newCustomer.Password };
+        return _mapper.Map<LogInData>(newCustomer);
     }
 
     public async Task<Customer> GetByEmailAndPasswordAsync(LogInData data)
     {
-        var customer = await _customerRepository.GetByEmailAsync(data.Email);
+        var customer = await _customerRepository.
+            GetFirstAsync(customer => customer.Email == data.Email);
 
         if (customer is null) throw new NoCustomerWithSuchEmailException();
         if (customer.Password != data.Password) throw new IncorrectPasswordException();

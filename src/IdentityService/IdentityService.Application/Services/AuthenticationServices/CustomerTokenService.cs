@@ -19,7 +19,7 @@ public class CustomerTokenService : ICustomerTokenService
     {
         var customer = await _customerService.GetByEmailAndPasswordAsync(data);
 
-        var token = await _tokenGenerationService.GetTokenAsync("Customer", customer.Email);
+        var token = _tokenGenerationService.GetToken("Customer", customer.Email);
 
         return token;
     }

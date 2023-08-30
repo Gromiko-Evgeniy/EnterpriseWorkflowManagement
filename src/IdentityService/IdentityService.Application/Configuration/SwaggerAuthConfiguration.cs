@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace IdentityService.Application.Authentication;
+namespace IdentityService.Application.Configuration;
 
 public static class SwaggerAuthConfiguration
 {
@@ -18,7 +18,7 @@ public static class SwaggerAuthConfiguration
 
         var securityRequirement = new OpenApiSecurityRequirement {
             {
-                new OpenApiSecurityScheme 
+                new OpenApiSecurityScheme
                 {
                     Reference = new OpenApiReference
                     {

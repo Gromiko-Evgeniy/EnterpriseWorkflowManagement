@@ -30,15 +30,6 @@ public class WorkerService : IWorkerService
         return workerDtos;
     }
 
-    private async Task<Worker> GetWorkerByEmailAndPasswordAsync(string email, string password)
-    {
-        var worker = await GetWorkerByEmailAsync(email);
-
-        if (worker.Password != password) throw new IncorrectPasswordException();
-
-        return worker;
-    }
-
     public async Task<GetWorkerDTO> GetByEmailAndPasswordAsync(LogInData data)
     {
         var worker = await GetWorkerByEmailAndPasswordAsync(data.Email, data.Password);
@@ -57,33 +48,21 @@ public class WorkerService : IWorkerService
         return workerDTO;
     }
 
-    private async Task<Worker> GetWorkerByEmailAsync(string email)
-    {
-        var worker = await _workerRepository.GetByEmailAsync(email);
-
-        if (worker is null) throw new NoWorkerWithSuchEmailException();
-
-        return worker;
-    }
-
     public async Task<LogInData> AddAsync(AddWorkerDTO workerDTO)
     {
-        var oldWorker = await _workerRepository.GetByEmailAsync(workerDTO.Email);
+        var oldWorker = await _workerRepository.
+            GetFirstAsync(worker => worker.Email == workerDTO.Email);
 
         if (oldWorker is not null) throw new WorkerAlreadyExistsException();
 
         //send data to services
 
-        var newWorker = new Worker()
-        {
-            Email = workerDTO.Email,
-            Password = workerDTO.Password
-        };
+        var newWorker = _mapper.Map<Worker>(workerDTO);
 
         _workerRepository.Add(newWorker);
         await _workerRepository.SaveChangesAsync();
 
-        return new LogInData() { Email = newWorker.Email, Password = newWorker.Password };
+        return _mapper.Map<LogInData>(newWorker);
     }
 
     public async Task UpdateNameAsync(string email, string name)
@@ -150,5 +129,24 @@ public class WorkerService : IWorkerService
         await _workerRepository.SaveChangesAsync();
 
         //overwrite data in other databases
+    }
+
+    private async Task<Worker> GetWorkerByEmailAsync(string email)
+    {
+        var worker = await _workerRepository.
+            GetFirstAsync(worker => worker.Email == email);
+
+        if (worker is null) throw new NoWorkerWithSuchEmailException();
+
+        return worker;
+    }
+
+    private async Task<Worker> GetWorkerByEmailAndPasswordAsync(string email, string password)
+    {
+        var worker = await GetWorkerByEmailAsync(email);
+
+        if (worker.Password != password) throw new IncorrectPasswordException();
+
+        return worker;
     }
 }

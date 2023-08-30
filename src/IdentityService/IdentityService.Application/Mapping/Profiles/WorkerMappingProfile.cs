@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.WorkerDTOs;
 using IdentityService.Domain.Entities;
 
@@ -9,5 +10,6 @@ public class WorkerMappingProfile : Profile
     {
         CreateMap<AddWorkerDTO, Worker>();
         CreateMap<Worker, GetWorkerDTO>();
+        CreateMap<Worker, LogInData>();
     }
 }

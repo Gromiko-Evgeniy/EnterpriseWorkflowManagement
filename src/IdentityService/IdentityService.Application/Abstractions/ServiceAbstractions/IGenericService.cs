@@ -12,4 +12,3 @@ public interface IGenericService<TEntity, TDTO> where TEntity : class
 
     public Task UpdatePasswordAsync(string email, string prevPassword, string newPassword);
 }
-

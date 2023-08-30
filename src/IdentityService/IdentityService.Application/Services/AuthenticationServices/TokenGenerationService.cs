@@ -1,5 +1,5 @@
 ﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
-using IdentityService.Application.RepositoryAbstractions;
+using IdentityService.Application.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -12,13 +12,13 @@ public class TokenGenerationService : ITokenGenerationService
 {
     private readonly AuthOptions _authOptions;
 
-    public TokenGenerationService(IConfiguration configuration, ICandidateRepository candidateRepository,
-        ICustomerRepository customerRepository, IWorkerRepository workerRepository)
+    public TokenGenerationService(IConfiguration configuration,
+        IOptions<AuthOptions> options)
     {
-        _authOptions = configuration.GetSection("Auth").Get<AuthOptions>(); ;
+        _authOptions = options.Value;
     }
 
-    public async Task<string> GetTokenAsync(string role, string email)
+    public string GetToken(string role, string email)
     {
         var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Email, email),

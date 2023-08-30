@@ -2,7 +2,7 @@ using ProjectManagementService.Application.Mapping;
 using IdentityService.Application.Services.Extensions;
 using IdentityService.Infrastructure.Data.Extensions;
 using ProjectManagementService.Application.Validation;
-using IdentityService.Application.Authentication;
+using IdentityService.Application.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +18,7 @@ builder.Services.AddServices();
 
 builder.Services.AddControllers();
 
+builder.Services.AddAuthOptions(builder.Configuration);
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();

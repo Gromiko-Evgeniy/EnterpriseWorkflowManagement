@@ -19,7 +19,7 @@ public class CandidateTokenService : ICandidateTokenService
     {
         var candidate = await _candidateService.GetByEmailAndPasswordAsync(data);
 
-        var token = await _tokenGenerationService.GetTokenAsync("Candidate", candidate.Email);
+        var token = _tokenGenerationService.GetToken("Candidate", candidate.Email);
 
         return token;
     }

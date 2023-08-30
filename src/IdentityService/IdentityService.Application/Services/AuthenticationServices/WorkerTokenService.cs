@@ -19,7 +19,7 @@ public class WorkerTokenService : IWorkerTokenService
     {
         var worker = await _workerService.GetByEmailAndPasswordAsync(data);
 
-        var token = await _tokenGenerationService.GetTokenAsync(worker.Position.ToString(), worker.Email);
+        var token = _tokenGenerationService.GetToken(worker.Position.ToString(), worker.Email);
 
         return token;
     }

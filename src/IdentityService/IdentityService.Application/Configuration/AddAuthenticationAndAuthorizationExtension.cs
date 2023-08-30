@@ -1,13 +1,13 @@
-﻿using IdentityService.Application.Services.AuthenticationServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityService.Application.Authentication;
+namespace IdentityService.Application.Configuration;
 
 public static class AddAuthenticationAndAuthorizationExtension
 {
+
     public static IServiceCollection AddAuthenticationAndAuthorization(
              this IServiceCollection services, IConfiguration configuration)
     {
@@ -30,7 +30,6 @@ public static class AddAuthenticationAndAuthorizationExtension
                     ValidateIssuerSigningKey = true
                 };
             });
-
 
         return services;
     }

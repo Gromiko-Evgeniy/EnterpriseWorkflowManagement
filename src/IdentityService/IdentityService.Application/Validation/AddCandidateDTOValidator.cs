@@ -13,4 +13,3 @@ public class AddCandidateDTOValidator : AbstractValidator<AddCandidateDTO>
         RuleFor(x => x.CV).NotEmpty().MaximumLength(500);
     }
 }
-

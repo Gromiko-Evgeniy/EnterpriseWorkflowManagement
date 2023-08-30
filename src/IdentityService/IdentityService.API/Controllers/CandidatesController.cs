@@ -12,6 +12,7 @@ public class CandidatesController : ControllerBase
 {
     private readonly ICandidateService _candidateService;
     private readonly ICandidateTokenService _tokenService;
+
     public CandidatesController(ICandidateService candidateService, ICandidateTokenService tokenService)
     {
         _candidateService = candidateService;
@@ -19,14 +20,14 @@ public class CandidatesController : ControllerBase
     }
 
     [HttpPost("log-in")]
-    public async Task<IActionResult> LogIn(LogInData data)
+    public async Task<IActionResult> LogIn([FromBody] LogInData data)
     {
         var token = await _tokenService.GetTokenAsync(data);
 
         return Ok(token);
     }
 
-    [HttpPost]
+    [HttpPost("sign-in")]
     public async Task<IActionResult> Registration(AddCandidateDTO candidateDTO)
     {
         var data = await _candidateService.AddAsync(candidateDTO);

@@ -1,6 +1,7 @@
 ﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
 using IdentityService.Application.DTOs;
 using IdentityService.Application.ServiceAbstractions;
+using IdentityService.Domain.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,8 @@ public class WorkersController : ControllerBase
 {
     private readonly IWorkerService _workerService;
     private readonly IWorkerTokenService _tokenService;
+    private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
+    private const string _workerRole = nameof(ApplicationRole.Worker);
 
     public WorkersController(IWorkerService workerService, IWorkerTokenService tokenService)
     {
@@ -20,7 +23,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "DepartmentHead")]
+    [Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> GetAllAsync()
     {
         var workerDTOs = await _workerService.GetAllAsync();
@@ -29,7 +32,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpGet("{email:regex(^\\S+@\\S+\\.\\S+$)}")]
-    [Authorize(Roles = "DepartmentHead")]
+    [Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
     {
         var workerDTO = await _workerService.GetByEmailAsync(email);
@@ -57,8 +60,8 @@ public class WorkersController : ControllerBase
     }
 
     [HttpPut("new-name")]
-    [Authorize(Roles = "Worker")]
-    public async Task<IActionResult> UpadateNameAsync(string name, string email) // remove email
+    [Authorize(Roles = _workerRole)]
+    public async Task<IActionResult> UpdateNameAsync([FromBody] string name, string email) // remove email
     {
         //email will be extracted from JWT
 
@@ -68,7 +71,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpPut("promote/{email}")]
-    [Authorize(Roles = "DepartmentHead")]
+    [Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> PromoteAsync([FromRoute] string email)
     {
         await _workerService.PromoteAsync(email);
@@ -77,7 +80,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpPut("demote/{email}")]
-    [Authorize(Roles = "DepartmentHead")]
+    [Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> DemoteAsync([FromRoute] string email)
     {
         await _workerService.DemoteAsync(email);
@@ -86,7 +89,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpDelete("dismiss/{email}")]
-    [Authorize(Roles = "DepartmentHead")]
+    [Authorize(Roles = _depHeadRole)]
     public async Task<IActionResult> DismissWorkerAsync([FromRoute] string email)
     {
         await _workerService.DismissAsync(email);
@@ -95,7 +98,7 @@ public class WorkersController : ControllerBase
     }
 
     [HttpDelete("quit")]
-    [Authorize(Roles = "Worker")]
+    [Authorize(Roles = _workerRole)]
     public async Task<IActionResult> QuitAsync(string password, string email) // remove email
     {
         //id will be extracted from JWT

@@ -12,8 +12,6 @@ public interface IGenericRepository<T> where T : class
 
     public Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
 
-    public Task<T?> GetByEmailAsync(string email);
-
     public T Add(T item);
 
     public void Remove(T item);

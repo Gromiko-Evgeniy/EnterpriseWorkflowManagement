@@ -6,8 +6,8 @@ namespace IdentityService.Infrastructure.Data.Repositories;
 
 public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    DbContext _context;
-    DbSet<T> _dbSet;
+    protected readonly DbContext _context;
+    protected readonly DbSet<T> _dbSet;
 
     public GenericRepository(DbContext context)
     {
@@ -55,6 +55,4 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     {
         await _context.SaveChangesAsync();
     }
-
-    public abstract Task<T?> GetByEmailAsync(string email);
 }
