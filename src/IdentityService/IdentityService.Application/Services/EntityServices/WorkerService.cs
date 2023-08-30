@@ -41,7 +41,7 @@ public class WorkerService : IWorkerService
 
     public async Task<GetWorkerDTO> GetByEmailAsync(string email)
     {
-        var worker = await GetByEmailAsync(email);
+        var worker = await GetWorkerByEmailAsync(email);
 
         var workerDTO = _mapper.Map<GetWorkerDTO>(worker);
 
