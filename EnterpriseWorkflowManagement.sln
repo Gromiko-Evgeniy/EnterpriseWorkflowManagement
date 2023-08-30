@@ -9,21 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HiringService", "HiringServ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{84E1F0B4-AE6F-4479-B703-1FDF84E427AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Domain", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Domain\EnterpriseWorkflowManagement.IdentityService.Domain.csproj", "{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Domain", "src\IdentityService\IdentityService.Domain\IdentityService.Domain.csproj", "{276A1C97-9BBE-410B-AEA2-14CB303F5BA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Application", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Application\EnterpriseWorkflowManagement.IdentityService.Application.csproj", "{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Application", "src\IdentityService\IdentityService.Application\IdentityService.Application.csproj", "{8EF5EA4D-BE0D-4FFB-BEFB-0C9E5FD7D9D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.Infrastructure", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.Infrastructure\EnterpriseWorkflowManagement.IdentityService.Infrastructure.csproj", "{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.Infrastructure", "src\IdentityService\IdentityService.Infrastructure\IdentityService.Infrastructure.csproj", "{B9BB3F23-E800-4F4D-88E8-4CA0BE19CBD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.IdentityService.API", "src\IdentityService\EnterpriseWorkflowManagement.IdentityService.API\EnterpriseWorkflowManagement.IdentityService.API.csproj", "{9443F5FC-1918-4237-96BA-DAFB7BB617E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.API", "src\IdentityService\IdentityService.API\IdentityService.API.csproj", "{9443F5FC-1918-4237-96BA-DAFB7BB617E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Domain", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Domain\EnterpriseWorkflowManagement.HiringService.Domain.csproj", "{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiringService.Domain", "src\HiringService\HiringService.Domain\HiringService.Domain.csproj", "{2D27A79B-63BC-4AC7-9381-ED7EBE46F9C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Application", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Application\EnterpriseWorkflowManagement.HiringService.Application.csproj", "{6139185F-B4E6-424C-B00D-A4269443D67D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiringService.Application", "src\HiringService\HiringService.Application\HiringService.Application.csproj", "{6139185F-B4E6-424C-B00D-A4269443D67D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.Infrastructure", "src\HiringService\EnterpriseWorkflowManagement.HiringService.Infrastructure\EnterpriseWorkflowManagement.HiringService.Infrastructure.csproj", "{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiringService.Infrastructure", "src\HiringService\HiringService.Infrastructure\HiringService.Infrastructure.csproj", "{E6E28A43-1A0A-457A-B53B-FA46AA0A1A56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseWorkflowManagement.HiringService.API", "src\HiringService\EnterpriseWorkflowManagement.HiringService.API\EnterpriseWorkflowManagement.HiringService.API.csproj", "{B93F4477-3D43-4CF5-9926-7E8155691169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiringService.API", "src\HiringService\HiringService.API\HiringService.API.csproj", "{B93F4477-3D43-4CF5-9926-7E8155691169}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectManagementService", "ProjectManagementService", "{45342DF7-0111-413B-9753-1823A3479114}"
 EndProject
@@ -85,10 +85,10 @@ Global
 		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B4B5061-F246-483E-8C82-B87970EEFC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3402A721-D117-4062-B677-D9DA0AA0A875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3402A721-D117-4062-B677-D9DA0AA0A875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3402A721-D117-4062-B677-D9DA0AA0A875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3402A721-D117-4062-B677-D9DA0AA0A875}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,7 +108,7 @@ Global
 		{A72B803D-8C1A-4A2B-B73A-A0B715B4EA26} = {45342DF7-0111-413B-9753-1823A3479114}
 		{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9} = {45342DF7-0111-413B-9753-1823A3479114}
 		{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660} = {45342DF7-0111-413B-9753-1823A3479114}
-		{2B4B5061-F246-483E-8C82-B87970EEFC0E} = {45342DF7-0111-413B-9753-1823A3479114}
+		{3402A721-D117-4062-B677-D9DA0AA0A875} = {45342DF7-0111-413B-9753-1823A3479114}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {302413E0-FB41-45BA-A889-349BF95B0ACB}
