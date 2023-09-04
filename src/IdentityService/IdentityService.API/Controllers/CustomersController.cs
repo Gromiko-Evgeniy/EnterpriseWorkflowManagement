@@ -1,7 +1,7 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
-using IdentityService.Application.DTOs;
+﻿using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.CustomerDTOs;
 using IdentityService.Application.ServiceAbstractions;
+using IdentityService.Application.TokenAbstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.API.Controllers;
@@ -13,7 +13,8 @@ public class CustomersController : ControllerBase
     private readonly ICustomerService _customerService;
     private readonly ICustomerTokenService _tokenService;
 
-    public CustomersController(ICustomerService customerService, ICustomerTokenService tokenService)
+    public CustomersController(ICustomerService customerService,
+        ICustomerTokenService tokenService)
     {
         _customerService = customerService;
         _tokenService = tokenService;

@@ -3,5 +3,6 @@ public enum ProjectStatus
 {
     WaitingToStart = 1,
     InProgress,
-    Done
+    Done,
+    Canceled
 }

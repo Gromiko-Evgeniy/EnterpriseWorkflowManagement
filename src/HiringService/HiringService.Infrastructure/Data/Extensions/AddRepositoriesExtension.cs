@@ -1,4 +1,4 @@
-﻿using HiringService.Application.Abstractions;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Infrastructure.Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -18,6 +18,10 @@ internal class StageNameEntityConfiguration : IEntityTypeConfiguration<HiringSta
             .HasMaxLength(60)
             .IsRequired();
 
+        builder.Property(p => p.Index)
+            .HasColumnName("Index")
+            .IsRequired();
+
         builder.HasMany(m => m.HiringStages)
             .WithOne(o => o.HiringStageName)
             .HasForeignKey(fk => fk.HiringStageNameId)

@@ -1,5 +1,4 @@
 ﻿using HiringService.Domain.Entities;
-using HiringService.Infrastructure.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

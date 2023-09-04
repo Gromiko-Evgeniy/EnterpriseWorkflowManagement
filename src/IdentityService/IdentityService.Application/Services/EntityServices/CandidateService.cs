@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.CandidateDTO;
+using IdentityService.Application.DTOs.CandidateDTOs;
 using IdentityService.Application.Exceptions;
 using IdentityService.Application.Exceptions.Candidate;
+using IdentityService.Application.KafkaAbstractions;
 using IdentityService.Application.RepositoryAbstractions;
 using IdentityService.Application.ServiceAbstractions;
+using IdentityService.Application.Services.Kafka;
 using IdentityService.Domain.Entities;
 
 namespace IdentityService.Application.Services.EntityServices;
@@ -12,11 +15,14 @@ namespace IdentityService.Application.Services.EntityServices;
 public class CandidateService : ICandidateService
 {
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IKafkaProducer _kafkaProducer;
     private readonly IMapper _mapper;
 
-    public CandidateService(ICandidateRepository candidateRepository, IMapper mapper)
+    public CandidateService(ICandidateRepository candidateRepository,
+        IMapper mapper, IKafkaProducer kafkaProducer)
     {
         _candidateRepository = candidateRepository;
+        _kafkaProducer = kafkaProducer;
         _mapper = mapper;
     }
 
@@ -27,12 +33,12 @@ public class CandidateService : ICandidateService
 
         if (oldCandidate is not null) throw new NoCandidateWithSuchEmailException();
 
-        //send data to hiring service?
-
         var newCandidate = _mapper.Map<Candidate>(candidateDTO);
 
         _candidateRepository.Add(newCandidate);
         await _candidateRepository.SaveChangesAsync();
+
+        _kafkaProducer.SendAddCandidateMessage(_mapper.Map<CandidateMessageDTO>(candidateDTO));
 
         return _mapper.Map<LogInData>(newCandidate);
     }

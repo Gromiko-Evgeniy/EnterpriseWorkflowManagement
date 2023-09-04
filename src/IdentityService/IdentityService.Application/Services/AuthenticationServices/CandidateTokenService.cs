@@ -1,6 +1,6 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
-using IdentityService.Application.DTOs;
+﻿using IdentityService.Application.DTOs;
 using IdentityService.Application.ServiceAbstractions;
+using IdentityService.Application.TokenAbstractions;
 
 namespace IdentityService.Application.Services.AuthenticationServices;
 

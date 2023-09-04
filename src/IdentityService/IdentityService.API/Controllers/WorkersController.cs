@@ -1,4 +1,4 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
+﻿using IdentityService.Application.TokenAbstractions;
 using IdentityService.Application.DTOs;
 using IdentityService.Application.ServiceAbstractions;
 using IdentityService.Domain.Enumerations;
@@ -13,13 +13,16 @@ public class WorkersController : ControllerBase
 {
     private readonly IWorkerService _workerService;
     private readonly IWorkerTokenService _tokenService;
+    private readonly IJWTExtractorService _JWTExtractorService;
     private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
     private const string _workerRole = nameof(ApplicationRole.Worker);
 
-    public WorkersController(IWorkerService workerService, IWorkerTokenService tokenService)
+    public WorkersController(IWorkerService workerService,
+        IWorkerTokenService tokenService, IJWTExtractorService JWTExtractorService)
     {
         _workerService = workerService;
         _tokenService = tokenService;
+        _JWTExtractorService = JWTExtractorService;
     }
 
     [HttpGet]
@@ -42,13 +45,13 @@ public class WorkersController : ControllerBase
 
     [HttpGet("current")]
     [Authorize]
-    public async Task<IActionResult> GetCurrentAsync(string email) // remove email
+    public async Task<IActionResult> GetCurrentAsync()
     {
-        //email will be extracted from JWT
+        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
 
-        var workerDTOs = await _workerService.GetAllAsync();
+        var workerDTO = await _workerService.GetByEmailAsync(email);
 
-        return Ok(workerDTOs);
+        return Ok(workerDTO);
     }
 
     [HttpPost("log-in")]
@@ -61,9 +64,9 @@ public class WorkersController : ControllerBase
 
     [HttpPut("new-name")]
     [Authorize(Roles = _workerRole)]
-    public async Task<IActionResult> UpdateNameAsync([FromBody] string name, string email) // remove email
+    public async Task<IActionResult> UpdateNameAsync([FromBody] string name)
     {
-        //email will be extracted from JWT
+        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
 
         await _workerService.UpdateNameAsync(email, name);
 
@@ -99,13 +102,14 @@ public class WorkersController : ControllerBase
 
     [HttpDelete("quit")]
     [Authorize(Roles = _workerRole)]
-    public async Task<IActionResult> QuitAsync(string password, string email) // remove email
+    public async Task<IActionResult> QuitAsync(string password)
     {
-        //id will be extracted from JWT
-        //передать таску другому grpc
-
+        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        
         await _workerService.QuitAsync(email, password);
 
         return NoContent();
     }
 }
+
+//передать таску другому grpc

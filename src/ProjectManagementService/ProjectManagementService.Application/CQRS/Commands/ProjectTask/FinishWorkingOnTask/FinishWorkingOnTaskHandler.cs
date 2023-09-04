@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Worker;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;

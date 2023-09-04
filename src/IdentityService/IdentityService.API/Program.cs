@@ -3,6 +3,7 @@ using IdentityService.Application.Services.Extensions;
 using IdentityService.Infrastructure.Data.Extensions;
 using ProjectManagementService.Application.Validation;
 using IdentityService.Application.Configuration;
+using IdentityService.Application.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddValidation();
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
+builder.Services.AddKafkaProducer();
 
 builder.Services.AddControllers();
 

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using HiringService.Application.Abstractions;
-using HiringService.Application.DTOs.HiringStageDTOs;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Exceptions.Candidate;
 using HiringService.Application.Exceptions.HiringStageName;
+using HiringService.Application.Exceptions.Worker;
 using HiringService.Domain.Entities;
 using MediatR;
 
@@ -41,8 +41,7 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
 
         var stage = _mapper.Map<HiringStage>(stageDTO);
 
-        stage = _stageRepository.AddAsync(stage);
-
+        stage = _stageRepository.Add(stage);
         await _stageRepository.SaveChangesAsync();
 
         return stage.Id;

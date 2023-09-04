@@ -1,7 +1,7 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
-using IdentityService.Application.ServiceAbstractions;
+﻿using IdentityService.Application.ServiceAbstractions;
 using IdentityService.Application.Services.AuthenticationServices;
 using IdentityService.Application.Services.EntityServices;
+using IdentityService.Application.TokenAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityService.Application.Services.Extensions;
@@ -19,6 +19,7 @@ public static class AddServicesExtension
         services.AddScoped<ICandidateTokenService, CandidateTokenService>();
         services.AddScoped<ICustomerTokenService, CustomerTokenService>();
         services.AddScoped<IWorkerTokenService, WorkerTokenService>();
+        services.AddScoped<IJWTExtractorService, JWTExtractorService>();
 
         return services;
     }

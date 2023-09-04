@@ -1,7 +1,7 @@
-﻿using ProjectManagementService.Application.Abstractions;
-using MediatR;
+﻿using MediatR;
 using AutoMapper;
 using ProjectManagementService.Application.DTOs.ProjectDTOs;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 

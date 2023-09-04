@@ -1,4 +1,4 @@
-﻿using HiringService.Application.Abstractions;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Domain.Entities;
 
 namespace HiringService.Infrastructure.Data.Repositories;

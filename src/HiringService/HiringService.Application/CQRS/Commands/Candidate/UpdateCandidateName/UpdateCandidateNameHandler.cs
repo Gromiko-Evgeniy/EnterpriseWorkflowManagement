@@ -1,4 +1,4 @@
-﻿using HiringService.Application.Abstractions;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Exceptions.Candidate;
 using MediatR;
 
@@ -21,8 +21,7 @@ public class UpdateCandidateNameHandler : IRequestHandler<UpdateCandidateNameCom
 
         candidate.Name = request.Name;
 
-        _candidateRepository.UpdateAsync(candidate);
-
+        _candidateRepository.Update(candidate);
         await _candidateRepository.SaveChangesAsync();
 
         return Unit.Value; //fake empty value

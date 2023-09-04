@@ -1,7 +1,7 @@
-﻿using HiringService.Application.Abstractions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Configuration;
 using ProjectManagementService.Domain.Entities;
 using System.Linq.Expressions;
@@ -32,7 +32,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 
     public async Task<List<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
     {
-        return (await _collection.FindAsync(predicate)).ToList();
+        try
+        {
+            return (await _collection.FindAsync(predicate)).ToList();
+        }
+        catch (Exception ex)
+        {
+            return new List<T>();
+        }
     }
 
     public async Task<T?> GetByIdAsync(string id)
@@ -44,7 +51,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 
     public async Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _collection.Find(predicate).FirstAsync();
+        try
+        {
+            return await _collection.Find(predicate).FirstAsync();
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<string> AddAsync(T item)

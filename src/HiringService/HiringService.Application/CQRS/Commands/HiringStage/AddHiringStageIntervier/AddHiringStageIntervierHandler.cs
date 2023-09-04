@@ -1,6 +1,6 @@
-﻿using HiringService.Application.Abstractions;
-using HiringService.Application.Exceptions.Candidate;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Exceptions.HiringStageName;
+using HiringService.Application.Exceptions.Worker;
 using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageCommands;
@@ -26,8 +26,7 @@ public class AddHiringStageIntervierHandler : IRequestHandler<AddHiringStageInte
 
         stage.Intervier = worker;
 
-        _stageRepository.UpdateAsync(stage);
-
+        _stageRepository.Update(stage);
         await _stageRepository.SaveChangesAsync();
 
         return Unit.Value;

@@ -1,38 +1,82 @@
-﻿using HiringService.Application.Abstractions;
-using HiringService.Application.Exceptions.Candidate;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+using HiringService.Application.Abstractions.ServiceAbstractions;
 using HiringService.Application.Exceptions.HiringStage;
 using HiringService.Application.Exceptions.HiringStageName;
+using HiringService.Application.Exceptions.Worker;
+using HiringService.Domain.Entities;
 using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageCommands;
 
-public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsPassedSuccessfullyCommand>
+public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsPassedSuccessfullyCommand, string>
 {
     private readonly IHiringStageRepository _stageRepository;
     private readonly IWorkerRepository _workerRepository;
+    private readonly IHiringStageNameRepository _stageNameRepository;
+    private readonly ICandidateRepository _candidateRepository;
+    private readonly IGRPCService _gRPCService;
 
-    public MarkStageAsPassedSuccessfullyHandler(IHiringStageRepository stageRepository, IWorkerRepository workerRepository)
+    public MarkStageAsPassedSuccessfullyHandler(IHiringStageRepository stageRepository,
+        IWorkerRepository workerRepository, IHiringStageNameRepository stageNameRepository,
+        ICandidateRepository candidateRepository, IGRPCService gRPCService)
     {
         _stageRepository = stageRepository;
         _workerRepository = workerRepository;
+        _stageNameRepository = stageNameRepository;
+        _candidateRepository = candidateRepository;
+        _gRPCService = gRPCService;
     }
 
-    public async Task<Unit> Handle(MarkStageAsPassedSuccessfullyCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(MarkStageAsPassedSuccessfullyCommand request, CancellationToken cancellationToken)
     {
-        var worker = await _workerRepository.GetByIdAsync(request.IntervierId);
+        string? newJWT = null;
+
+        var intervier = await _workerRepository.GetByIdAsync(request.IntervierId);
         var stage = await _stageRepository.GetByIdAsync(request.StageId);
 
-        if (worker is null) throw new NoWorkerWithSuchIdException();
+        if (intervier is null) throw new NoWorkerWithSuchIdException();
         if (stage is null) throw new NoStageNameWithSuchIdException();
 
         if (stage.IntervierId != request.IntervierId) throw new AccessToHiringStageDeniedException();
 
+        var stageNames = await _stageNameRepository.GetAllAsync();
+
+        var currentStageName = stageNames.FirstOrDefault(n => n.Id == stage.HiringStageNameId);
+
+        if (currentStageName is null) throw new NoHiringStageWithSuchIdException("Hiring stage has incorrect HiringStageNameId");
+
+        if (stageNames.Any(n => n.Index > currentStageName.Index))
+        {
+            var nextStageName = stageNames.FirstOrDefault(n => n.Index == currentStageName.Index + 1);
+
+            var newStage = new HiringStage()
+            {
+                CandidateId = stage.CandidateId,
+                IntervierId = intervier.Id,
+                HiringStageNameId = nextStageName.Id
+            };
+
+            _stageRepository.Add(newStage);
+            await _stageRepository.SaveChangesAsync();
+        }
+        else
+        {
+            var candidate = await _candidateRepository.GetByIdAsync(stage.CandidateId);
+
+            if (candidate is not null)
+            {
+                newJWT = await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
+                _candidateRepository.Remove(candidate); // locally
+
+                await _candidateRepository.SaveChangesAsync();
+            }
+        }
+
         stage.PassedSuccessfully = true;
 
-        _stageRepository.UpdateAsync(stage);
-
+        _stageRepository.Update(stage);
         await _stageRepository.SaveChangesAsync();
 
-        return Unit.Value;
+        return newJWT;
     }
 }
