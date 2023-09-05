@@ -1,0 +1,90 @@
+version: "3.9"
+networks:
+  appnet:
+    driver: bridge
+services:
+  hiring-service: 
+    container_name: hiring-service
+    build:
+      context: .
+      dockerfile: ./src/HiringService/HiringService.API/Dockerfile
+    ports:
+      - "8000:80"
+      - "8001:443"
+    networks:
+      - appnet
+    depends_on:
+      - postgres_db
+  postgres_db:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 11412020
+      POSTGRES_DB: hiringdb
+    ports:
+      - "5432:5432"
+    networks:
+      - appnet
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  identity-service:
+    container_name: identity-service
+    build:
+      context: .
+      dockerfile: ./src/IdentityService/IdentityService.API/Dockerfile
+    ports:
+      - "3000:80"
+      - "3001:443"
+    networks:
+      - appnet
+    depends_on:
+      - mssql
+  mssql:
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=11412020
+    volumes:
+      - ./mssql-data:/var/opt/mssql
+  identity-grpc:
+    container_name: identity-grpc
+    build:
+      context: .
+      dockerfile: ./src/IdentityService/IdentityService.GRPC/Dockerfile
+    ports:
+      - "7000:80"
+      - "7001:443"
+    networks:
+      - appnet
+    depends_on:
+      - mssql
+  pm-service:
+    container_name: identity-service
+    build:
+      context: .
+      dockerfile: ./src/ProjectManagementService/ProjectManagementService.API/Dockerfile
+    ports:
+      - "6000:80"
+      - "6001:443"
+    networks:
+      - appnet
+    depends_on:
+      - mongo_db 
+  mongo_db:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+volumes:
+  postgres-data:
+  mssql-data:
+  mongo-data:
