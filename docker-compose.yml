@@ -9,12 +9,15 @@ services:
       context: .
       dockerfile: ./src/HiringService/HiringService.API/Dockerfile
     ports:
-      - "8000:80"
-      - "8001:443"
+      - "5000:5000"
+      - "5001:5001"
     networks:
       - appnet
     depends_on:
       - postgres_db
+    environment:
+      - ASPNETCORE_URLS=https://+:5000
+      - ASPNETCORE_URLS=http://+:5001
   postgres_db:
     container_name: postgres
     image: postgres:latest
@@ -34,12 +37,15 @@ services:
       context: .
       dockerfile: ./src/IdentityService/IdentityService.API/Dockerfile
     ports:
-      - "3000:80"
-      - "3001:443"
+      - "3000:3000"
+      - "3001:3001"
     networks:
       - appnet
     depends_on:
       - mssql
+    environment:
+      - ASPNETCORE_URLS=https://+:3000
+      - ASPNETCORE_URLS=http://+:3001
   mssql:
     image: mcr.microsoft.com/mssql/server
     restart: always
@@ -68,12 +74,15 @@ services:
       context: .
       dockerfile: ./src/ProjectManagementService/ProjectManagementService.API/Dockerfile
     ports:
-      - "6000:80"
-      - "6001:443"
+      - "6000:6000"
+      - "6001:6001"
     networks:
       - appnet
     depends_on:
       - mongo_db 
+    environment:
+      - ASPNETCORE_URLS=https://+:6000
+      - ASPNETCORE_URLS=http://+:6001
   mongo_db:
     container_name: mongo
     image: mongo
@@ -84,6 +93,21 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=secret
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+       - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 volumes:
   postgres-data:
   mssql-data:
