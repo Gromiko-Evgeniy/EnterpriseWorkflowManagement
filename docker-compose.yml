@@ -14,10 +14,12 @@ services:
     networks:
       - appnet
     depends_on:
+      - kafka
       - postgres_db
     environment:
       - ASPNETCORE_URLS=https://+:5000
       - ASPNETCORE_URLS=http://+:5001
+    command: sh -c "dockerize -wait tcp://kafka:9092 -timeout 20s"
   postgres_db:
     container_name: postgres
     image: postgres:latest
@@ -43,10 +45,12 @@ services:
       - appnet
     depends_on:
       - mssql
+      - kafka
     environment:
       - ASPNETCORE_URLS=https://+:3000
       - ASPNETCORE_URLS=http://+:3001
   mssql:
+    container_name: mssql
     image: mcr.microsoft.com/mssql/server
     restart: always
     ports:
@@ -68,8 +72,9 @@ services:
       - appnet
     depends_on:
       - mssql
+      - kafka
   pm-service:
-    container_name: identity-service
+    container_name: pm-service
     build:
       context: .
       dockerfile: ./src/ProjectManagementService/ProjectManagementService.API/Dockerfile
@@ -80,6 +85,7 @@ services:
       - appnet
     depends_on:
       - mongo_db 
+      - kafka
     environment:
       - ASPNETCORE_URLS=https://+:6000
       - ASPNETCORE_URLS=http://+:6001
@@ -98,16 +104,21 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - appnet
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
-       - "9092:9092"
+      - "9092:9092"
+    networks:
+      - appnet
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "add-candidates:1:1,add-workers:1:1,remove-workers:1:1,add-customers:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 volumes:
   postgres-data:
   mssql-data:
