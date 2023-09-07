@@ -61,9 +61,7 @@ namespace HiringService.API.Controllers
         [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> RemoveAsync([FromRoute] int id)
         {
-            var newJWT = await _mediator.Send(new RemoveStageNameCommand(id));
-
-            if (newJWT is not null) return Ok(newJWT);
+            await _mediator.Send(new RemoveStageNameCommand(id));
 
             return NoContent();
         }

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
-public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, string>
+public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 {
     private readonly IHiringStageNameRepository _nameRepository;
     private readonly IHiringStageRepository _stageRepository;
@@ -22,10 +22,8 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<string?> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
-        string? newJWT = null;
-
         var stageName = await _nameRepository.GetByIdAsync(request.Id);
 
         if (stageName is null) throw new NoStageNameWithSuchIdException();
@@ -41,7 +39,7 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
 
                 if (candidate is not null)
                 {
-                    newJWT = await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
+                    await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
                     _candidateRepository.Remove(candidate); // locally
 
                     await _candidateRepository.SaveChangesAsync();
@@ -77,6 +75,6 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
             await _nameRepository.SaveChangesAsync();
         }
 
-        return newJWT;
+        return Unit.Value;
     }
 }
