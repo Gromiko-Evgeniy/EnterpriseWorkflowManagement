@@ -1,32 +1,49 @@
-﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.StageNameDTOs;
 using HiringService.Application.Exceptions.HiringStageName;
+using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
 public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, string>
 {
     private readonly IHiringStageNameRepository _nameRepository;
+    private readonly ICandidateRepository _candidateRepository;
     private readonly IHiringStageRepository _stageRepository;
     private readonly IGRPCService _gRPCService;
-    private readonly ICandidateRepository _candidateRepository;
+    private readonly IDistributedCache _cache;
+    private readonly IMapper _mapper;
 
     public RemoveStageNameHandler(IHiringStageNameRepository nameRepository,
         IHiringStageRepository stageRepository, IGRPCService gRPCService,
-        ICandidateRepository candidateRepository)
+        ICandidateRepository candidateRepository, IDistributedCache cache,
+        IMapper mapper)
     {
-        _nameRepository = nameRepository;
-        _stageRepository = stageRepository;
-        _gRPCService = gRPCService;
         _candidateRepository = candidateRepository;
+        _stageRepository = stageRepository;
+        _nameRepository = nameRepository;
+        _gRPCService = gRPCService;
+        _mapper = mapper;
+        _cache = cache;
     }
 
     public async Task<string?> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
         string? newJWT = null;
 
-        var stageName = await _nameRepository.GetByIdAsync(request.Id);
+        var idKey = "StageName_" + request.Id;
+        var stageNameDTO = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
+        var stageName = _mapper.Map<HiringStageName>(stageNameDTO);
+
+        if (stageName is null) 
+        {
+            stageName = await _nameRepository.GetByIdAsync(request.Id);
+        }
 
         if (stageName is null) throw new NoStageNameWithSuchIdException();
 
@@ -66,9 +83,11 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
         _nameRepository.Remove(stageName);
         await _nameRepository.SaveChangesAsync();
 
+        await _cache.RemoveAsync(idKey);
+
         if (stageNamesToUpdate.Count > 0)
         {
-            // shifting the indices of all subsequent elements in the list
+            // shifting the indexes of all subsequent elements in the list
             foreach (var sName in stageNamesToUpdate)
             {
                 sName.Index -= 1;

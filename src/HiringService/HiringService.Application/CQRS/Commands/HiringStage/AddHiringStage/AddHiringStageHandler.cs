@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using HiringService.Application.Abstractions.RepositoryAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Application.Exceptions.Candidate;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Application.Exceptions.Worker;
 using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.HiringStageCommands;
 
@@ -14,17 +17,20 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
     private readonly IHiringStageNameRepository _nameRepository;
     private readonly ICandidateRepository _candidateRepository;
     private readonly IWorkerRepository _workerRepository;
+    private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
     public AddHiringStageHandler(IHiringStageRepository stageRepository,
         IWorkerRepository workerRepository, IMapper mapper,
-        ICandidateRepository candidateRepository, IHiringStageNameRepository nameRepository)
+        ICandidateRepository candidateRepository, IDistributedCache cache,
+        IHiringStageNameRepository nameRepository)
     {
         _candidateRepository = candidateRepository;
         _stageRepository = stageRepository;
         _nameRepository = nameRepository;
         _workerRepository = workerRepository;
         _mapper = mapper;
+        _cache = cache;
     }
 
     public async Task<int> Handle(AddHiringStageCommand request, CancellationToken cancellationToken)
@@ -43,6 +49,11 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
 
         stage = _stageRepository.Add(stage);
         await _stageRepository.SaveChangesAsync();
+
+        var idKey = "HiringStage_" + stage.Id;
+        var hiringStageDTO = _mapper.Map<HiringStageMainInfoDTO>(stage);
+
+        await _cache.SetRecordAsync(idKey, hiringStageDTO);
 
         return stage.Id;
     }

@@ -2,6 +2,7 @@
 using HiringService.Application.CQRS.CandidateQueries;
 using HiringService.Application.CQRS.HiringStageCommands;
 using HiringService.Application.CQRS.HiringStageQueries;
+using HiringService.Application.CQRS.WorkerQueries;
 using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Domain.Enumerations;
 using MediatR;
@@ -52,7 +53,7 @@ namespace HiringService.API.Controllers
 
             var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
-            var stages = await _mediator.Send(new GetHiringStageByIntervierIdQuery(worker.Id));
+            var stages = await _mediator.Send(new GetHiringStagesByIntervierIdQuery(worker.Id));
 
             return Ok(stages);
         }

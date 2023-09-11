@@ -7,11 +7,14 @@ using ProjectManagementService.Application.Configuration;
 using HiringService.Application.Services;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
+using HiringService.Application.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseConnection(builder.Configuration);
 builder.Services.AddMongoDBConfiguration(builder.Configuration);
+
+builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddMapping();
 

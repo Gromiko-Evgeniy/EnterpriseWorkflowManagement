@@ -1,3 +1,4 @@
+using HiringService.Application.Cache;
 using HiringService.Application.CQRS.CandidateCommands;
 using HiringService.Application.Kafka;
 using HiringService.Application.Mapping;
@@ -10,6 +11,8 @@ using MediatR;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
+builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddRepositories();
 
