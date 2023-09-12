@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Worker;
 
@@ -8,11 +9,14 @@ public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskComma
 {
     private readonly IWorkerRepository _workerRepository;
     private readonly IProjectTaskRepository _taskRepository;
+    private readonly IDistributedCache _cache;
 
-    public StartWorkingOnTaskHandler(IWorkerRepository workersRepository, IProjectTaskRepository taskRepository)
+    public StartWorkingOnTaskHandler(IWorkerRepository workersRepository,
+        IProjectTaskRepository taskRepository, IDistributedCache cache)
     {
         _workerRepository = workersRepository;
         _taskRepository = taskRepository;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
@@ -24,6 +28,9 @@ public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskComma
         if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
 
         await _taskRepository.StartWorkingOnTask(worker.CurrentTaskId);
+
+        var idKey = "Task_" + worker.CurrentTaskId;
+        await _cache.RemoveAsync(idKey);
 
         return Unit.Value; //fake empty value
     }

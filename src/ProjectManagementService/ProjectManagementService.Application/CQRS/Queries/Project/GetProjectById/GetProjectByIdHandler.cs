@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime.Internal.Util;
-using AutoMapper;
+﻿using AutoMapper;
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -35,6 +34,8 @@ public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, Projec
         }
 
         if (project is null) throw new NoProjectWithSuchIdException();
+
+        await _cache.SetRecordAsync(idKey, project);
 
         return _mapper.Map<ProjectMainInfoDTO>(project);
     }

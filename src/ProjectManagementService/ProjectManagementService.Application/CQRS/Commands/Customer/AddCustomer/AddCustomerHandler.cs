@@ -28,7 +28,7 @@ public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
         var newCustomer = _mapper.Map<Customer>(customerDTO);
 
         string id = await _customerRepository.AddAsync(newCustomer);
-
+        
         var emailKey = "Customer_" + newCustomer.Email;
         await _cache.SetRecordAsync(emailKey, newCustomer);
 
