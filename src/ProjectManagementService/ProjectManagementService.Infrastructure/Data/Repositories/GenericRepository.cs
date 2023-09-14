@@ -32,14 +32,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 
     public async Task<List<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
     {
-        try
-        {
-            return (await _collection.FindAsync(predicate)).ToList();
-        }
-        catch (Exception ex)
-        {
-            return new List<T>();
-        }
+        return (await _collection.FindAsync(predicate)).ToList();
     }
 
     public async Task<T?> GetByIdAsync(string id)
@@ -51,14 +44,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 
     public async Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate)
     {
-        try
-        {
-            return await _collection.Find(predicate).FirstAsync();
-        }
-        catch
-        {
-            return null;
-        }
+        return await _collection.Find(predicate).FirstAsync();
     }
 
     public async Task<string> AddAsync(T item)

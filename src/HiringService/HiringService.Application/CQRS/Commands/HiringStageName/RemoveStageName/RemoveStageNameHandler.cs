@@ -1,7 +1,9 @@
 ﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
 using HiringService.Application.Exceptions.HiringStageName;
+using HiringService.Domain.Entities;
 using MediatR;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -25,7 +27,6 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
     public async Task<Unit> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
         var stageName = await _nameRepository.GetByIdAsync(request.Id);
-
         if (stageName is null) throw new NoStageNameWithSuchIdException();
 
         var stageNamesToUpdate = await _nameRepository.GetFilteredAsync(n => n.Index > stageName.Index);
@@ -33,48 +34,67 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 
         if (stageNamesToUpdate.Count == 0) // no more stages need to be passed, candidates hired = become workers
         {
-            foreach (var stage in hiringStagesToUpdate)
-            {
-                var candidate = await _candidateRepository.GetByIdAsync(stage.CandidateId);
-
-                if (candidate is not null)
-                {
-                    await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
-                    _candidateRepository.Remove(candidate); // locally
-
-                    await _candidateRepository.SaveChangesAsync();
-                }
-            }
-            // stages will be deleted because of cascade delete
+            RemoveStagesAndTheirCandidates(hiringStagesToUpdate);
         }
         else
         {
-            foreach (var stage in hiringStagesToUpdate)
-            {
-                var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
+            var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
 
-                stage.HiringStageName = newStageName;
-                stage.HiringStageNameId = newStageName.Id;
-
-                _stageRepository.Update(stage);
-            }
-            await _stageRepository.SaveChangesAsync();
+            SetNextStageNames(hiringStagesToUpdate, newStageName);
         }
 
         _nameRepository.Remove(stageName);
         await _nameRepository.SaveChangesAsync();
 
-        if (stageNamesToUpdate.Count > 0)
+        if (stageNamesToUpdate.Count > 0) 
         {
-            // shifting the indices of all subsequent elements in the list
-            foreach (var sName in stageNamesToUpdate)
-            {
-                sName.Index -= 1;
-                _nameRepository.Update(sName);
-            }
-            await _nameRepository.SaveChangesAsync();
+            ShifHiringStageNametIndexes(stageNamesToUpdate);
         }
 
         return Unit.Value;
+    }
+
+    private async Task RemoveStagesAndTheirCandidates(List<HiringStage> hiringStages)
+    {
+        var candidatesToDelete = new List<Candidate>();
+
+        foreach (var stage in hiringStages)
+        {
+            var candidate = await _candidateRepository.GetByIdAsync(stage.CandidateId);
+
+            if (candidate is not null)
+            {
+                await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
+
+                candidatesToDelete.Add(candidate);
+            }
+        }
+
+        _candidateRepository.RemoveRange(candidatesToDelete); // locally
+        await _candidateRepository.SaveChangesAsync();
+        // stages will be deleted because of cascade delete
+    }
+
+    private async Task SetNextStageNames(List<HiringStage> hiringStages, HiringStageName newStageName)
+    {
+        foreach (var stage in hiringStages)
+        {
+            stage.HiringStageName = newStageName;
+            stage.HiringStageNameId = newStageName.Id;
+
+            _stageRepository.Update(stage);
+        }
+        await _stageRepository.SaveChangesAsync();
+    }
+
+    private async Task ShifHiringStageNametIndexes(List<HiringStageName> stageNames)
+    {
+        // shifting the indices of all subsequent elements in the list
+        foreach (var sName in stageNames)
+        {
+            sName.Index -= 1;
+            _nameRepository.Update(sName);
+        }
+        await _nameRepository.SaveChangesAsync();
     }
 }

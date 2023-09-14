@@ -11,6 +11,7 @@ namespace HiringService.API.Controllers
 {
     [Route("hiring-stage-names")]
     [ApiController]
+    [Authorize(Roles = _depHeadRole)]
     public class HiringStageNamesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,7 +23,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetAllAsync()
         {
             var stageNames = await _mediator.Send(new GetHiringStageNamesQuery());
@@ -31,7 +31,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
             var stageName = await _mediator.Send(new GetHiringStageNameByIdQuery(id));
@@ -40,7 +39,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{name}")]
-        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] string name)
         {
             var stageName = await _mediator.Send(new GetHiringStageNameByNameQuery(name));
@@ -49,7 +47,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> AddAsync([FromBody] AddHiringStageDTO hiringStageDTO)
         {
             var id = await _mediator.Send(new AddHiringStageCommand(hiringStageDTO));
@@ -58,7 +55,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> RemoveAsync([FromRoute] int id)
         {
             await _mediator.Send(new RemoveStageNameCommand(id));

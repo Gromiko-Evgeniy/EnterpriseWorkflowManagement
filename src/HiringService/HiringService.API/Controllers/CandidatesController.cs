@@ -101,20 +101,5 @@ namespace HiringService.API.Controllers
 
             return NoContent();
         }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAsync(int candidateId) //REMOVE_!!!____IT'S_FOR_TESTING
-        {
-            var candidate = await _candidateRepository.GetByIdAsync(candidateId);
-
-            //_candidateRepository.Remove(candidate);
-            //await _candidateRepository.SaveChangesAsync();
-
-            var newJWT = await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name);
-
-            if (newJWT is not null) return Ok(newJWT);
-
-            return NoContent();
-        }
     }
 }

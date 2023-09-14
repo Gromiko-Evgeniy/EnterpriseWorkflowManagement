@@ -15,6 +15,8 @@ public interface IGenericRepository<T> where T : class
 
     public void Remove(T item);
 
+    public void RemoveRange(List<T> item);
+
     public void Update(T item);
 
     public Task SaveChangesAsync();

@@ -1,4 +1,5 @@
 using HiringService.Application.CQRS.CandidateCommands;
+using HiringService.Application.CQRS.MediatrPipeline;
 using HiringService.Application.Kafka;
 using HiringService.Application.Mapping;
 using HiringService.Application.Services;
@@ -15,11 +16,10 @@ builder.Services.AddRepositories();
 
 builder.Services.AddServices();
 
-builder.Services.AddValidation();
-
 builder.Services.AddMapping();
 
 builder.Services.AddMediatR(typeof(AddCandidateCommand).Assembly);
+builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddControllers();
 

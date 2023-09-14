@@ -2,6 +2,7 @@
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -34,10 +35,7 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         }
         else
         {
-            //проеверить: возможно наибольший индекс меньше количества имен
-            //(0,1,__3,4  count<5) -> не столь важно
-            //(__1,2,3,4  count<5) -> индекс дублируется, важно
-            //но такое возможно лишь при тупом удалении данных прямиком из базы
+            await RemovePossibleIndexErrors(stageNames);
 
             newStageName.Index = stageNames.Count;
         }
@@ -46,6 +44,21 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         await _nameRepository.SaveChangesAsync();
 
         return newStageName.Id;
+    }
+
+    private async Task RemovePossibleIndexErrors(List<HiringStageName> stageNames)
+    {
+        stageNames.Sort((x, y) => x.Index.CompareTo(y.Index));
+
+        for (int i = 0; i < stageNames.Count; i++)
+        {
+            if (stageNames[i].Index != i)
+            {
+                stageNames[i].Index = i;
+                _nameRepository.Update(stageNames[i]);
+                await _nameRepository.SaveChangesAsync();
+            }
+        }
     }
 }
 
