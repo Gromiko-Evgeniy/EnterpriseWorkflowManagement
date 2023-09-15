@@ -16,8 +16,6 @@ builder.Services.AddMongoDBConfiguration(builder.Configuration);
 
 builder.Services.AddMapping();
 
-//builder.Services.AddValidation();
-
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
@@ -32,7 +30,7 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
-//builder.Services.AddKafkaBGServices();
+builder.Services.AddKafkaBGServices();
 
 var app = builder.Build();
 
