@@ -16,6 +16,12 @@ public static class AddDatabaseConfigurationExtension
             )
         );
 
+        services.AddDbContext<HangfireDataContext>(
+            o => o.UseSqlServer(
+                configuration.GetConnectionString("Hangfire")
+            )
+        );
+
         return services;
     }
 }

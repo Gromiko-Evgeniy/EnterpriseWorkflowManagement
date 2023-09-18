@@ -8,6 +8,10 @@ using HiringService.Application.Services;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
 using HiringService.Application.Cache;
+using ProjectManagementService.Application.Hangfire;
+using ProjectManagementService.Application.Middleware;
+using HiringService.Infrastructure.Data.AddTestingData;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +30,8 @@ builder.Services.AddServices();
 
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
 
+builder.Services.AddHangfire(builder.Configuration);
+
 builder.Services.AddControllers();
 
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
@@ -33,14 +39,26 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
-builder.Services.AddKafkaBGServices();
+//builder.Services.AddKafkaBGServices();
 
 var app = builder.Build();
+
+app.UseExceptionHandlingMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using var scope = app.Services.CreateScope();
+
+    var workerRepository = scope.ServiceProvider.GetRequiredService<IWorkerRepository>();
+    var customerRepository = scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+    var projectRepository = scope.ServiceProvider.GetRequiredService<IProjectRepository>();
+    var taskRepository = scope.ServiceProvider.GetRequiredService<IProjectTaskRepository>();
+
+    await TestingDataContainer.AddTestingData(customerRepository,
+        workerRepository, taskRepository, projectRepository);
 }
 
 app.UseHttpsRedirection();

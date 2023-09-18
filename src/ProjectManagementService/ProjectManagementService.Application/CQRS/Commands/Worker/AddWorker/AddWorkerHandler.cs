@@ -33,7 +33,7 @@ public class AddWorkerHandler : IRequestHandler<AddWorkerCommand, string>
 
         var newWorker = _mapper.Map<Worker>(workerDTO);
 
-        string id = await _workerRepository.AddAsync(newWorker);
+        string id = await _workerRepository.AddOneAsync(newWorker);
 
         var emailKey = "Worker_" + newWorker.Email;
         await _cache.SetRecordAsync(emailKey, newWorker);

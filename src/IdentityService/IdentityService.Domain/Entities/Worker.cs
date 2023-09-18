@@ -13,4 +13,6 @@ public class Worker
     public string Password { get; set; } = string.Empty;
 
     public Position Position { get; set; }
+
+    public DateTime LastTimeVisited { get; set; }
 }

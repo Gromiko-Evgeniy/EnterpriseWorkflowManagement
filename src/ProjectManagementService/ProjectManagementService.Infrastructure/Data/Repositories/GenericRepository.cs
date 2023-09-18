@@ -51,21 +51,19 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
 
     public async Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate)
     {
-        try
-        {
-            return await _collection.Find(predicate).FirstAsync();
-        }
-        catch
-        {
-            return null;
-        }
+        return await _collection.Find(predicate).FirstAsync();
     }
 
-    public async Task<string> AddAsync(T item)
+    public async Task<string> AddOneAsync(T item)
     {
         await _collection.InsertOneAsync(item);
 
         return item.Id;
+    }
+
+    public async Task AddManyAsync(List<T> items)
+    {
+        await _collection.InsertManyAsync(items);
     }
 
     public async Task RemoveAsync(string id)

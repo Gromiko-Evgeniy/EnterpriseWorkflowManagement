@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace ProjectManagementService.Application.Mapping;
+namespace IdentityService.Application.Mapping;
 
 public static class AddMappingExtension
 {

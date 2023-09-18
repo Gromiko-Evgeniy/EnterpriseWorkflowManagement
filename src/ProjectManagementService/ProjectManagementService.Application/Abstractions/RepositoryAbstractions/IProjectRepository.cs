@@ -9,6 +9,4 @@ public interface IProjectRepository : IGenericRepository<Project>
     public Task<Project?> GetProjectByProjectLeaderId(string projectLeaderId);
     
     public Task CancelAsync(string id);
-
-    public new Task<string> AddAsync(Project project);
 }

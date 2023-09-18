@@ -4,8 +4,6 @@ namespace ProjectManagementService.Application.Abstractions.RepositoryAbstractio
 
 public interface IProjectTaskRepository : IGenericRepository<ProjectTask>
 {
-    public new Task<string> AddAsync(ProjectTask project);
-
     public Task<List<ProjectTask>> GetByProjectIdAsync(string projectId);
 
     public Task CancelAsync(string id);

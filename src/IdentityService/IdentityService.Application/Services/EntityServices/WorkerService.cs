@@ -104,6 +104,16 @@ public class WorkerService : IWorkerService
         await _workerRepository.SaveChangesAsync();
     }
 
+    public async Task UpdateLastTimeVisitedAsync(string email)
+    {
+        var worker = await GetWorkerByEmailAsync(email);
+
+        worker.LastTimeVisited = DateTime.Now;
+
+        _workerRepository.Update(worker);
+        await _workerRepository.SaveChangesAsync();
+    }
+
     public async Task DemoteAsync(string email)
     {
         var worker = await GetWorkerByEmailAsync(email);

@@ -14,7 +14,9 @@ public interface IGenericRepository<T> where T : EntityWithId
 
     public Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
 
-    public Task<string> AddAsync(T item);
+    public Task<string> AddOneAsync(T item);
+
+    public Task AddManyAsync(List<T> items);
 
     public Task RemoveAsync(string id);
 
