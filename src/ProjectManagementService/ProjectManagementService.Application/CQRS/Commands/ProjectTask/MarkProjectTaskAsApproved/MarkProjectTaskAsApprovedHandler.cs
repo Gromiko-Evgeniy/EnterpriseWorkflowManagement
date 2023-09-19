@@ -30,7 +30,7 @@ public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskA
 
     public async Task<Unit> Handle(MarkProjectTaskAsApprovedCommand request, CancellationToken cancellationToken)
     {
-        var idKey = "Task_" + request.ProjectTaskId;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + request.ProjectTaskId;
 
         var taskDTO = await _cache.GetRecordAsync<TaskMainInfoDTO>(idKey);
         var task = _mapper.Map<ProjectTask>(taskDTO);

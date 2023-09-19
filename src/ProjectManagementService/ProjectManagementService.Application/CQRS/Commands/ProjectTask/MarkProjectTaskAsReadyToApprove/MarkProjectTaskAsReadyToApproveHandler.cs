@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using HiringService.Application.Cache;
+using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Worker;
@@ -28,7 +29,7 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
 
         await _taskRepository.MarkAsReadyToApproveAsync(worker.CurrentTaskId);
 
-        var idKey = "Task_" + worker.CurrentTaskId;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + worker.CurrentTaskId;
         await _cache.RemoveAsync(idKey);
 
         return Unit.Value; //fake empty value

@@ -36,7 +36,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
         {
             return (await _collection.FindAsync(predicate)).ToList();
         }
-        catch (Exception ex)
+        catch
         {
             return new List<T>();
         }

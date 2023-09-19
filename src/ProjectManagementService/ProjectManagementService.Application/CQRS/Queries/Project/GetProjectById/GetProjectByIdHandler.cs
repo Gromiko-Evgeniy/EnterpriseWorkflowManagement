@@ -25,7 +25,7 @@ public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, Projec
 
     public async Task<ProjectMainInfoDTO> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
     {
-        var idKey = "Project_" + request.Id;
+        var idKey = RedisKeysPrefixes.ProjectPrefix + request.Id;
         var project = await _cache.GetRecordAsync<Project>(idKey);
 
         if (project is null)

@@ -29,7 +29,7 @@ public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
 
         string id = await _customerRepository.AddAsync(newCustomer);
         
-        var emailKey = "Customer_" + newCustomer.Email;
+        var emailKey = RedisKeysPrefixes.CustomerPrefix + newCustomer.Email;
         await _cache.SetRecordAsync(emailKey, newCustomer);
 
         return id;

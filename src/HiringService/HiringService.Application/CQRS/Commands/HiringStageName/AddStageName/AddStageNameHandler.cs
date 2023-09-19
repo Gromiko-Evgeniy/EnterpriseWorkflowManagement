@@ -55,8 +55,8 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         await _nameRepository.SaveChangesAsync();
 
         var stageNameDTO = _mapper.Map<GetStageNameDTO>(newStageName);
-        var idKey = "StageName_" + newStageName.Id;
-        var nameKey = "StageName_" + newStageName.Name;
+        var idKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Id;
+        var nameKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Name;
 
         await _cache.SetRecordAsync(nameKey, stageNameDTO);
         await _cache.SetRecordAsync(idKey, stageNameDTO);

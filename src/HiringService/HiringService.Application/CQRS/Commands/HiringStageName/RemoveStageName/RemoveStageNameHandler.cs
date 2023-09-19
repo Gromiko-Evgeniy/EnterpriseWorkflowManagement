@@ -32,11 +32,11 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
         _cache = cache;
     }
 
-    public async Task<string?> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
         string? newJWT = null;
 
-        var idKey = "StageName_" + request.Id;
+        var idKey = RedisKeysPrefixes.StageNamePrefix + request.Id;
         var stageNameDTO = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
         var stageName = _mapper.Map<HiringStageName>(stageNameDTO);
 
@@ -72,8 +72,8 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
             {
                 var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
 
-                stage.HiringStageName = newStageName;
-                stage.HiringStageNameId = newStageName.Id;
+                stage.HiringStageName = newStageName!;
+                stage.HiringStageNameId = newStageName!.Id;
 
                 _stageRepository.Update(stage);
             }

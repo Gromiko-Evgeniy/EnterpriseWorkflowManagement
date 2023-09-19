@@ -20,9 +20,9 @@ public static class DistributedCacheExtensions
         await cache.SetStringAsync(recordId, jsonData, options);
     }
 
-    public static async Task<T> GetRecordAsync<T>(this IDistributedCache cache, string recordId)
+    public static async Task<T?> GetRecordAsync<T>(this IDistributedCache cache, string key)
     {
-        var jsonData = await cache.GetStringAsync(recordId);
+        var jsonData = await cache.GetStringAsync(key);
 
         if (jsonData is null)
         {

@@ -36,7 +36,7 @@ public class AddWorkerHandler : IRequestHandler<AddWorkerCommand, int>
         newWorker = _workerRepository.Add(newWorker);
         await _workerRepository.SaveChangesAsync();
 
-        var emailKey = "Worker_" + newWorker.Email;
+        var emailKey = RedisKeysPrefixes.WorkerPrefix + newWorker.Email;
 
         await _cache.SetRecordAsync(emailKey, newWorker);
 

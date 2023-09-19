@@ -21,7 +21,7 @@ public class RemoveWorkerHandler : IRequestHandler<RemoveWorkerCommand>
 
     public async Task<Unit> Handle(RemoveWorkerCommand request, CancellationToken cancellationToken)
     {
-        var emailKey = "Worker_" + request.Email;
+        var emailKey = RedisKeysPrefixes.WorkerPrefix + request.Email;
         var worker = await _cache.GetRecordAsync<Worker>(emailKey);
 
         if (worker is null)

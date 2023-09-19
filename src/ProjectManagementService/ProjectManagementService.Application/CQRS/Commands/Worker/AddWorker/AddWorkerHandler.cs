@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Worker;
 using ProjectManagementService.Domain.Entities;
+using StackExchange.Redis;
 
 namespace ProjectManagementService.Application.CQRS.WorkerCommands;
 
@@ -35,7 +36,7 @@ public class AddWorkerHandler : IRequestHandler<AddWorkerCommand, string>
 
         string id = await _workerRepository.AddAsync(newWorker);
 
-        var emailKey = "Worker_" + newWorker.Email;
+        var emailKey = RedisKeysPrefixes.WorkerPrefix + newWorker.Email;
         await _cache.SetRecordAsync(emailKey, newWorker);
 
         return id;

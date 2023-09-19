@@ -62,13 +62,13 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
             {
                 CandidateId = stage.CandidateId,
                 IntervierId = intervier.Id,
-                HiringStageNameId = nextStageName.Id
+                HiringStageNameId = nextStageName!.Id
             };
 
             _stageRepository.Add(newStage);
             await _stageRepository.SaveChangesAsync();
 
-            var idKey = "HiringStage_" + newStage.Id;
+            var idKey = RedisKeysPrefixes.StagePrefix + newStage.Id;
             var hiringStageDTO = _mapper.Map<HiringStageMainInfoDTO>(newStage);
 
             await _cache.SetRecordAsync(idKey, hiringStageDTO);
