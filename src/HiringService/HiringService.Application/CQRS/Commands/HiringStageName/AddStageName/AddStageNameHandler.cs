@@ -35,7 +35,7 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         }
         else
         {
-            await RemovePossibleIndexErrors(stageNames);
+            await RemovePossibleIndexErrorsAsync(stageNames);
 
             newStageName.Index = stageNames.Count;
         }
@@ -46,7 +46,7 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         return newStageName.Id;
     }
 
-    private async Task RemovePossibleIndexErrors(List<HiringStageName> stageNames)
+    private async Task RemovePossibleIndexErrorsAsync(List<HiringStageName> stageNames)
     {
         stageNames.Sort((x, y) => x.Index.CompareTo(y.Index));
 

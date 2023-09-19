@@ -3,7 +3,6 @@ using HiringService.Application.Abstractions.ServiceAbstractions;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -34,13 +33,13 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 
         if (stageNamesToUpdate.Count == 0) // no more stages need to be passed, candidates hired = become workers
         {
-            RemoveStagesAndTheirCandidates(hiringStagesToUpdate);
+            await RemoveStagesAndTheirCandidatesAsync(hiringStagesToUpdate);
         }
         else
         {
             var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
 
-            SetNextStageNames(hiringStagesToUpdate, newStageName);
+            await SetNextStageNamesAsync(hiringStagesToUpdate, newStageName!);
         }
 
         _nameRepository.Remove(stageName);
@@ -48,13 +47,13 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 
         if (stageNamesToUpdate.Count > 0) 
         {
-            ShifHiringStageNametIndexes(stageNamesToUpdate);
+            await ShifHiringStageNametIndexesAsync(stageNamesToUpdate);
         }
 
         return Unit.Value;
     }
 
-    private async Task RemoveStagesAndTheirCandidates(List<HiringStage> hiringStages)
+    private async Task RemoveStagesAndTheirCandidatesAsync(List<HiringStage> hiringStages)
     {
         var candidatesToDelete = new List<Candidate>();
 
@@ -75,7 +74,7 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
         // stages will be deleted because of cascade delete
     }
 
-    private async Task SetNextStageNames(List<HiringStage> hiringStages, HiringStageName newStageName)
+    private async Task SetNextStageNamesAsync(List<HiringStage> hiringStages, HiringStageName newStageName)
     {
         foreach (var stage in hiringStages)
         {
@@ -87,7 +86,7 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
         await _stageRepository.SaveChangesAsync();
     }
 
-    private async Task ShifHiringStageNametIndexes(List<HiringStageName> stageNames)
+    private async Task ShifHiringStageNametIndexesAsync(List<HiringStageName> stageNames)
     {
         // shifting the indices of all subsequent elements in the list
         foreach (var sName in stageNames)

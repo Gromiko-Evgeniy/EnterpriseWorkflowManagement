@@ -2,6 +2,7 @@
 using HiringService.Application.Abstractions.ServiceAbstractions;
 using IdentityService.GRPC;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace HiringService.Application.Services;
 
@@ -9,9 +10,9 @@ internal class GRPCService : IGRPCService
 {
     private readonly string _serverAddress;
 
-    public GRPCService(IConfiguration configuration)
+    public GRPCService(IConfiguration configuration, IOptions<IdentityGRPCServiceAddress> gRPCServiceAddress)
     {
-        _serverAddress = configuration["GRPC:IdentityServerAddress"];
+        _serverAddress = gRPCServiceAddress.Value.IdentityServerAddress!;
     }
 
     public async Task<string> DeleteCandidate(string email, string name)

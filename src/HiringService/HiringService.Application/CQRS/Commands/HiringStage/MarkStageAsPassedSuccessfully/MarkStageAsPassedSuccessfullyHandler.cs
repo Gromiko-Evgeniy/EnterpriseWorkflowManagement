@@ -42,11 +42,11 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         {
             var nextStageName = stageNames.FirstOrDefault(n => n.Index == currentStageName.Index + 1);
 
-            await CreateNextHiringStageForCandidate(stage.CandidateId, request.IntervierId, nextStageName.Id);
+            await CreateNextHiringStageForCandidateAsync(stage.CandidateId, request.IntervierId, nextStageName!.Id);
         }
         else
         {
-            await RemoveCandidateRemotelyAndLocally(stage.CandidateId); // make the candidate an employee
+            newJWT = await RemoveCandidateRemotelyAndLocallyAsync(stage.CandidateId); // make the candidate an employee
         }
 
         stage.PassedSuccessfully = true;
@@ -70,7 +70,7 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         return stage;
     }
 
-    private async Task CreateNextHiringStageForCandidate(int candidateId, int intervierId, int nextStageNameId)
+    private async Task CreateNextHiringStageForCandidateAsync(int candidateId, int intervierId, int nextStageNameId)
     {
         var newStage = new HiringStage()
         {
@@ -83,9 +83,9 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         await _stageRepository.SaveChangesAsync();
     }
 
-    private async Task<string> RemoveCandidateRemotelyAndLocally(int candidateId)
+    private async Task<string?> RemoveCandidateRemotelyAndLocallyAsync(int candidateId)
     {
-        string newJWT = null;
+        string? newJWT = null;
         var candidate = await _candidateRepository.GetByIdAsync(candidateId);
 
         if (candidate is not null)

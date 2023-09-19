@@ -31,7 +31,7 @@ public static class BaseKafkaConsumerFunctionality
                             await messageValueAsyncProcessing(data);
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         throw new KafkaMessageUnsupportedTypeException();
                     }

@@ -7,7 +7,7 @@ namespace HiringService.Application.Services;
 
 public class JWTExtractorService : IJWTExtractorService
 {
-    public string ExtractClaim(HttpRequest request, string claimType)
+    public string? ExtractClaim(HttpRequest request, string claimType)
     {
         var token = request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -16,6 +16,8 @@ public class JWTExtractorService : IJWTExtractorService
 
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+        if (jwtToken is null) throw new InvalidJWTException();
 
         var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == claimType)?.Value;
 
