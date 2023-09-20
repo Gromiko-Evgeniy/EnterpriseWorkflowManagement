@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HiringService.Application.Abstractions;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.DTOs.StageNameDTOs;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;

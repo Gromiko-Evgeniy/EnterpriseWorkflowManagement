@@ -1,7 +1,7 @@
-﻿using HiringService.Application.Abstractions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Configuration;
 using ProjectManagementService.Domain.Entities;
 using System.Linq.Expressions;

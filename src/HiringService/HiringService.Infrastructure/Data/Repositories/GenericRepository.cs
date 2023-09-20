@@ -1,7 +1,6 @@
-﻿using HiringService.Application.Abstractions;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-
 
 namespace HiringService.Infrastructure.Data.Repositories;
 
@@ -35,19 +34,24 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 
-    public T AddAsync(T item)
+    public T Add(T item)
     {
         _dbSet.Add(item);
 
         return item;
     }
 
-    public void RemoveAsync(T item)
+    public void Remove(T item)
     {
         _dbSet.Remove(item);
     }
 
-    public void UpdateAsync(T item)
+    public void RemoveRange(List<T> items)
+    {
+        _dbSet.RemoveRange(items);
+    }
+
+public void Update(T item)
     {
         _dbSet.Update(item);
     }

@@ -1,7 +1,11 @@
-﻿using HiringService.Application.CQRS.HiringStageCommands;
+﻿using HiringService.Application.Abstractions.ServiceAbstractions;
+using HiringService.Application.CQRS.CandidateQueries;
+using HiringService.Application.CQRS.HiringStageCommands;
 using HiringService.Application.CQRS.HiringStageQueries;
 using HiringService.Application.DTOs.HiringStageDTOs;
+using HiringService.Domain.Enumerations;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
@@ -11,14 +15,19 @@ namespace HiringService.API.Controllers
     public class HiringStagesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IJWTExtractorService _JWTExtractorService;
+        private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
+        private const string _workerRole = nameof(ApplicationRole.Worker);
+        private const string _leaderRole = nameof(ApplicationRole.ProjectLeader);
 
-        public HiringStagesController(IMediator mediator)
+        public HiringStagesController(IMediator mediator, IJWTExtractorService JWTExtractorService)
         {
             _mediator = mediator;
+            _JWTExtractorService = JWTExtractorService;
         }
 
         [HttpGet]
-        //[Authorize(Roles = "DepartmentHead")]
+        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetAllAsync()
         {
             var stages = await _mediator.Send(new GetHiringStagesQuery());
@@ -27,8 +36,8 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        [Authorize(Roles = _depHeadRole)]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
             var stage = await _mediator.Send(new GetHiringStageByIdQuery(id));
 
@@ -36,29 +45,38 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("current")]
-        //[Authorize(Roles = "ProjectLeader,Worker")]
-        public async Task<IActionResult> GetCurrentAsync(int intervierId) // remove intervierId from parameters
+        [Authorize(Roles = $"{_leaderRole},{_workerRole}")]
+        public async Task<IActionResult> GetCurrentAsync()
         {
-            //IntervierId will be extracted from JWT
-            var stages = await _mediator.Send(new GetHiringStageByIntervierIdQuery(intervierId));
+            var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+
+            var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
+
+            var stages = await _mediator.Send(new GetHiringStageByIntervierIdQuery(worker.Id));
 
             return Ok(stages);
         }
 
         [HttpPost]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync(AddHiringStageDTO hiringStageDTO) // remove intervierId
+        [Authorize(Roles = _depHeadRole)]
+        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync([FromBody] AddHiringStageDTO hiringStageDTO)
         {
             var id = await _mediator.Send(new AddHiringStageCommand(hiringStageDTO));
 
             return Ok(id);
         }
 
-        [HttpPut("{id}")]
-        //[Authorize(Roles = "DepartmentHead,ProjectLeader,Worker")]
-        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync(int intervierId, int id) // remove intervierId
+        [HttpPut("mark-as-success/{id}")]
+        [Authorize(Roles = $"{_depHeadRole},{_leaderRole},{_workerRole}")]
+        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync([FromRoute] int id)
         {
-            await _mediator.Send(new MarkStageAsPassedSuccessfullyCommand(intervierId, id));
+            var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+
+            var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
+
+            var newJWT = await _mediator.Send(new MarkStageAsPassedSuccessfullyCommand(worker.Id, id));
+
+            if (newJWT is not null) return Ok(newJWT);
 
             return NoContent();
         }

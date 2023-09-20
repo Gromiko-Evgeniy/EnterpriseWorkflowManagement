@@ -1,7 +1,11 @@
-﻿using HiringService.Application.CQRS.CandidateCommands;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+using HiringService.Application.Abstractions.ServiceAbstractions;
+using HiringService.Application.CQRS.CandidateCommands;
 using HiringService.Application.CQRS.CandidateQueries;
 using HiringService.Application.DTOs.CandidateDTOs;
+using HiringService.Domain.Enumerations;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
@@ -11,14 +15,23 @@ namespace HiringService.API.Controllers
     public class CandidatesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ICandidateRepository _candidateRepository;
+        private readonly IGRPCService _gRPCService;
+        private readonly IJWTExtractorService _JWTExtractorService;
+        private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
+        private const string _candidateRole = nameof(ApplicationRole.Candidate);
 
-        public CandidatesController(IMediator mediator)
+        public CandidatesController(IMediator mediator, ICandidateRepository candidateRepository,
+            IGRPCService gRPCService, IJWTExtractorService JWTExtractorService)
         {
             _mediator = mediator;
+            _candidateRepository = candidateRepository;
+            _gRPCService = gRPCService;
+            _JWTExtractorService = JWTExtractorService;
         }
 
         [HttpGet]
-        //[Authorize(Roles = "DepartmentHead")]
+        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetAllAsync()
         {
             var candidates = await _mediator.Send(new GetCandidatesQuery());
@@ -27,8 +40,8 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int id) 
+        [Authorize(Roles = _depHeadRole)]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
             var candidate = await _mediator.Send(new GetCandidateByIdQuery(id));
 
@@ -36,45 +49,55 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{email:regex(^\\S+@\\S+\\.\\S+$)}")]
-        //[Authorize(Roles = "DepartmentHead")]
+        [Authorize(Roles = _depHeadRole)]
         public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
         {
-            var candidate = await _mediator.Send(new GetCandidateByEmailQuery(email));
+            var candidate = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
             return Ok(candidate);
         }
 
         [HttpGet("current")]
-        //[Authorize(Roles = "Candidate")]
-        public async Task<IActionResult> GetCurrentAsync(int candidateId) //remove candidateId
+        [Authorize(Roles = _candidateRole)]
+        public async Task<IActionResult> GetCurrentAsync()
         {
-            var candidate = await _mediator.Send(new GetCandidateByIdQuery(candidateId));
+            var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+
+            var candidate = await _mediator.Send(new GetCandidateByEmailQuery(email));
 
             return Ok(candidate);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync(AddCandidateDTO candidate)
+        public async Task<IActionResult> AddAsync([FromBody] AddCandidateDTO candidate)
         {
             var id = await _mediator.Send(new AddCandidateCommand(candidate));
-            
+
             return Ok(id);
         }
 
         [HttpPut("new-name")]
-        //[Authorize(Roles = "Candidate")]
-        public async Task<IActionResult> UpdateNameAsync(int candidateId, string name) //remove candidateId
+        [Authorize(Roles = _candidateRole)]
+        public async Task<IActionResult> UpdateNameAsync([FromBody] string name)
         {
-            await _mediator.Send(new UpdateCandidateNameCommand(candidateId, name));
+            var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+
+            var candidate = await _mediator.Send(new GetCandidateByEmailQuery(email));
+
+            await _mediator.Send(new UpdateCandidateNameCommand(candidate.Id, name));
 
             return NoContent();
         }
 
         [HttpPut("new-cv")]
-        //[Authorize(Roles = "Candidate")]
-        public async Task<IActionResult> UpdateCVAsync(int candidateId, string CV) //remove candidateId
+        [Authorize(Roles = _candidateRole)]
+        public async Task<IActionResult> UpdateCVAsync([FromBody] string CV)
         {
-            await _mediator.Send(new UpdateCandidateCVCommand(candidateId, CV));
+            var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+
+            var candidate = await _mediator.Send(new GetCandidateByEmailQuery(email));
+
+            await _mediator.Send(new UpdateCandidateCVCommand(candidate.Id, CV));
 
             return NoContent();
         }

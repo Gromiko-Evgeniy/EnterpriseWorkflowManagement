@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MongoDB.Bson;
-using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
 
 namespace ProjectManagementService.Application.CQRS.Commands.ProjectTask.ChangeTaskWorker;

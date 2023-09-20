@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using ProjectManagementService.Application.Abstractions;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectCommands;

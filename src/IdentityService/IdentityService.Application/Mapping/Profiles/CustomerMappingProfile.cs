@@ -11,5 +11,6 @@ public class CustomerMappingProfile : Profile
     {
         CreateMap<AddCustomerDTO, Customer>();
         CreateMap<Customer, LogInData>();
+        CreateMap<AddCustomerDTO, NameEmailDTO>();
     }
 }

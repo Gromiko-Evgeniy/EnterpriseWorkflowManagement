@@ -14,6 +14,7 @@ public static class AddDatabaseConfigurationExtension
                 configuration.GetConnectionString("HiringServiceDB"),
                 b => b.MigrationsAssembly(configuration.GetSection("MigrationsAssembly").Get<string>())
             )
+            .EnableSensitiveDataLogging()
         );
 
         return services;

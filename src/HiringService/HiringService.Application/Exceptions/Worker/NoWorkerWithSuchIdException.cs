@@ -1,4 +1,4 @@
-﻿namespace HiringService.Application.Exceptions.Candidate;
+﻿namespace HiringService.Application.Exceptions.Worker;
 
 public class NoWorkerWithSuchIdException : CustomException
 {

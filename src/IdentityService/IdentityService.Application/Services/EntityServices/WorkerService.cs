@@ -3,6 +3,7 @@ using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.WorkerDTOs;
 using IdentityService.Application.Exceptions;
 using IdentityService.Application.Exceptions.Worker;
+using IdentityService.Application.KafkaAbstractions;
 using IdentityService.Application.RepositoryAbstractions;
 using IdentityService.Application.ServiceAbstractions;
 using IdentityService.Domain.Entities;
@@ -13,11 +14,15 @@ namespace IdentityService.Application.Services.EntityServices;
 public class WorkerService : IWorkerService
 {
     private readonly IWorkerRepository _workerRepository;
+    private readonly IKafkaProducer _kafkaProducer;
+
     private readonly IMapper _mapper;
 
-    public WorkerService(IWorkerRepository workerRepository, IMapper mapper)
+    public WorkerService(IWorkerRepository workerRepository,
+        IMapper mapper, IKafkaProducer kafkaProducer)
     {
         _workerRepository = workerRepository;
+        _kafkaProducer = kafkaProducer;
         _mapper = mapper;
     }
 
@@ -55,12 +60,12 @@ public class WorkerService : IWorkerService
 
         if (oldWorker is not null) throw new WorkerAlreadyExistsException();
 
-        //send data to services
-
         var newWorker = _mapper.Map<Worker>(workerDTO);
 
         _workerRepository.Add(newWorker);
         await _workerRepository.SaveChangesAsync();
+
+        _kafkaProducer.SendAddWorkerMessage(_mapper.Map<NameEmailDTO>(newWorker));
 
         return _mapper.Map<LogInData>(newWorker);
     }
@@ -74,7 +79,7 @@ public class WorkerService : IWorkerService
         _workerRepository.Update(worker);
         await _workerRepository.SaveChangesAsync();
 
-        //overwrite data in other databases
+        _kafkaProducer.SendAddWorkerMessage(_mapper.Map<NameEmailDTO>(worker)); //проверить есть ли, если есть, именить имя
     }
 
     public async Task UpdatePasswordAsync(string email, string prevPassword, string newPassword)
@@ -118,7 +123,7 @@ public class WorkerService : IWorkerService
         _workerRepository.Remove(worker);
         await _workerRepository.SaveChangesAsync();
 
-        //overwrite data in other databases
+        _kafkaProducer.SendRemoveWorkerMessage(email);
     }
 
     public async Task QuitAsync(string email, string password)
@@ -128,7 +133,7 @@ public class WorkerService : IWorkerService
         _workerRepository.Remove(worker);
         await _workerRepository.SaveChangesAsync();
 
-        //overwrite data in other databases
+        _kafkaProducer.SendRemoveWorkerMessage(email);
     }
 
     private async Task<Worker> GetWorkerByEmailAsync(string email)

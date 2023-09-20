@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HiringService.Application.Abstractions;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Exceptions.Candidate;
 using HiringService.Domain.Entities;
 using MediatR;
@@ -27,8 +27,7 @@ public class AddCandidateHandler : IRequestHandler<AddCandidateCommand, int>
 
         var candidate = _mapper.Map<Candidate>(candidateDTO);
 
-        candidate = _candidateRepository.AddAsync(candidate);
-
+        candidate = _candidateRepository.Add(candidate);
         await _candidateRepository.SaveChangesAsync();
 
         return candidate.Id;

@@ -4,24 +4,33 @@ using ProjectManagementService.Infrastucture.Data.Extensions;
 using ProjectManagementService.Application.Validation;
 using ProjectManagementService.Application.CQRS.ProjectQueries;
 using ProjectManagementService.Application.Configuration;
+using HiringService.Application.Services;
+using IdentityService.Application.Authentication;
+using ProjectManagementService.Application.Kafka;
+using ProjectManagementService.Application.CQRS.MediatrPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDatabaseConfiguration(builder.Configuration);
+builder.Services.AddDatabaseConnection(builder.Configuration);
 builder.Services.AddMongoDBConfiguration(builder.Configuration);
-
 
 builder.Services.AddMapping();
 
-builder.Services.AddValidation();
-
 builder.Services.AddRepositories();
 
+builder.Services.AddServices();
+
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
+builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddControllers();
+
+builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
+
+builder.Services.AddKafkaBGServices();
 
 var app = builder.Build();
 

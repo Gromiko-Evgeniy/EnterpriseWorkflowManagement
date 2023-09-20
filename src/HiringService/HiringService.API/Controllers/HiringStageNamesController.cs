@@ -1,15 +1,21 @@
-﻿using HiringService.Application.CQRS.StageNameCommands;
+﻿using HiringService.Application.CQRS.HiringStageCommands;
+using HiringService.Application.CQRS.StageNameCommands;
 using HiringService.Application.CQRS.StageNameQueries;
+using HiringService.Application.DTOs.HiringStageDTOs;
+using HiringService.Domain.Enumerations;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
 {
     [Route("hiring-stage-names")]
     [ApiController]
+    [Authorize(Roles = _depHeadRole)]
     public class HiringStageNamesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private const string _depHeadRole = nameof(ApplicationRole.DepartmentHead);
 
         public HiringStageNamesController(IMediator mediator)
         {
@@ -17,7 +23,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetAllAsync()
         {
             var stageNames = await _mediator.Send(new GetHiringStageNamesQuery());
@@ -26,7 +31,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
             var stageName = await _mediator.Send(new GetHiringStageNameByIdQuery(id));
@@ -35,7 +39,6 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{name}")]
-        //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] string name)
         {
             var stageName = await _mediator.Send(new GetHiringStageNameByNameQuery(name));
@@ -44,16 +47,14 @@ namespace HiringService.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "DepartmentHead")]
-        public async Task<IActionResult> AddAsync(string name)
+        public async Task<IActionResult> AddAsync([FromBody] AddHiringStageDTO hiringStageDTO)
         {
-            var id = await _mediator.Send(new AddStageNameCommand(name));
+            var id = await _mediator.Send(new AddHiringStageCommand(hiringStageDTO));
 
             return Ok(id);
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "DepartmentHead")]
         public async Task<IActionResult> RemoveAsync([FromRoute] int id)
         {
             await _mediator.Send(new RemoveStageNameCommand(id));

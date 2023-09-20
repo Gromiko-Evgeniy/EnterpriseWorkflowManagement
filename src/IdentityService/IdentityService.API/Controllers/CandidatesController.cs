@@ -1,8 +1,9 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
+﻿using IdentityService.Application.TokenAbstractions;
 using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.CandidateDTO;
 using IdentityService.Application.ServiceAbstractions;
 using Microsoft.AspNetCore.Mvc;
+using IdentityService.Application.KafkaAbstractions;
 
 namespace IdentityService.API.Controllers;
 
@@ -13,7 +14,8 @@ public class CandidatesController : ControllerBase
     private readonly ICandidateService _candidateService;
     private readonly ICandidateTokenService _tokenService;
 
-    public CandidatesController(ICandidateService candidateService, ICandidateTokenService tokenService)
+    public CandidatesController(ICandidateService candidateService,
+        ICandidateTokenService tokenService)
     {
         _candidateService = candidateService;
         _tokenService = tokenService;
@@ -24,11 +26,12 @@ public class CandidatesController : ControllerBase
     {
         var token = await _tokenService.GetTokenAsync(data);
 
+
         return Ok(token);
     }
 
     [HttpPost("sign-in")]
-    public async Task<IActionResult> Registration(AddCandidateDTO candidateDTO)
+    public async Task<IActionResult> Registration([FromBody] AddCandidateDTO candidateDTO)
     {
         var data = await _candidateService.AddAsync(candidateDTO);
 

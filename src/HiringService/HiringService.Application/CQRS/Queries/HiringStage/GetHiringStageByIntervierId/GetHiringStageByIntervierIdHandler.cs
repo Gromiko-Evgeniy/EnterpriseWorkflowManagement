@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using HiringService.Application.Abstractions;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.DTOs.HiringStageDTOs;
-using HiringService.Application.Exceptions.Candidate;
-using HiringService.Application.Exceptions.HiringStage;
-using HiringService.Domain.Entities;
+using HiringService.Application.Exceptions.Worker;
 using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageQueries;

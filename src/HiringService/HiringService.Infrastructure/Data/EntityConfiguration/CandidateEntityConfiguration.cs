@@ -34,7 +34,6 @@ public class CandidateEntityConfiguration : IEntityTypeConfiguration<Candidate>
         builder.HasMany(m => m.HiringStages)
             .WithOne(o => o.Candidate)
             .HasForeignKey(fk => fk.CandidateId)
-            .IsRequired()
             .OnDelete(DeleteBehavior.SetNull);
     }
 }

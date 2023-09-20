@@ -1,5 +1,6 @@
-﻿using MediatR;
+﻿using HiringService.Application.DTOs.StageNameDTOs;
+using MediatR;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
-public sealed record AddStageNameCommand(string Name) : IRequest<int> { }
+public sealed record AddStageNameCommand(AddStageNameDTO StageNameDTO) : IRequest<int> { }

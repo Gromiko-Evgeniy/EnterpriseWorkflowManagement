@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HiringService.Application.Abstractions;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Application.Exceptions.HiringStage;
 using MediatR;

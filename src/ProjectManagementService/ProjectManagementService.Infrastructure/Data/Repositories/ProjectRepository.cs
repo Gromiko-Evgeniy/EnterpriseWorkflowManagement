@@ -1,9 +1,11 @@
 ﻿using ProjectManagementService.Domain.Entities;
 using MongoDB.Driver;
-using ProjectManagementService.Application.Abstractions;
 using HiringService.Infrastructure.Data.Repositories;
 using ProjectManagementService.Application.Configuration;
 using Microsoft.Extensions.Options;
+using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
+using MongoDB.Bson;
+using ProjectManagementService.Domain.Enumerations;
 
 namespace ProjectManagementService.Infrastucture.Data.Repositories;
 
@@ -22,5 +24,12 @@ public class ProjectRepository : GenericRepository<Project>, IProjectRepository
     public async Task<Project?> GetProjectByProjectLeaderId(string projectLeaderId) 
     {
         return await GetFirstAsync(task => task.LeadWorkerId == projectLeaderId);
+    }
+
+    public async Task CancelAsync(string id)
+    {
+        var update = new BsonDocument("$set", new BsonDocument("status", ProjectStatus.Canceled));
+
+        await UpdateAsync(update, task => task.Id == id);
     }
 }

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "IdentityService.GRPC";
+
+package candidate;
+
+service CandidateService {
+
+  rpc RemoveCandidate (RemoveCandidateRequest) returns (NewJWTReply);
+}
+
+message RemoveCandidateRequest {
+  string email = 1;
+  string name = 2;
+}
+
+message NewJWTReply {
+  string NewJWT = 1;
+}

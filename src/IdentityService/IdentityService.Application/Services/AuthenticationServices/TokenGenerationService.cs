@@ -1,5 +1,5 @@
-﻿using IdentityService.Application.Abstractions.ServiceAbstractions.TokenServices;
-using IdentityService.Application.Configuration;
+﻿using IdentityService.Application.Configuration;
+using IdentityService.Application.TokenAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
