@@ -1,6 +1,7 @@
 ﻿using Grpc.Net.Client;
 using HiringService.Application.Abstractions.ServiceAbstractions;
 using IdentityService.GRPC;
+﻿using HiringService.Application.Abstractions.ServiceAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,8 @@ public static class AddServicesExtension
 
         services.AddSingleton<IGRPCService, GRPCService>();
         services.AddSingleton<IJWTExtractorService, JWTExtractorService>();
+
+        services.Configure<IdentityGRPCServiceAddress>(configuration.GetSection("GRPC"));
 
         return services;
     }

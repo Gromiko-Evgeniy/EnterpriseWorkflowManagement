@@ -1,7 +1,4 @@
-version: "3.9"
-networks:
-  appnet:
-    driver: bridge
+version: '3.9'
 services:
   hiring-service: 
     container_name: hiring-service
@@ -20,19 +17,6 @@ services:
       - ASPNETCORE_URLS=https://+:5000
       - ASPNETCORE_URLS=http://+:5001
     command: sh -c "dockerize -wait tcp://kafka:9092 -timeout 20s"
-  postgres_db:
-    container_name: postgres
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 11412020
-      POSTGRES_DB: hiringdb
-    ports:
-      - "5432:5432"
-    networks:
-      - appnet
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
   identity-service:
     container_name: identity-service
     build:
@@ -49,30 +33,6 @@ services:
     environment:
       - ASPNETCORE_URLS=https://+:3000
       - ASPNETCORE_URLS=http://+:3001
-  mssql:
-    container_name: mssql
-    image: mcr.microsoft.com/mssql/server
-    restart: always
-    ports:
-      - 1433:1433
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=11412020
-    volumes:
-      - ./mssql-data:/var/opt/mssql
-  identity-grpc:
-    container_name: identity-grpc
-    build:
-      context: .
-      dockerfile: ./src/IdentityService/IdentityService.GRPC/Dockerfile
-    ports:
-      - "7000:80"
-      - "7001:443"
-    networks:
-      - appnet
-    depends_on:
-      - mssql
-      - kafka
   pm-service:
     container_name: pm-service
     build:
@@ -89,37 +49,7 @@ services:
     environment:
       - ASPNETCORE_URLS=https://+:6000
       - ASPNETCORE_URLS=http://+:6001
-  mongo_db:
-    container_name: mongo
-    image: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - ./mongo-data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=secret
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    networks:
-      - appnet
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    networks:
-      - appnet
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_CREATE_TOPICS: "add-candidates:1:1,add-workers:1:1,remove-workers:1:1,add-customers:1:1"
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    depends_on:
-      - zookeeper
-volumes:
-  postgres-data:
-  mssql-data:
-  mongo-data:
+networks:
+  appnet:
+    driver: bridge
+    external: true

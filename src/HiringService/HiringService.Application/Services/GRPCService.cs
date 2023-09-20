@@ -4,6 +4,7 @@ using IdentityService.GRPC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using static IdentityService.GRPC.CandidateService;
+using Microsoft.Extensions.Options;
 
 namespace HiringService.Application.Services;
 

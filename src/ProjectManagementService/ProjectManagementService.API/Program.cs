@@ -8,6 +8,7 @@ using HiringService.Application.Services;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
 using HiringService.Application.Cache;
+using ProjectManagementService.Application.CQRS.MediatrPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,13 +19,12 @@ builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddMapping();
 
-builder.Services.AddValidation();
-
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
 
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
+builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddControllers();
 

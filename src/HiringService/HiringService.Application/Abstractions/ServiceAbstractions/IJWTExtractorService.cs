@@ -4,5 +4,5 @@ namespace HiringService.Application.Abstractions.ServiceAbstractions;
 
 public interface IJWTExtractorService
 {
-    public string ExtractClaim(HttpRequest request, string claimType);
+    public string? ExtractClaim(HttpRequest request, string claimType);
 }

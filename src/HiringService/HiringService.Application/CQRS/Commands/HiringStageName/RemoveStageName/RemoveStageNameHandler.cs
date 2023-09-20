@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
 using HiringService.Application.Cache;
@@ -10,32 +10,25 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
-public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, string>
+public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 {
     private readonly IHiringStageNameRepository _nameRepository;
-    private readonly ICandidateRepository _candidateRepository;
     private readonly IHiringStageRepository _stageRepository;
     private readonly IGRPCService _gRPCService;
-    private readonly IDistributedCache _cache;
-    private readonly IMapper _mapper;
+    private readonly ICandidateRepository _candidateRepository;
 
     public RemoveStageNameHandler(IHiringStageNameRepository nameRepository,
         IHiringStageRepository stageRepository, IGRPCService gRPCService,
-        ICandidateRepository candidateRepository, IDistributedCache cache,
-        IMapper mapper)
+        ICandidateRepository candidateRepository)
     {
-        _candidateRepository = candidateRepository;
-        _stageRepository = stageRepository;
         _nameRepository = nameRepository;
+        _stageRepository = stageRepository;
         _gRPCService = gRPCService;
-        _mapper = mapper;
-        _cache = cache;
+        _candidateRepository = candidateRepository;
     }
 
-    public async Task<string> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
-        string? newJWT = null;
-
         var idKey = RedisKeysPrefixes.StageNamePrefix + request.Id;
         var stageNameDTO = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
         var stageName = _mapper.Map<HiringStageName>(stageNameDTO);
@@ -44,7 +37,6 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
         {
             stageName = await _nameRepository.GetByIdAsync(request.Id);
         }
-
         if (stageName is null) throw new NoStageNameWithSuchIdException();
 
         var stageNamesToUpdate = await _nameRepository.GetFilteredAsync(n => n.Index > stageName.Index);
@@ -52,50 +44,67 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand, st
 
         if (stageNamesToUpdate.Count == 0) // no more stages need to be passed, candidates hired = become workers
         {
-            foreach (var stage in hiringStagesToUpdate)
-            {
-                var candidate = await _candidateRepository.GetByIdAsync(stage.CandidateId);
-
-                if (candidate is not null)
-                {
-                    newJWT = await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
-                    _candidateRepository.Remove(candidate); // locally
-
-                    await _candidateRepository.SaveChangesAsync();
-                }
-            }
-            // stages will be deleted because of cascade delete
+            await RemoveStagesAndTheirCandidatesAsync(hiringStagesToUpdate);
         }
         else
         {
-            foreach (var stage in hiringStagesToUpdate)
-            {
-                var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
+            var newStageName = stageNamesToUpdate.FirstOrDefault(n => n.Index == stageName.Index + 1);
 
-                stage.HiringStageName = newStageName!;
-                stage.HiringStageNameId = newStageName!.Id;
-
-                _stageRepository.Update(stage);
-            }
-            await _stageRepository.SaveChangesAsync();
+            await SetNextStageNamesAsync(hiringStagesToUpdate, newStageName!);
         }
 
         _nameRepository.Remove(stageName);
         await _nameRepository.SaveChangesAsync();
 
-        await _cache.RemoveAsync(idKey);
-
-        if (stageNamesToUpdate.Count > 0)
+        if (stageNamesToUpdate.Count > 0) 
         {
-            // shifting the indexes of all subsequent elements in the list
-            foreach (var sName in stageNamesToUpdate)
-            {
-                sName.Index -= 1;
-                _nameRepository.Update(sName);
-            }
-            await _nameRepository.SaveChangesAsync();
+            await ShifHiringStageNametIndexesAsync(stageNamesToUpdate);
         }
 
-        return newJWT;
+        return Unit.Value;
+    }
+
+    private async Task RemoveStagesAndTheirCandidatesAsync(List<HiringStage> hiringStages)
+    {
+        var candidatesToDelete = new List<Candidate>();
+
+        foreach (var stage in hiringStages)
+        {
+            var candidate = await _candidateRepository.GetByIdAsync(stage.CandidateId);
+
+            if (candidate is not null)
+            {
+                await _gRPCService.DeleteCandidate(candidate.Email, candidate.Name); // remotely
+
+                candidatesToDelete.Add(candidate);
+            }
+        }
+
+        _candidateRepository.RemoveRange(candidatesToDelete); // locally
+        await _candidateRepository.SaveChangesAsync();
+        // stages will be deleted because of cascade delete
+    }
+
+    private async Task SetNextStageNamesAsync(List<HiringStage> hiringStages, HiringStageName newStageName)
+    {
+        foreach (var stage in hiringStages)
+        {
+            stage.HiringStageName = newStageName;
+            stage.HiringStageNameId = newStageName.Id;
+
+            _stageRepository.Update(stage);
+        }
+        await _stageRepository.SaveChangesAsync();
+    }
+
+    private async Task ShifHiringStageNametIndexesAsync(List<HiringStageName> stageNames)
+    {
+        // shifting the indices of all subsequent elements in the list
+        foreach (var sName in stageNames)
+        {
+            sName.Index -= 1;
+            _nameRepository.Update(sName);
+        }
+        await _nameRepository.SaveChangesAsync();
     }
 }

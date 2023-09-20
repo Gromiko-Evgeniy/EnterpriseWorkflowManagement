@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using HiringService.Application.Exceptions.Kafka;
 using Newtonsoft.Json;
 
 namespace HiringService.Application.Kafka;
@@ -27,22 +28,12 @@ public static class BaseKafkaConsumerFunctionality
 
                         if (data is not null)
                         {
-                            try
-                            {
-                                await messageValueAsyncProcessing(data);
-                            }
-                            catch (Exception ex)
-                            {
-                                await Console.Out.WriteLineAsync(ex.Message);
-                                //incorrect data
-                                //throw ?
-                                //log ?
-                            }
+                            await messageValueAsyncProcessing(data);
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        //unsupported type
+                        throw new KafkaMessageUnsupportedTypeException();
                     }
 
                     consumer.Commit(consumeResult);
