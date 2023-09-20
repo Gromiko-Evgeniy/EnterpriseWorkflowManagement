@@ -6,7 +6,10 @@ namespace HiringService.Infrastructure.Data;
 
 public class DataContext : DbContext
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+    public DataContext(DbContextOptions<DataContext> options) : base(options) 
+    {
+        Database.EnsureCreated();
+    }
 
     public DbSet<Worker> Workers { get; set; }
 

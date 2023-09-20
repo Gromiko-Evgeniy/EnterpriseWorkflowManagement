@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
 {
-    [Route("сandidates")]
+    [Route("candidates")]
     [ApiController]
     public class CandidatesController : ControllerBase
     {

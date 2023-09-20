@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  postgres_db:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 11412020
+      POSTGRES_DB: hiringdb
+    ports:
+      - "5432:5432"
+    networks:
+      - appnet
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=11412020
+    volumes:
+      - ./mssql-data:/var/opt/mssql
+  mongo_db:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+volumes:
+  postgres-data:
+  mssql-data:
+  mongo-data:

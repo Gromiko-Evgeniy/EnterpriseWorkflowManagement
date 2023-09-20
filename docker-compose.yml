@@ -1,0 +1,55 @@
+version: '3.9'
+services:
+  hiring-service: 
+    container_name: hiring-service
+    build:
+      context: .
+      dockerfile: ./src/HiringService/HiringService.API/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      - appnet
+    depends_on:
+      - kafka
+      - postgres_db
+    environment:
+      - ASPNETCORE_URLS=https://+:5000
+      - ASPNETCORE_URLS=http://+:5001
+    command: sh -c "dockerize -wait tcp://kafka:9092 -timeout 20s"
+  identity-service:
+    container_name: identity-service
+    build:
+      context: .
+      dockerfile: ./src/IdentityService/IdentityService.API/Dockerfile
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    networks:
+      - appnet
+    depends_on:
+      - mssql
+      - kafka
+    environment:
+      - ASPNETCORE_URLS=https://+:3000
+      - ASPNETCORE_URLS=http://+:3001
+  pm-service:
+    container_name: pm-service
+    build:
+      context: .
+      dockerfile: ./src/ProjectManagementService/ProjectManagementService.API/Dockerfile
+    ports:
+      - "6000:6000"
+      - "6001:6001"
+    networks:
+      - appnet
+    depends_on:
+      - mongo_db 
+      - kafka
+    environment:
+      - ASPNETCORE_URLS=https://+:6000
+      - ASPNETCORE_URLS=http://+:6001
+networks:
+  appnet:
+    driver: bridge
+    external: true
