@@ -1,10 +1,14 @@
-﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Application.Exceptions.HiringStage;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Application.Exceptions.Worker;
 using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.HiringStageCommands;
 
@@ -15,16 +19,21 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
     private readonly IHiringStageNameRepository _stageNameRepository;
     private readonly ICandidateRepository _candidateRepository;
     private readonly IGRPCService _gRPCService;
+    private readonly IDistributedCache _cache;
+    private readonly IMapper _mapper;
 
     public MarkStageAsPassedSuccessfullyHandler(IHiringStageRepository stageRepository,
         IWorkerRepository workerRepository, IHiringStageNameRepository stageNameRepository,
-        ICandidateRepository candidateRepository, IGRPCService gRPCService)
+        ICandidateRepository candidateRepository, IGRPCService gRPCService,
+        IDistributedCache cache, IMapper mapper)
     {
         _stageRepository = stageRepository;
         _workerRepository = workerRepository;
         _stageNameRepository = stageNameRepository;
         _candidateRepository = candidateRepository;
         _gRPCService = gRPCService;
+        _cache = cache;
+        _mapper = mapper;
     }
 
     public async Task<string> Handle(MarkStageAsPassedSuccessfullyCommand request, CancellationToken cancellationToken)

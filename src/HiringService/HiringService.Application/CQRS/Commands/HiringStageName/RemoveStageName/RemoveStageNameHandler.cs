@@ -1,8 +1,12 @@
-﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+using AutoMapper;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.StageNameDTOs;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -25,7 +29,14 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 
     public async Task<Unit> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
     {
-        var stageName = await _nameRepository.GetByIdAsync(request.Id);
+        var idKey = RedisKeysPrefixes.StageNamePrefix + request.Id;
+        var stageNameDTO = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
+        var stageName = _mapper.Map<HiringStageName>(stageNameDTO);
+
+        if (stageName is null) 
+        {
+            stageName = await _nameRepository.GetByIdAsync(request.Id);
+        }
         if (stageName is null) throw new NoStageNameWithSuchIdException();
 
         var stageNamesToUpdate = await _nameRepository.GetFilteredAsync(n => n.Index > stageName.Index);

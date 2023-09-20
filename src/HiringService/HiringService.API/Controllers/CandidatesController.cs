@@ -2,6 +2,7 @@
 using HiringService.Application.Abstractions.ServiceAbstractions;
 using HiringService.Application.CQRS.CandidateCommands;
 using HiringService.Application.CQRS.CandidateQueries;
+using HiringService.Application.CQRS.WorkerQueries;
 using HiringService.Application.DTOs.CandidateDTOs;
 using HiringService.Domain.Enumerations;
 using MediatR;

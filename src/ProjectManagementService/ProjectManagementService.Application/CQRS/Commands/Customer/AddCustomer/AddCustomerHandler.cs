@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using HiringService.Application.Cache;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Domain.Entities;
 
@@ -8,12 +10,15 @@ namespace ProjectManagementService.Application.CQRS.CustomerCommands;
 public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public AddCustomerHandler(ICustomerRepository customerRepository, IMapper mapper)
+    public AddCustomerHandler(ICustomerRepository customerRepository,
+        IDistributedCache cache, IMapper mapper)
     {
-        _mapper = mapper;
         _customerRepository = customerRepository;
+        _mapper = mapper;
+        _cache = cache;
     }
 
     public async Task<string> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
@@ -23,6 +28,9 @@ public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
         var newCustomer = _mapper.Map<Customer>(customerDTO);
 
         string id = await _customerRepository.AddAsync(newCustomer);
+        
+        var emailKey = RedisKeysPrefixes.CustomerPrefix + newCustomer.Email;
+        await _cache.SetRecordAsync(emailKey, newCustomer);
 
         return id;
     }

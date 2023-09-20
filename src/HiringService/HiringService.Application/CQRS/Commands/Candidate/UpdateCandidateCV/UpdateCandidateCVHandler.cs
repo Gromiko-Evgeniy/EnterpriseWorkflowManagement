@@ -1,16 +1,25 @@
-﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.CandidateDTOs;
 using HiringService.Application.Exceptions.Candidate;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HiringService.Application.CQRS.CandidateCommands;
 
 public class UpdateCandidateCVHandler : IRequestHandler<UpdateCandidateCVCommand>
 {
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IDistributedCache _cache;
+    private readonly IMapper _mapper;
 
-    public UpdateCandidateCVHandler(ICandidateRepository candidateRepository)
+    public UpdateCandidateCVHandler(ICandidateRepository candidateRepository,
+        IMapper mapper, IDistributedCache cache)
     {
         _candidateRepository = candidateRepository;
+        _mapper = mapper;
+        _cache = cache;
     }
 
     async Task<Unit> IRequestHandler<UpdateCandidateCVCommand, Unit>.Handle(UpdateCandidateCVCommand request, CancellationToken cancellationToken)
@@ -23,6 +32,13 @@ public class UpdateCandidateCVHandler : IRequestHandler<UpdateCandidateCVCommand
 
         _candidateRepository.Update(candidate);
         await _candidateRepository.SaveChangesAsync();
+
+        var emailKey = RedisKeysPrefixes.CandidatePrefix + candidate.Email;
+        var idKey = RedisKeysPrefixes.CandidatePrefix + candidate.Id;
+        var candidateMainInfo = _mapper.Map<CandidateMainInfoDTO>(candidate);
+
+        await _cache.SetRecordAsync(emailKey, candidateMainInfo);
+        await _cache.SetRecordAsync(idKey, candidateMainInfo);
 
         return Unit.Value; //fake empty value
     }

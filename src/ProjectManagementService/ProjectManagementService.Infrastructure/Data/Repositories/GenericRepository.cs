@@ -18,8 +18,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
         var DBConfiguration = DBConfigurationOptions.Value;
         var collectionConfigName = typeof(T).Name + "CollectionName";
 
-        var databaseName = DBConfiguration.DatabaseName; 
-        var collectionName = DBConfiguration.Collections[collectionConfigName]; 
+        var databaseName = DBConfiguration.DatabaseName;
+        var collectionName = DBConfiguration.Collections[collectionConfigName];
 
         var database = mongoClient.GetDatabase(databaseName);
         _collection = database.GetCollection<T>(collectionName);

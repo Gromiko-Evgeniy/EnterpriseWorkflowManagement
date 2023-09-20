@@ -1,7 +1,11 @@
-﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
+﻿using AutoMapper;
+using HiringService.Application.Abstractions.RepositoryAbstractions;
+using HiringService.Application.Cache;
+using HiringService.Application.DTOs.StageNameDTOs;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
@@ -9,10 +13,15 @@ namespace HiringService.Application.CQRS.StageNameCommands;
 public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
 {
     private readonly IHiringStageNameRepository _nameRepository;
+    private readonly IDistributedCache _cache;
+    private readonly IMapper _mapper;
 
-    public AddStageNameHandler(IHiringStageNameRepository nameRepository)
+    public AddStageNameHandler(IHiringStageNameRepository nameRepository,
+        IDistributedCache cache, IMapper mapper)
     {
         _nameRepository = nameRepository;
+        _cache = cache;
+        _mapper = mapper;
     }
 
     public async Task<int> Handle(AddStageNameCommand request, CancellationToken cancellationToken)
@@ -42,6 +51,13 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
 
         newStageName = _nameRepository.Add(newStageName);
         await _nameRepository.SaveChangesAsync();
+
+        var stageNameDTO = _mapper.Map<GetStageNameDTO>(newStageName);
+        var idKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Id;
+        var nameKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Name;
+
+        await _cache.SetRecordAsync(nameKey, stageNameDTO);
+        await _cache.SetRecordAsync(idKey, stageNameDTO);
 
         return newStageName.Id;
     }

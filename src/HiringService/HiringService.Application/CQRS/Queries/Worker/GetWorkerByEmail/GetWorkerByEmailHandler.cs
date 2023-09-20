@@ -1,32 +1,37 @@
 ﻿using AutoMapper;
 using HiringService.Application.Abstractions.RepositoryAbstractions;
-using HiringService.Application.CQRS.CandidateQueries;
-using HiringService.Application.DTOs.CandidateDTOs;
+using HiringService.Application.Cache;
 using HiringService.Application.Exceptions.Candidate;
 using HiringService.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
-namespace HiringService.Application.CQRS.Queries.Worker.GetWorkerByEmail;
+namespace HiringService.Application.CQRS.WorkerQueries;
 
-public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, CandidateMainInfoDTO>
+public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, Worker>
 {
     private readonly IWorkerRepository _workerRepository;
-    private readonly IMapper _mapper;
+    private readonly IDistributedCache _cache;
 
-    public GetWorkerByEmailHandler(IWorkerRepository workerRepository, IMapper mapper)
+    public GetWorkerByEmailHandler(IWorkerRepository workerRepository,
+        IDistributedCache cache, IMapper mapper)
     {
         _workerRepository = workerRepository;
-        _mapper = mapper;
+        _cache = cache;
     }
 
-    public async Task<CandidateMainInfoDTO> Handle(GetWorkerByEmailQuery request, CancellationToken cancellationToken)
+    public async Task<Worker> Handle(GetWorkerByEmailQuery request, CancellationToken cancellationToken)
     {
-        var worker = await _workerRepository.GetByEmailAsync(request.Email);
+        var emailKey = RedisKeysPrefixes.WorkerPrefix + request.Email;
+        var cachedWorker = await _cache.GetRecordAsync<Worker>(emailKey);
 
+        if (cachedWorker is not null) return cachedWorker;
+
+        var worker = await _workerRepository.GetByEmailAsync(request.Email);
         if (worker is null) throw new NoCandidateWithSuchEmailException();
 
-        var candidateDTO = _mapper.Map<CandidateMainInfoDTO>(worker);
+        await _cache.SetRecordAsync(emailKey, worker);
 
-        return candidateDTO;
+        return worker;
     }
 }

@@ -1,6 +1,9 @@
-﻿using MediatR;
+﻿using HiringService.Application.Cache;
+using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Customer;
+using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.CustomerCommands;
 
@@ -9,20 +12,29 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
     private readonly ICustomerRepository _customerRepository;
     private readonly IProjectRepository _projectRepository;
     private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IDistributedCache _cache;
 
     public RemoveCustomerHandler(ICustomerRepository customerRepository,
-        IProjectRepository projectRepository, IProjectTaskRepository projectTaskRepository)
+        IProjectRepository projectRepository, IDistributedCache cache,
+        IProjectTaskRepository projectTaskRepository)
     {
         _projectRepository = projectRepository;
         _customerRepository = customerRepository;
         _projectTaskRepository = projectTaskRepository;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(RemoveCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository
-            .GetFirstAsync(customer => customer.Email == request.Email);
+        var emailKey = RedisKeysPrefixes.CustomerPrefix + request.Email;
+        var customer = await _cache.GetRecordAsync<Customer>(emailKey);
 
+        if (customer is null)
+        {
+            customer = await _customerRepository
+                .GetFirstAsync(customer => customer.Email == request.Email);
+        }
+        
         if (customer is null) throw new NoCustomerWithSuchIdException();
 
         var projects = await _projectRepository.GetFilteredAsync(p => p.CustomerId == customer.Id);
@@ -39,9 +51,9 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
             }
         }
 
-        //grpc to remove customer from identity
-
         await _customerRepository.RemoveAsync(customer.Id);
+
+        await _cache.RemoveAsync(emailKey);
 
         return Unit.Value;
     }

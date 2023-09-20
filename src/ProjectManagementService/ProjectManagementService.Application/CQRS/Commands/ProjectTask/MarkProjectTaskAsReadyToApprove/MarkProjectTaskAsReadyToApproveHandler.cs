@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using HiringService.Application.Cache;
+using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Worker;
 
@@ -8,11 +10,14 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
 {
     private readonly IWorkerRepository _workerRepository;
     private readonly IProjectTaskRepository _taskRepository;
+    private readonly IDistributedCache _cache;
 
-    public MarkProjectTaskAsReadyToApproveHandler(IWorkerRepository workersRepository, IProjectTaskRepository taskRepository)
+    public MarkProjectTaskAsReadyToApproveHandler(IWorkerRepository workersRepository,
+        IProjectTaskRepository taskRepository, IDistributedCache cache)
     {
         _workerRepository = workersRepository;
         _taskRepository = taskRepository;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(MarkProjectTaskAsReadyToApproveCommand request, CancellationToken cancellationToken)
@@ -23,6 +28,9 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
         if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
 
         await _taskRepository.MarkAsReadyToApproveAsync(worker.CurrentTaskId);
+
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + worker.CurrentTaskId;
+        await _cache.RemoveAsync(idKey);
 
         return Unit.Value; //fake empty value
     }

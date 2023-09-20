@@ -6,13 +6,13 @@ using MediatR;
 
 namespace HiringService.Application.CQRS.HiringStageQueries;
 
-public class GetHiringStageByIntervierIdHandler : IRequestHandler<GetHiringStageByIntervierIdQuery, List<HiringStageShortInfoDTO>>
+public class GetHiringStagesByIntervierIdHandler : IRequestHandler<GetHiringStagesByIntervierIdQuery, List<HiringStageShortInfoDTO>>
 {
     private readonly IHiringStageRepository _stageRepository;
     private readonly IWorkerRepository _workerRepository;
     private readonly IMapper _mapper;
 
-    public GetHiringStageByIntervierIdHandler(IHiringStageRepository stageRepository,
+    public GetHiringStagesByIntervierIdHandler(IHiringStageRepository stageRepository,
         IWorkerRepository workerRepository, IMapper mapper)
     {
         _stageRepository = stageRepository;
@@ -20,7 +20,7 @@ public class GetHiringStageByIntervierIdHandler : IRequestHandler<GetHiringStage
         _mapper = mapper;
     }
 
-    public async Task<List<HiringStageShortInfoDTO>> Handle(GetHiringStageByIntervierIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<HiringStageShortInfoDTO>> Handle(GetHiringStagesByIntervierIdQuery request, CancellationToken cancellationToken)
     {
         var worker = await _workerRepository.GetByIdAsync(request.IntervierId);
 
