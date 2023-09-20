@@ -16,7 +16,7 @@ builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddRepositories();
 
-builder.Services.AddServices();
+builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddValidation();
 
