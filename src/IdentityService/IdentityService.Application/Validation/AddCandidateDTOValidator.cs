@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IdentityService.Application.DTOs.CandidateDTO;
 
-namespace ProjectManagementService.Application.Validation;
+namespace IdentityService.Application.Validation;
 
 public class AddCandidateDTOValidator : AbstractValidator<AddCandidateDTO>
 {

@@ -1,10 +1,10 @@
 using IdentityService.GRPC.Services;
-using ProjectManagementService.Application.Mapping;
 using IdentityService.Application.Services.Extensions;
 using IdentityService.Infrastructure.Data.Extensions;
-using ProjectManagementService.Application.Validation;
 using IdentityService.Application.Kafka;
 using IdentityService.Application.Configuration;
+using IdentityService.Application.Mapping;
+using IdentityService.Application.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 

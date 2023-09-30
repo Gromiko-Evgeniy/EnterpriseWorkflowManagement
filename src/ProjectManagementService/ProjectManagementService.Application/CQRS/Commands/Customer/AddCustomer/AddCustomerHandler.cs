@@ -27,7 +27,7 @@ public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
 
         var newCustomer = _mapper.Map<Customer>(customerDTO);
 
-        string id = await _customerRepository.AddAsync(newCustomer);
+        string id = await _customerRepository.AddOneAsync(newCustomer);
         
         var emailKey = RedisKeysPrefixes.CustomerPrefix + newCustomer.Email;
         await _cache.SetRecordAsync(emailKey, newCustomer);

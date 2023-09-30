@@ -110,6 +110,10 @@ namespace HiringService.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Index")
+                        .HasColumnType("integer")
+                        .HasColumnName("Index");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -118,7 +122,7 @@ namespace HiringService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StageNames", (string)null);
+                    b.ToTable("HiringStageNames", (string)null);
                 });
 
             modelBuilder.Entity("HiringService.Domain.Entities.Worker", b =>

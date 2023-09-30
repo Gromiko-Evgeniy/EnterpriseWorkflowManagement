@@ -5,6 +5,8 @@ using HiringService.Application.Kafka;
 using HiringService.Application.Mapping;
 using HiringService.Application.Services;
 using HiringService.Application.Validation;
+using HiringService.Infrastructure.Data;
+using HiringService.Infrastructure.Data.AddTestingData;
 using HiringService.Infrastructure.Data.Extensions;
 using IdentityService.Application.Authentication;
 using MediatR;
@@ -26,7 +28,7 @@ builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddControllers();
 
-builder.Services.AddKafkaBGServices();
+//builder.Services.AddKafkaBGServices();
 
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
@@ -39,6 +41,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await TestingDataContainer.AddTestingData(context);
 }
 
 app.UseHttpsRedirection();

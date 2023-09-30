@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -6,8 +7,10 @@ using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
 using ProjectManagementService.Application.Exceptions.Project;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
+using ProjectManagementService.Application.Exceptions.Worker;
 using ProjectManagementService.Domain.Entities;
 using ProjectManagementService.Domain.Enumerations;
+using System;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
@@ -15,15 +18,17 @@ public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskA
 {
     private readonly IProjectTaskRepository _taskRepository;
     private readonly IProjectRepository _projectRepository;
+    private readonly IWorkerRepository _workerRepository;
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
     public MarkProjectTaskAsApprovedHandler(IProjectTaskRepository tasksRepository,
-        IProjectRepository projectRepository, IDistributedCache cache,
-        IMapper mapper)
+        IProjectRepository projectRepository, IWorkerRepository workerRepository,
+        IDistributedCache cache, IMapper mapper)
     {
         _taskRepository = tasksRepository;
         _projectRepository = projectRepository;
+        _workerRepository = workerRepository;
         _mapper = mapper;
         _cache = cache;
     }
@@ -51,6 +56,33 @@ public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskA
         task.Status = ProjectTaskStatus.Approved;
         await _cache.SetRecordAsync(idKey, task);
 
+        await SetNewTaskForWorker(task.Id);
+
         return Unit.Value; //fake empty value
+    }
+
+    public async Task SetNewTaskForWorker(string taskId)
+    {
+        var worker = await _workerRepository.GetFirstAsync(worker => worker.CurrentTaskId == taskId);
+        if (worker is null) throw new NoWorkerWithSuchTaskIdException();
+
+        var today = DateTime.Now;
+
+        if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            var daysToAdd = ((int)DayOfWeek.Monday - (int)today.DayOfWeek + 7) % 7;
+            var time = new TimeSpan(6, 0, 0);
+
+            var monday = today.AddDays(daysToAdd);
+            monday = monday.Date + time;
+
+            BackgroundJob.Schedule(
+                () => _workerRepository.UpdateTaskAsync(worker.Id, taskId),
+                monday.Subtract(DateTime.Now)); // Till monday 6 am
+        }
+        else
+        {
+            await _workerRepository.UpdateTaskAsync(worker.Id, taskId);
+        }
     }
 }

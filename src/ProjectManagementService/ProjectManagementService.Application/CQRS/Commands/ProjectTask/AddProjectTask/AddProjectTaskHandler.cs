@@ -32,7 +32,7 @@ public class AddProjectTaskHandler : IRequestHandler<AddProjectTaskCommand, stri
         if (project is null) throw new NoProjectWithSuchIdException();
 
         var newProjectTask = _mapper.Map<ProjectTask>(projectTaskDTO);
-        var id = await _projectTaskRepository.AddAsync(newProjectTask);
+        var id = await _projectTaskRepository.AddOneAsync(newProjectTask);
 
         var idKey = RedisKeysPrefixes.ProjectTaskPrefix + id;
         await _cache.SetRecordAsync(idKey, project);

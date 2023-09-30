@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using IdentityService.Domain.Entities;
 
-namespace HiringService.Infrastructure.Data.EntityConfiguration;
+namespace IdentityService.Infrastructure.Data.EntityConfiguration;
 
 public class CustomerEntityConfiguration : IEntityTypeConfiguration<Customer>
 {

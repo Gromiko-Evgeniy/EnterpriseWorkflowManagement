@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HiringService.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230815182126_Initial")]
+    [Migration("20230917124207_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,35 +29,44 @@ namespace HiringService.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CV")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("CV");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("Name");
 
                     b.Property<DateTime>("NextStageTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("NextStageTime");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("Candidates", (string)null);
                 });
 
             modelBuilder.Entity("HiringService.Domain.Entities.HiringStage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -65,11 +74,14 @@ namespace HiringService.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("DateTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("Description");
 
                     b.Property<int>("HiringStageNameId")
                         .HasColumnType("integer");
@@ -78,7 +90,8 @@ namespace HiringService.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool>("PassedSuccessfully")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("PassedSuccessfully");
 
                     b.HasKey("Id");
 
@@ -88,45 +101,57 @@ namespace HiringService.Infrastructure.Migrations
 
                     b.HasIndex("IntervierId");
 
-                    b.ToTable("HiringStages");
+                    b.ToTable("HiringStages", (string)null);
                 });
 
             modelBuilder.Entity("HiringService.Domain.Entities.HiringStageName", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Index")
+                        .HasColumnType("integer")
+                        .HasColumnName("Index");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HiringStageNames");
+                    b.ToTable("HiringStageNames", (string)null);
                 });
 
             modelBuilder.Entity("HiringService.Domain.Entities.Worker", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workers");
+                    b.ToTable("Workers", (string)null);
                 });
 
             modelBuilder.Entity("HiringService.Domain.Entities.HiringStage", b =>
@@ -134,19 +159,19 @@ namespace HiringService.Infrastructure.Migrations
                     b.HasOne("HiringService.Domain.Entities.Candidate", "Candidate")
                         .WithMany("HiringStages")
                         .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("HiringService.Domain.Entities.HiringStageName", "HiringStageName")
                         .WithMany("HiringStages")
                         .HasForeignKey("HiringStageNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("HiringService.Domain.Entities.Worker", "Intervier")
                         .WithMany("HiringStages")
                         .HasForeignKey("IntervierId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Candidate");

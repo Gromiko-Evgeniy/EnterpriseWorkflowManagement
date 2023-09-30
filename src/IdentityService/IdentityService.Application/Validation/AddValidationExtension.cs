@@ -3,7 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace ProjectManagementService.Application.Validation;
+namespace IdentityService.Application.Validation;
 
 public static class AddValidationExtension
 {
@@ -11,7 +11,7 @@ public static class AddValidationExtension
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddFluentValidationAutoValidation();
-        
+
         return services;
     }
 }

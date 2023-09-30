@@ -27,7 +27,7 @@ public class AddProjectHandler : IRequestHandler<AddProjectCommand, string>
 
         var newProject = _mapper.Map<Project>(projectDTO);
 
-        var id = await _projectRepository.AddAsync(newProject);
+        var id = await _projectRepository.AddOneAsync(newProject);
 
         var idKey = RedisKeysPrefixes.ProjectPrefix + newProject.Id;
         await _cache.SetRecordAsync(idKey, newProject);

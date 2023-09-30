@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IdentityService.Application.DTOs.WorkerDTOs;
 
-namespace ProjectManagementService.Application.Validation;
+namespace IdentityService.Application.Validation;
 
 public class AddWorkerDTOValidator : AbstractValidator<AddWorkerDTO>
 {

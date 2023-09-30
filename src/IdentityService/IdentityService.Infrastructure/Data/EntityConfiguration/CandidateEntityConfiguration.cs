@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HiringService.Infrastructure.Data.EntityConfiguration;
+namespace IdentityService.Infrastructure.Data.EntityConfiguration;
 
 public class CandidateEntityConfiguration : IEntityTypeConfiguration<Candidate>
 {

@@ -31,11 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementService.Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementService.API", "src\ProjectManagementService\ProjectManagementService.API\ProjectManagementService.API.csproj", "{735E1E27-F4C3-4960-92D8-8A2A0BE7C3E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementService.Infrastucture", "src\ProjectManagementService\ProjectManagementService.Infrastructure\ProjectManagementService.Infrastucture.csproj", "{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementService.Infrastructure", "src\ProjectManagementService\ProjectManagementService.Infrastructure\ProjectManagementService.Infrastructure.csproj", "{731F7FB8-C1F5-4F56-B59D-E49DF7DC8660}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementService.Application", "src\ProjectManagementService\ProjectManagementService.Application\ProjectManagementService.Application.csproj", "{2B4B5061-F246-483E-8C82-B87970EEFC0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.GRPC", "src\IdentityService\IdentityService.GRPC\IdentityService.GRPC.csproj", "{F4383D51-36AE-461F-B260-C8BDA72989D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.GRPC", "src\IdentityService\IdentityService.GRPC\IdentityService.GRPC.csproj", "{F4383D51-36AE-461F-B260-C8BDA72989D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

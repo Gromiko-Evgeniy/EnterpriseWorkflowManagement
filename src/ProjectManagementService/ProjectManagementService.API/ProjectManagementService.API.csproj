@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectManagementService.Infrastructure\ProjectManagementService.Infrastucture.csproj" />
+    <ProjectReference Include="..\ProjectManagementService.Infrastructure\ProjectManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
