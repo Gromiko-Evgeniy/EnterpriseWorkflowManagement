@@ -6,6 +6,7 @@ using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -43,10 +44,7 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         }
         else
         {
-            //проеверить: возможно наибольший индекс меньше количества имен
-            //(0,1,__3,4  count<5) -> не столь важно
-            //(__1,2,3,4  count<5) -> индекс дублируется, важно
-            //но такое возможно лишь при тупом удалении данных прямиком из базы
+            await RemovePossibleIndexErrorsAsync(stageNames);
 
             newStageName.Index = stageNames.Count;
         }
@@ -55,13 +53,28 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         await _nameRepository.SaveChangesAsync();
 
         var stageNameDTO = _mapper.Map<GetStageNameDTO>(newStageName);
-        var idKey = "StageName_" + newStageName.Id;
-        var nameKey = "StageName_" + newStageName.Name;
+        var idKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Id;
+        var nameKey = RedisKeysPrefixes.StageNamePrefix + newStageName.Name;
 
         await _cache.SetRecordAsync(nameKey, stageNameDTO);
         await _cache.SetRecordAsync(idKey, stageNameDTO);
 
         return newStageName.Id;
+    }
+
+    private async Task RemovePossibleIndexErrorsAsync(List<HiringStageName> stageNames)
+    {
+        stageNames.Sort((x, y) => x.Index.CompareTo(y.Index));
+
+        for (int i = 0; i < stageNames.Count; i++)
+        {
+            if (stageNames[i].Index != i)
+            {
+                stageNames[i].Index = i;
+                _nameRepository.Update(stageNames[i]);
+                await _nameRepository.SaveChangesAsync();
+            }
+        }
     }
 }
 

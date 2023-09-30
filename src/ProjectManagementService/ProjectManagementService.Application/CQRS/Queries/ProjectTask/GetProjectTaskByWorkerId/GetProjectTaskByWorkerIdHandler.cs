@@ -17,11 +17,12 @@ public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByW
 
     public GetProjectTaskByWorkerIdHandler(IWorkerRepository repository,
         IProjectTaskRepository projectTaskRepository, IMapper mapper,
-        IWorkerRepository workerRepository)
+        IWorkerRepository workerRepository, IDistributedCache cache)
     {
         _workerRepository = repository;
         _projectTaskRepository = projectTaskRepository;
         _mapper = mapper;
+        _cache = cache;
         _workerRepository = workerRepository;
     }
 
@@ -32,7 +33,7 @@ public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByW
         if (worker is null) throw new NoWorkerWithSuchIdException();
         if (worker.CurrentTaskId is null) throw new WorkerHasNoTaskNowException();
 
-        var idKey = "Task_" + worker.CurrentTaskId;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + worker.CurrentTaskId;
         var taskDTO = await _cache.GetRecordAsync<TaskMainInfoDTO>(idKey);
 
         if (taskDTO is not null) return taskDTO;

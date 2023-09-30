@@ -2,4 +2,4 @@
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
-public sealed record RemoveStageNameCommand(int Id) : IRequest<string> { }
+public sealed record RemoveStageNameCommand(int Id) : IRequest { }

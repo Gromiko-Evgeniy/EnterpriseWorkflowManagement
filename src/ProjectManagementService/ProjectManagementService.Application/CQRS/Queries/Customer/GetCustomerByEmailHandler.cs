@@ -22,7 +22,7 @@ public class GetCustomerByEmailHandler : IRequestHandler<GetCustomerByEmailQuery
 
     public async Task<Customer> Handle(GetCustomerByEmailQuery request, CancellationToken cancellationToken)
     {
-        var emailKey = "Customer_" + request.Email;
+        var emailKey = RedisKeysPrefixes.CustomerPrefix + request.Email;
         var customer = await _cache.GetRecordAsync<Customer>(emailKey);
 
         if (customer is null)

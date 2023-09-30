@@ -12,6 +12,7 @@ using ProjectManagementService.Application.Hangfire;
 using ProjectManagementService.Application.Middleware;
 using HiringService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
+using ProjectManagementService.Application.CQRS.MediatrPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,13 +23,12 @@ builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddMapping();
 
-builder.Services.AddValidation();
-
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
 
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
+builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddHangfire(builder.Configuration);
 
@@ -39,7 +39,7 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
-//builder.Services.AddKafkaBGServices();
+builder.Services.AddKafkaBGServices();
 
 var app = builder.Build();
 

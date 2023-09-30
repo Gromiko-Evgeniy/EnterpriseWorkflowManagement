@@ -6,7 +6,7 @@ namespace HiringService.Application.Cache;
 public static class DistributedCacheExtensions
 {
     public static async Task SetRecordAsync<T>(this IDistributedCache cache,
-        string recordId,
+        string key,
         T data,
         TimeSpan? absoluteExpireTime = null,
         TimeSpan? unusedExpireTime = null)
@@ -17,12 +17,12 @@ public static class DistributedCacheExtensions
         options.SlidingExpiration = unusedExpireTime;
 
         var jsonData = JsonSerializer.Serialize(data);
-        await cache.SetStringAsync(recordId, jsonData, options);
+        await cache.SetStringAsync(key, jsonData, options);
     }
 
-    public static async Task<T> GetRecordAsync<T>(this IDistributedCache cache, string recordId)
+    public static async Task<T> GetRecordAsync<T>(this IDistributedCache cache, string key)
     {
-        var jsonData = await cache.GetStringAsync(recordId);
+        var jsonData = await cache.GetStringAsync(key);
 
         if (jsonData is null)
         {

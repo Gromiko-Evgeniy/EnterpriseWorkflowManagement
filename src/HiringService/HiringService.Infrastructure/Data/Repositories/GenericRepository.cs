@@ -46,7 +46,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.Remove(item);
     }
 
-    public void Update(T item)
+    public void RemoveRange(List<T> items)
+    {
+        _dbSet.RemoveRange(items);
+    }
+
+public void Update(T item)
     {
         _dbSet.Update(item);
     }

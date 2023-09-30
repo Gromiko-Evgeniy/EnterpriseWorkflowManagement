@@ -24,7 +24,7 @@ public class GetCandidateByIdHandler : IRequestHandler<GetCandidateByIdQuery, Ca
 
     public async Task<CandidateMainInfoDTO> Handle(GetCandidateByIdQuery request, CancellationToken cancellationToken)
     {
-        var idKey = "Candidate_" + request.Id;
+        var idKey = RedisKeysPrefixes.CandidatePrefix + request.Id;
 
         var cachedCandidate = await _cache.GetRecordAsync<CandidateMainInfoDTO>(idKey);
         if (cachedCandidate is not null) return cachedCandidate;
@@ -34,7 +34,7 @@ public class GetCandidateByIdHandler : IRequestHandler<GetCandidateByIdQuery, Ca
 
         var candidateDTO = _mapper.Map<CandidateMainInfoDTO>(candidate);
 
-        var emailKey = "Candidate_" + candidateDTO.Email;
+        var emailKey = RedisKeysPrefixes.CandidatePrefix + candidateDTO.Email;
 
         await _cache.SetRecordAsync(emailKey, candidateDTO);
         await _cache.SetRecordAsync(idKey, candidateDTO);

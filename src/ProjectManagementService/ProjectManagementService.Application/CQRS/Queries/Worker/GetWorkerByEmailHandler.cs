@@ -21,7 +21,7 @@ public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, Wo
 
     public async Task<Worker> Handle(GetWorkerByEmailQuery request, CancellationToken cancellationToken)
     {
-        var emailKey = "Worker_" + request.Email;
+        var emailKey = RedisKeysPrefixes.WorkerPrefix + request.Email;
         var worker = await _cache.GetRecordAsync<Worker>(emailKey);
 
         if (worker is null)

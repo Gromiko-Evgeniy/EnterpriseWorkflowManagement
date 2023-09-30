@@ -26,7 +26,7 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
 
     public async Task<Unit> Handle(RemoveCustomerCommand request, CancellationToken cancellationToken)
     {
-        var emailKey = "Customer_" + request.Email;
+        var emailKey = RedisKeysPrefixes.CustomerPrefix + request.Email;
         var customer = await _cache.GetRecordAsync<Customer>(emailKey);
 
         if (customer is null)
