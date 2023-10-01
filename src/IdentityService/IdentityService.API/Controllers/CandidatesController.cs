@@ -26,7 +26,6 @@ public class CandidatesController : ControllerBase
     {
         var token = await _tokenService.GetTokenAsync(data);
 
-
         return Ok(token);
     }
 

@@ -1,0 +1,40 @@
+.styledButton {
+    font-size: inherit;
+    padding: 5px 5px;
+    margin: 5px 0px;
+    color: #006868;
+    background-color: beige;
+    border: 2px solid #006868;
+    border-radius: 5px;
+    transition: transform 0.2s ease;
+}
+
+.styledButton:active {
+    transform: scale(0.7);
+}
+
+.roundButton {
+    padding: 0;
+    margin-left: 10px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 15px;
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.roundButton:active {
+    transform: scale(0.7);
+}
+
+.smallImage{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+}
+
+
+

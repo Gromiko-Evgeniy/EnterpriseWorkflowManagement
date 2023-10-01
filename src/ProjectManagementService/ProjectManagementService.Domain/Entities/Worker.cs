@@ -11,10 +11,4 @@ public class Worker : EntityWithId
 
     [BsonElement("email")]
     public string Email { get; set; } = string.Empty;
-
-    [BsonElement("currentTaskId")]
-    public string? CurrentTaskId { get; set; } = null;
-
-    [BsonElement("currentProjectId")]
-    public string? CurrentProjectId { get; set; }
 }

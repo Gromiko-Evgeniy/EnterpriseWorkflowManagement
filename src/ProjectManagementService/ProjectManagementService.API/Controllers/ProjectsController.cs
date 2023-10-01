@@ -49,7 +49,7 @@ public class ProjectsController : ControllerBase
     [Authorize(Roles = _customerRole)]
     public async Task<IActionResult> GetAllCustomerProjectsAsync()
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var customer = await _mediator.Send(new GetCustomerByEmailQuery(email));
 
@@ -62,7 +62,7 @@ public class ProjectsController : ControllerBase
     [Authorize(Roles = _customerRole)]
     public async Task<IActionResult> GetCustomerProjectByIdAsync([FromRoute] string id)
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var customer = await _mediator.Send(new GetCustomerByEmailQuery(email));
 
@@ -75,7 +75,7 @@ public class ProjectsController : ControllerBase
     [Authorize(Roles = _leaderRole)]
     public async Task<IActionResult> GetProjectLeaderProject()
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var projectLeader = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
@@ -88,7 +88,7 @@ public class ProjectsController : ControllerBase
     [Authorize(Roles = _customerRole)]
     public async Task<IActionResult> AddAsync(AddProjectDTO addProjectDTO)
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var customer = await _mediator.Send(new GetCustomerByEmailQuery(email));
 

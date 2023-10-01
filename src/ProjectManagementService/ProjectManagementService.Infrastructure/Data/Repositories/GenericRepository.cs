@@ -46,12 +46,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
     {
         var filter = new BsonDocument { { "_id", new BsonDocument("$eq", new ObjectId(id)) } };
 
-        return await _collection.Find(filter).FirstAsync();
+        return await _collection.Find(filter).FirstOrDefaultAsync();
     }
 
     public async Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _collection.Find(predicate).FirstAsync();
+        return await _collection.Find(predicate).FirstOrDefaultAsync();
     }
 
     public async Task<string> AddOneAsync(T item)
@@ -76,5 +76,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : EntityWithId
     public async Task UpdateAsync(BsonDocument update, Expression<Func<T, bool>> predicate)
     {
         await _collection.UpdateOneAsync(predicate, update);
+    }
+
+    public async Task UpdatePropertyAsync(string id, string propertyName, BsonValue value)
+    {
+        var update = new BsonDocument("$set", new BsonDocument(propertyName, value));
+
+        await UpdateAsync(update, task => task.Id == id);
     }
 }

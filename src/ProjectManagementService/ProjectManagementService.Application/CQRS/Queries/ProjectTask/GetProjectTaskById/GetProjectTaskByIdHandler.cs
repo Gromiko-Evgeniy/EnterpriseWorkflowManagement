@@ -3,7 +3,7 @@ using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
-using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
+using ProjectManagementService.Application.TaskDTOs;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;

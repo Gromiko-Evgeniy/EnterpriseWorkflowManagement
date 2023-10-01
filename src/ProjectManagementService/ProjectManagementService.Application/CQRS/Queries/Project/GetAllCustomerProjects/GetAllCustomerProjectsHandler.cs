@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Routing.Matching;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
-using ProjectManagementService.Application.DTOs.ProjectDTOs;
+using ProjectManagementService.Application.ProjectDTOs;
 using ProjectManagementService.Application.Exceptions.Customer;
 using ProjectManagementService.Domain.Entities;
 

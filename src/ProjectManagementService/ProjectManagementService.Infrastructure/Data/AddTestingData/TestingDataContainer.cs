@@ -2,7 +2,7 @@
 using ProjectManagementService.Domain.Entities;
 using ProjectManagementService.Domain.Enumerations;
 
-namespace HiringService.Infrastructure.Data.AddTestingData;
+namespace ProjectManagementService.Infrastructure.Data.AddTestingData;
 
 public static class TestingDataContainer
 {
@@ -11,10 +11,10 @@ public static class TestingDataContainer
         IProjectRepository projectRepository)
     {
         //check if there is no data in database
-        if (workerRepository.GetFirstAsync(_ => true) is not null) return;
-        if (projectRepository.GetFirstAsync(_ => true) is not null) return;
-        if (taskRepository.GetFirstAsync(_ => true) is not null) return;
-        if (customerRepository.GetFirstAsync(_ => true) is not null) return;
+        if (await workerRepository.GetFirstAsync(_ => true) is not null) return;
+        if (await projectRepository.GetFirstAsync(_ => true) is not null) return;
+        if (await taskRepository.GetFirstAsync(_ => true) is not null) return;
+        if (await customerRepository.GetFirstAsync(_ => true) is not null) return;
 
         var testWorkers = await AddTestWorkers(workerRepository);
         var worker1 = testWorkers[0];
@@ -29,7 +29,7 @@ public static class TestingDataContainer
         var testProjects = await CreateTestProjects(projectRepository,
             customer1, customer2, projectLeader);
         var project1 = testProjects[0];
-        var project2 = testProjects[2];
+        var project2 = testProjects[1];
 
         await AddTestTasksAndUpdateTestWorkers(taskRepository, workerRepository,
             project1, project2, worker1, worker2);
@@ -150,10 +150,6 @@ public static class TestingDataContainer
         var testTasks = new List<ProjectTask> { task1, task2, task3 };
         await taskRepository.AddManyAsync(testTasks);
 
-        await workerRepository.UpdateProjectAsync(worker1.Id, task2.ProjectId);
-        await workerRepository.UpdateTaskAsync(worker1.Id, task2.Id);
-
-        await workerRepository.UpdateProjectAsync(worker2.Id, task3.ProjectId);
-        await workerRepository.UpdateTaskAsync(worker2.Id, task3.Id);
-    }  
+        //------
+    }
 }

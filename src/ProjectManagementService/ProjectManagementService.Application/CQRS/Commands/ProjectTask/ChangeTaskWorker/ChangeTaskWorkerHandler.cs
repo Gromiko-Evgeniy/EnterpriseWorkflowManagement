@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
-using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
+using ProjectManagementService.Application.TaskDTOs;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
 using ProjectManagementService.Domain.Entities;
 

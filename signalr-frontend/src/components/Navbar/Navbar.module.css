@@ -1,0 +1,21 @@
+.navbar {
+    box-sizing: border-box;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    background-color: #bad8b2;
+    border-bottom: 2px solid #006868;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.spaceBetween{
+    display: flex;
+    justify-content: space-between;
+}

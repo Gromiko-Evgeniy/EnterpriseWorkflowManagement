@@ -34,7 +34,18 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(builder =>
+        builder.WithOrigins("http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+    )
+);
+
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseExceptionHandlingMiddleware();
 

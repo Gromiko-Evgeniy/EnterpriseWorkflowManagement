@@ -1,0 +1,17 @@
+.loginForm {
+    box-sizing: border-box;
+    width: 500px;
+    padding: 20px;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #82d26e;
+    border: 2px solid #006868;
+    border-radius: 10px;
+}
+
+.text {
+    color: #006868;
+}

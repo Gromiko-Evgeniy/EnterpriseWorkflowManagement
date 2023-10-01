@@ -4,14 +4,15 @@ using ProjectManagementService.Infrastucture.Data.Extensions;
 using ProjectManagementService.Application.Validation;
 using ProjectManagementService.Application.CQRS.ProjectQueries;
 using ProjectManagementService.Application.Configuration;
-using HiringService.Application.Services;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
 using HiringService.Application.Cache;
 using ProjectManagementService.Application.Hangfire;
 using ProjectManagementService.Application.Middleware;
-using HiringService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
+using ProjectManagementService.Application.Hubs;
+using ProjectManagementService.Infrastructure.Data.AddTestingData;
+using ProjectManagementService.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,22 +29,35 @@ builder.Services.AddRepositories();
 
 builder.Services.AddServices();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
 
 builder.Services.AddHangfire(builder.Configuration);
 
 builder.Services.AddControllers();
 
-builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+//builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
 //builder.Services.AddKafkaBGServices();
 
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(builder =>
+        builder.WithOrigins("http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+    )
+);
+
 var app = builder.Build();
 
-app.UseExceptionHandlingMiddleware();
+app.UseCors();
+ 
+//app.UseExceptionHandlingMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
@@ -61,9 +75,11 @@ if (app.Environment.IsDevelopment())
         workerRepository, taskRepository, projectRepository);
 }
 
+app.MapHub<ProjectsHub>("/project-groups");
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

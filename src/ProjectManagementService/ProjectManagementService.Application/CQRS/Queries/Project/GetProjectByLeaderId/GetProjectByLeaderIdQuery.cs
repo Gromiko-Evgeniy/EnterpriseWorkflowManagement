@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProjectManagementService.Application.DTOs.ProjectDTOs;
+using ProjectManagementService.Application.ProjectDTOs;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 

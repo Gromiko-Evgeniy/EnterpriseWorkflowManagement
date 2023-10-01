@@ -6,7 +6,7 @@ using ProjectManagementService.Application.CQRS.CustomerQueries;
 using ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 using ProjectManagementService.Application.CQRS.ProjectTaskQueries;
 using ProjectManagementService.Application.CQRS.WorkerQueries;
-using ProjectManagementService.Application.ProjectTaskDTOs;
+using ProjectManagementService.Application.TaskDTOs;
 using ProjectManagementService.Domain.Enumerations;
 
 namespace ProjectManagementService.API.Controllers;
@@ -59,7 +59,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = $"{_workerRole},{_leaderRole}")]
     public async Task<IActionResult> GetCurrentAsync()
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
@@ -81,7 +81,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = _customerRole)]
     public async Task<IActionResult> CancelAsync([FromRoute] string id)
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var customer = await _mediator.Send(new GetCustomerByEmailQuery(email));
 
@@ -94,7 +94,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = $"{_workerRole},{_leaderRole}")]
     public async Task<IActionResult> MarkAsReadyToApproveAsync()
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
@@ -107,7 +107,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = _leaderRole)]
     public async Task<IActionResult> MarkAsApproved([FromRoute] string id)
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var projectLeader = await _mediator.Send(new GetWorkerByEmailQuery(email));
         
@@ -120,7 +120,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = _workerRole)]
     public async Task<IActionResult> StartWorkingOnTask()
     { 
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
 
@@ -133,7 +133,7 @@ public class ProjectTasksController : ControllerBase
     [Authorize(Roles = _workerRole)]
     public async Task<IActionResult> FinishWorkingOnTask()
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
+        var email = _JWTExtractorService.ExtractClaimFromRequest(HttpContext.Request, "email");
 
         var worker = await _mediator.Send(new GetWorkerByEmailQuery(email));
 

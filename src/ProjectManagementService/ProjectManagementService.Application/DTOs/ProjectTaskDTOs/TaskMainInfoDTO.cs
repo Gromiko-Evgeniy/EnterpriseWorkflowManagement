@@ -1,6 +1,6 @@
 ﻿using ProjectManagementService.Domain.Enumerations;
 
-namespace ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
+namespace ProjectManagementService.Application.TaskDTOs;
 
 public class TaskMainInfoDTO
 {
@@ -17,4 +17,6 @@ public class TaskMainInfoDTO
     public DateTime StartTime { get; set; }
 
     public DateTime FinishTime { get; set; }
+
+    public string? WorkerId { get; set; }
 }

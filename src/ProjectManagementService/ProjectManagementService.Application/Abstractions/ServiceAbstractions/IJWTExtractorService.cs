@@ -4,5 +4,7 @@ namespace ProjectManagementService.Application.Abstractions.ServiceAbstractions;
 
 public interface IJWTExtractorService
 {
-    public string ExtractClaim(HttpRequest request, string claimType);
+    public string ExtractClaimFromRequest(HttpRequest request, string claimType);
+
+    public string ExtractClaimFromJWT(string JWT, string claimType);
 }

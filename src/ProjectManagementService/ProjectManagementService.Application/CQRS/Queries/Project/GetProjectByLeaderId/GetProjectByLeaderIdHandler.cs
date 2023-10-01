@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
-using ProjectManagementService.Application.DTOs.ProjectDTOs;
+using ProjectManagementService.Application.ProjectDTOs;
 using ProjectManagementService.Application.Exceptions.Project;
 using ProjectManagementService.Application.Exceptions.Worker;
-using ProjectManagementService.Domain.Entities;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 

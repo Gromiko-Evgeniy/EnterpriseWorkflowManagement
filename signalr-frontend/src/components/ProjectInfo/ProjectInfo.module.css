@@ -1,0 +1,14 @@
+.projectHeader{
+    display: flex;
+    justify-content: space-between;
+    font-size: large;
+}
+
+.centered {
+    display: flex;
+    align-items: center;
+}
+
+.marginRight10px {
+    margin-right: 10px;
+}

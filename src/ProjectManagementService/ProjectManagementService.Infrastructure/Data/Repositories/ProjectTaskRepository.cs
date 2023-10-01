@@ -1,6 +1,5 @@
 ﻿using ProjectManagementService.Domain.Entities;
 using ProjectManagementService.Domain.Enumerations;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using HiringService.Infrastructure.Data.Repositories;
 using ProjectManagementService.Application.Configuration;
@@ -19,6 +18,16 @@ public class ProjectTaskRepository : GenericRepository<ProjectTask>, IProjectTas
     public async Task<List<ProjectTask>> GetByProjectIdAsync(string projectId) 
     {
         return await GetFilteredAsync(task => task.ProjectId == projectId);
+    }
+
+    public async Task<ProjectTask?> GetByWorkerIdAsync(string workerId)
+    {
+        return await GetFirstAsync(task => task.WorkerId == workerId);
+    }
+
+    public async Task SetNewWorker(string taskId, string workerId)
+    {
+        await UpdatePropertyAsync(taskId, "workerId", workerId);
     }
 
     public async Task CancelAsync(string id) 
@@ -46,10 +55,13 @@ public class ProjectTaskRepository : GenericRepository<ProjectTask>, IProjectTas
         await UpdatePropertyAsync(id, "finishTime", DateTime.Now);
     }
 
-    private async Task UpdatePropertyAsync(string id, string propertyName, BsonValue value)
+    public async Task UpdateNameAsync(string id, string name)
     {
-        var update = new BsonDocument("$set", new BsonDocument(propertyName, value));
+        await UpdatePropertyAsync(id, "name", name);
+    }
 
-        await UpdateAsync(update, task => task.Id == id);
+    public async Task UpdateDescriptionAsync(string id, string description)
+    {
+        await UpdatePropertyAsync(id, "description", description);
     }
 }
