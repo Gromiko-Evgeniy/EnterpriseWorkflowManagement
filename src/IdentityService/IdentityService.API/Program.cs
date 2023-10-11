@@ -10,6 +10,7 @@ using IdentityService.Infrastructure.Data;
 using IdentityService.Application.Mapping;
 using IdentityService.Application.Validation;
 using IdentityService.Application.RepositoryAbstractions;
+using IdentityService.Application.CORS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,14 +35,7 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
-builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(builder =>
-        builder.WithOrigins("http://localhost:3000")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials()
-    )
-);
+builder.Services.AddCustomCors(builder.Configuration);
 
 var app = builder.Build();
 

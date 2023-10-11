@@ -13,6 +13,7 @@ using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Hubs;
 using ProjectManagementService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Services;
+using ProjectManagementService.Application.CORS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,27 +38,20 @@ builder.Services.AddHangfire(builder.Configuration);
 
 builder.Services.AddControllers();
 
-//builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
-//builder.Services.AddKafkaBGServices();
+builder.Services.AddKafkaBGServices();
 
-builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(builder =>
-        builder.WithOrigins("http://localhost:3000")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials()
-    )
-);
+builder.Services.AddCustomCors(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseCors();
  
-//app.UseExceptionHandlingMiddleware();
+app.UseExceptionHandlingMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
@@ -79,7 +73,7 @@ app.MapHub<ProjectsHub>("/project-groups");
 
 app.UseHttpsRedirection();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 

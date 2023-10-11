@@ -28,7 +28,7 @@ builder.Services.AddMediatR(typeof(AddCandidateCommand).Assembly);
 
 builder.Services.AddControllers();
 
-//builder.Services.AddKafkaBGServices();
+builder.Services.AddKafkaBGServices();
 
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 

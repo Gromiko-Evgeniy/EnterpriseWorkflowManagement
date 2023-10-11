@@ -58,18 +58,8 @@ public class WorkersController : ControllerBase
     [HttpPost("log-in")]
     public async Task<IActionResult> LogInAsync(LogInData data)
     {
-        //try
-        //{
-            var token = await _tokenService.GetTokenAsync(data);
-            return Ok(token);
-
-
-        //}
-        //catch (Exception ex) {
-        //    return Ok(ex);
-
-        //}
-
+        var token = await _tokenService.GetTokenAsync(data);
+        return Ok(token);
     }
 
     [HttpPut("new-name")]
@@ -121,5 +111,3 @@ public class WorkersController : ControllerBase
         return NoContent();
     }
 }
-
-//передать таску другому grpc

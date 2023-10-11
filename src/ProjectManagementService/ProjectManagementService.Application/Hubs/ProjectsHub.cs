@@ -36,7 +36,7 @@ public class ProjectsHub : Hub
     {
         if (!TryExtractEmailAndRoleFromJWT(JWT, out string email, out ApplicationRole role))
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return;
         }
 
@@ -113,7 +113,7 @@ public class ProjectsHub : Hub
         var worker = await _workerRepository.GetFirstAsync(worker => worker.Email == email);
         if (worker is null)
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return; 
         }
 
@@ -121,13 +121,13 @@ public class ProjectsHub : Hub
 
         if(workerTask is null)
         {
-            await noProjectsResponceAsync();
+            await BadUserResponseAsync();
             return;
         }
 
-        var projectDTO = await GetProjectWithTaskListDTO(workerTask.ProjectId);
+        var projectDTO = await GetProjectWithTaskListDTOAsync(workerTask.ProjectId);
 
-        await SendData(workerTask.ProjectId, projectDTO);
+        await SendDataAsync(workerTask.ProjectId, projectDTO);
     }
 
     private async Task SendProjectsToCustomerAsync(string email)
@@ -135,7 +135,7 @@ public class ProjectsHub : Hub
         var customer = await _customerRepository.GetFirstAsync(worker => worker.Email == email);
         if (customer is null)
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return; 
         }
 
@@ -143,13 +143,13 @@ public class ProjectsHub : Hub
 
         foreach (var project in projects)
         {
-            var projectDTO = await GetProjectWithTaskListDTO(project.Id);
+            var projectDTO = await GetProjectWithTaskListDTOAsync(project.Id);
 
-            await SendData(project.Id, projectDTO);
+            await SendDataAsync(project.Id, projectDTO);
         }        
     }
 
-    private async Task SendData<T>(string groupName, T data )
+    private async Task SendDataAsync<T>(string groupName, T data )
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
@@ -157,17 +157,17 @@ public class ProjectsHub : Hub
                 .SendAsync(receiveProjectsMethodName, data);
     }
 
-    private async Task BadUserResponceAsync()
+    private async Task BadUserResponseAsync()
     {
-        await SendData("BadUserGroup", "Your data is out of date, try to log in in again");
+        await SendDataAsync("BadUserGroup", "Your data is out of date, try to log in in again");
     }
 
-    private async Task noProjectsResponceAsync()
+    private async Task NoProjectsResponceAsync()
     {
-        await SendData("NoProjectGroup", "You have no projecs now");
+        await SendDataAsync("NoProjectGroup", "You have no projecs now");
     }
 
-    private async Task<ProjectWithTaskListDTO> GetProjectWithTaskListDTO(string projectId)
+    private async Task<ProjectWithTaskListDTO> GetProjectWithTaskListDTOAsync(string projectId)
     {
         var project = await _projectRepository.GetByIdAsync(projectId);
 
@@ -203,20 +203,20 @@ public class ProjectsHub : Hub
     {
         if (!TryExtractEmailAndRoleFromJWT(JWT, out string email, out ApplicationRole role))
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return;
         }
 
         if (role != ApplicationRole.Customer)
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return;
         }
 
         var customer = await _customerRepository.GetFirstAsync(worker => worker.Email == email);
         if (customer is null)
         {
-            await BadUserResponceAsync();
+            await BadUserResponseAsync();
             return;
         }
     }
