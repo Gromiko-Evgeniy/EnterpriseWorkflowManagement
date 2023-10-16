@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -23,7 +23,7 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
         _workerRepository = workersRepository;
         _taskRepository = taskRepository;
         _mapper = mapper;
-        _cache = cache;
+        _cache = cache; 
     }
 
     public async Task<Unit> Handle(MarkProjectTaskAsReadyToApproveCommand request, CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
 
         await _taskRepository.MarkAsReadyToApproveAsync(workerTask.Id);
 
-        var idKey = "Task_" + workerTask.Id;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + workerTask.Id;
         var taskDTO = _mapper.Map<TaskMainInfoDTO>(workerTask);
         await _cache.SetRecordAsync(idKey, taskDTO);
 

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -35,7 +35,7 @@ public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskComma
 
         await _taskRepository.StartWorkingOnTask(workerTask.Id);
 
-        var idKey = "Task_" + workerTask.Id;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + workerTask.Id;
         var taskDTO = _mapper.Map<TaskMainInfoDTO>(workerTask);
         await _cache.SetRecordAsync(idKey, taskDTO);
 

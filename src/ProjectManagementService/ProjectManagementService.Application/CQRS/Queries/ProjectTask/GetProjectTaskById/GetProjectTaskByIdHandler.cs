@@ -24,7 +24,7 @@ public class GetProjectTaskByIdHandler : IRequestHandler<GetProjectTaskByIdQuery
 
     public async Task<TaskMainInfoDTO> Handle(GetProjectTaskByIdQuery request, CancellationToken cancellationToken)
     {
-        var idKey = "Task_" + request.Id;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + request.Id;
         var taskDTO = await _cache.GetRecordAsync<TaskMainInfoDTO>(idKey);
         if (taskDTO is not null) return taskDTO;
          

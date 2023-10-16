@@ -25,7 +25,7 @@ public class GetHiringStageByIdHandler : IRequestHandler<GetHiringStageByIdQuery
 
     public async Task<HiringStageMainInfoDTO> Handle(GetHiringStageByIdQuery request, CancellationToken cancellationToken)
     {
-        var idKey = "HiringStage_" + request.Id;
+        var idKey = RedisKeysPrefixes.StagePrefix + request.Id;
         var cachedHiringStage = await _cache.GetRecordAsync<HiringStageMainInfoDTO>(idKey);
 
         if (cachedHiringStage is not null) return cachedHiringStage;

@@ -35,8 +35,8 @@ public class AddCandidateHandler : IRequestHandler<AddCandidateCommand, int>
         candidate = _candidateRepository.Add(candidate);
         await _candidateRepository.SaveChangesAsync();
 
-        var emailKey = "Candidate_" + candidate.Email;
-        var idKey = "Candidate_" + candidate.Id;
+        var emailKey = RedisKeysPrefixes.CandidatePrefix + candidate.Email;
+        var idKey = RedisKeysPrefixes.CandidatePrefix + candidate.Id;
         var candidateMainInfo = _mapper.Map<CandidateMainInfoDTO>(candidate);
 
         await _cache.SetRecordAsync(emailKey, candidateMainInfo);

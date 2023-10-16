@@ -29,7 +29,7 @@ public class AddProjectHandler : IRequestHandler<AddProjectCommand, string>
 
         var id = await _projectRepository.AddOneAsync(newProject);
 
-        var idKey = "Project_" + newProject.Id;
+        var idKey = RedisKeysPrefixes.ProjectPrefix + newProject.Id;
         await _cache.SetRecordAsync(idKey, newProject);
 
         return id;

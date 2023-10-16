@@ -29,7 +29,7 @@ public class ChangeTaskWorkerHandler : IRequestHandler<ChangeTaskWorkerCommand>
 
     public async Task<Unit> Handle(ChangeTaskWorkerCommand request, CancellationToken cancellationToken)
     {
-        var idKey = "Task_" + request.TaskId;
+        var idKey = RedisKeysPrefixes.ProjectTaskPrefix + request.TaskId;
 
         var taskDTO = await _cache.GetRecordAsync<TaskMainInfoDTO>(idKey);
         var task = _mapper.Map<ProjectTask>(taskDTO);
@@ -52,7 +52,7 @@ public class ChangeTaskWorkerHandler : IRequestHandler<ChangeTaskWorkerCommand>
         var update = new BsonDocument("$set", newTaskDocument);
         await _workerRepository.UpdateAsync(update, worker => worker.Id == request.WorkerId);
 
-        await _cache.RemoveAsync("Worker_" + request.WorkerId);
+        await _cache.RemoveAsync(RedisKeysPrefixes.WorkerPrefix + request.WorkerId);
 
         return Unit.Value;
     }

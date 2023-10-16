@@ -14,6 +14,7 @@ using ProjectManagementService.Application.Hubs;
 using ProjectManagementService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Services;
 using ProjectManagementService.Application.CORS;
+using ProjectManagementService.Application.CQRS.MediatrPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,6 @@ builder.Services.AddRedisCaching(builder.Configuration);
 
 builder.Services.AddMapping();
 
-builder.Services.AddValidation();
-
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
@@ -33,6 +32,7 @@ builder.Services.AddServices();
 builder.Services.AddSignalR();
 
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
+builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddHangfire(builder.Configuration);
 

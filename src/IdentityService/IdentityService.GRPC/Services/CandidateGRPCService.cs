@@ -33,7 +33,7 @@ public class CandidateGRPCService : CandidateService.CandidateServiceBase
 
         if (candidateToRemove is null)
         {
-            return new NewJWTReply { NewJWT = "error: incorrect email" };
+            return new NewJWTReply { NewJWT = "" };
         }
 
         _candidateRepository.Remove(candidateToRemove);

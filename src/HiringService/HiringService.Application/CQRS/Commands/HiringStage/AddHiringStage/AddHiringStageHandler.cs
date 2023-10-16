@@ -50,7 +50,7 @@ public class AddHiringStageHandler : IRequestHandler<AddHiringStageCommand, int>
         stage = _stageRepository.Add(stage);
         await _stageRepository.SaveChangesAsync();
 
-        var idKey = "HiringStage_" + stage.Id;
+        var idKey = RedisKeysPrefixes.StagePrefix + stage.Id;
         var hiringStageDTO = _mapper.Map<HiringStageMainInfoDTO>(stage);
 
         await _cache.SetRecordAsync(idKey, hiringStageDTO);
