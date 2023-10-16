@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IdentityService.Application.Exceptions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
@@ -20,9 +21,14 @@ public class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (CustomException ex)
         {
-            await HandleExceptionAsync(context, ex);
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsync(ex.Message);
+        }
+        catch
+        {
+            context.Response.StatusCode = 500;
         }
     }
 

@@ -1,6 +1,6 @@
 ﻿using ProjectManagementService.Domain.Enumerations;
 
-namespace ProjectManagementService.Application.ProjectTaskDTOs;
+namespace ProjectManagementService.Application.TaskDTOs;
 
 public class AddProjectTaskDTO
 {

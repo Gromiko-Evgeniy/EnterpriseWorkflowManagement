@@ -27,4 +27,7 @@ public class ProjectTask : EntityWithId
 
     [BsonElement("finishTime")]
     public DateTime FinishTime { get; set; }
+
+    [BsonElement("workerId")]
+    public string? WorkerId { get; set; }
 }

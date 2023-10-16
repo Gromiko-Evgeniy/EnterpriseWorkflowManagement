@@ -1,4 +1,4 @@
-﻿namespace ProjectManagementService.Application.DTOs.ProjectDTOs;
+﻿namespace ProjectManagementService.Application.ProjectDTOs;
 
 public class ProjectShortInfoDTO
 {

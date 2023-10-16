@@ -4,6 +4,7 @@ using IdentityService.Application.ServiceAbstractions;
 using IdentityService.Domain.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace EnterpriseWorkflowManagement.IdentityService.API.Controllers;
 
@@ -57,11 +58,7 @@ public class WorkersController : ControllerBase
     [HttpPost("log-in")]
     public async Task<IActionResult> LogInAsync(LogInData data)
     {
-        var email = _JWTExtractorService.ExtractClaim(HttpContext.Request, "email");
-        await _workerService.UpdateLastTimeVisitedAsync(email);
-
         var token = await _tokenService.GetTokenAsync(data);
-
         return Ok(token);
     }
 
@@ -114,5 +111,3 @@ public class WorkersController : ControllerBase
         return NoContent();
     }
 }
-
-//передать таску другому grpc

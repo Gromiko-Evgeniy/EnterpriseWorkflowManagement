@@ -4,14 +4,16 @@ using ProjectManagementService.Infrastucture.Data.Extensions;
 using ProjectManagementService.Application.Validation;
 using ProjectManagementService.Application.CQRS.ProjectQueries;
 using ProjectManagementService.Application.Configuration;
-using HiringService.Application.Services;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
 using HiringService.Application.Cache;
 using ProjectManagementService.Application.Hangfire;
 using ProjectManagementService.Application.Middleware;
-using HiringService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
+using ProjectManagementService.Application.Hubs;
+using ProjectManagementService.Infrastructure.Data.AddTestingData;
+using ProjectManagementService.Application.Services;
+using ProjectManagementService.Application.CORS;
 using ProjectManagementService.Application.CQRS.MediatrPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,8 @@ builder.Services.AddRepositories();
 
 builder.Services.AddServices();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddMediatR(typeof(GetAllProjectsQuery).Assembly);
 builder.Services.AddMediatRPipelineBehaviors();
 
@@ -41,8 +45,12 @@ builder.Services.AddSwaggerGen(SwaggerAuthConfiguration.Configure);
 
 builder.Services.AddKafkaBGServices();
 
+builder.Services.AddCustomCors(builder.Configuration);
+
 var app = builder.Build();
 
+app.UseCors();
+ 
 app.UseExceptionHandlingMiddleware();
 
 if (app.Environment.IsDevelopment())
@@ -60,6 +68,8 @@ if (app.Environment.IsDevelopment())
     await TestingDataContainer.AddTestingData(customerRepository,
         workerRepository, taskRepository, projectRepository);
 }
+
+app.MapHub<ProjectsHub>("/project-groups");
 
 app.UseHttpsRedirection();
 

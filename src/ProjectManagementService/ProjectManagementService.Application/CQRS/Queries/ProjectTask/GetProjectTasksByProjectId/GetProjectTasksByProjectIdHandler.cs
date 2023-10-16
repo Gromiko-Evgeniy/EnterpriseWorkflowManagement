@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
-using ProjectManagementService.Application.DTOs.ProjectTaskDTOs;
+using ProjectManagementService.Application.TaskDTOs;
 using ProjectManagementService.Application.Exceptions.Project;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskQueries;
