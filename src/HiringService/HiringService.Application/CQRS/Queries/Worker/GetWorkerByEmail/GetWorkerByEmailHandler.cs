@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using HiringService.Application.Abstractions.RepositoryAbstractions;
+﻿using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Cache;
-using HiringService.Application.Exceptions.Candidate;
+using HiringService.Application.Exceptions.Worker;
 using HiringService.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -14,7 +13,7 @@ public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, Wo
     private readonly IDistributedCache _cache;
 
     public GetWorkerByEmailHandler(IWorkerRepository workerRepository,
-        IDistributedCache cache, IMapper mapper)
+        IDistributedCache cache)
     {
         _workerRepository = workerRepository;
         _cache = cache;
@@ -28,7 +27,7 @@ public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, Wo
         if (cachedWorker is not null) return cachedWorker;
 
         var worker = await _workerRepository.GetByEmailAsync(request.Email);
-        if (worker is null) throw new NoCandidateWithSuchEmailException();
+        if (worker is null) throw new NoWorkerWithSuchEmailException();
 
         await _cache.SetRecordAsync(emailKey, worker);
 

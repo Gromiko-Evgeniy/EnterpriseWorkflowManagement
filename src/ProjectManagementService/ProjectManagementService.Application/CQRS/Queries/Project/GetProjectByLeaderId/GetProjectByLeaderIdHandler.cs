@@ -2,8 +2,8 @@
 using MediatR;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.ProjectDTOs;
-using ProjectManagementService.Application.Exceptions.Project;
 using ProjectManagementService.Application.Exceptions.Worker;
+using ProjectManagementService.Application.Exceptions.Project;
 
 namespace ProjectManagementService.Application.CQRS.ProjectQueries;
 
@@ -14,8 +14,10 @@ public class GetProjectByLeaderIdHandler : IRequestHandler<GetProjectByLeaderIdQ
     private readonly IMapper _mapper;
 
 
-    public GetProjectByLeaderIdHandler(IProjectRepository repository,
-        IWorkerRepository workerRepository, IMapper mapper)
+    public GetProjectByLeaderIdHandler(
+        IProjectRepository repository,
+        IWorkerRepository workerRepository,
+        IMapper mapper)
     {
         _projectRepository = repository;
         _workerRepository = workerRepository;
@@ -30,7 +32,7 @@ public class GetProjectByLeaderIdHandler : IRequestHandler<GetProjectByLeaderIdQ
 
         var project = await _projectRepository.GetProjectByProjectLeaderId(request.ProjectLeaderId);
 
-        if (project is null) throw new NoProjectWithSuchProjectLeader();
+        if (project is null) throw new NoProjectWithSuchProjectLeaderException();
 
         return _mapper.Map<ProjectMainInfoDTO>(project);
     }

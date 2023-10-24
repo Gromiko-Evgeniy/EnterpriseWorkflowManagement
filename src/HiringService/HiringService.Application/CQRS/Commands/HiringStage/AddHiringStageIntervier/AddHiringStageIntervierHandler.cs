@@ -24,7 +24,7 @@ public class AddHiringStageIntervierHandler : IRequestHandler<AddHiringStageInte
         if (worker is null) throw new NoWorkerWithSuchIdException();
         if (stage is null) throw new NoStageNameWithSuchIdException();
 
-        stage.Intervier = worker;
+        stage.Interviewer = worker;
 
         _stageRepository.Update(stage);
         await _stageRepository.SaveChangesAsync();

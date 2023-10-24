@@ -1,6 +1,5 @@
 ﻿using HiringService.Application.Cache;
 using MediatR;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Caching.Distributed;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.Exceptions.Customer;
@@ -13,7 +12,8 @@ public class GetCustomerByEmailHandler : IRequestHandler<GetCustomerByEmailQuery
     private readonly ICustomerRepository _customerRepository;
     private readonly IDistributedCache _cache;
 
-    public GetCustomerByEmailHandler(ICustomerRepository customerRepository,
+    public GetCustomerByEmailHandler(
+        ICustomerRepository customerRepository,
         IDistributedCache cache)
     {
         _customerRepository = customerRepository;

@@ -23,4 +23,6 @@ public interface IProjectTaskRepository : IGenericRepository<ProjectTask>
     public Task UpdateNameAsync(string id, string name);
 
     public Task UpdateDescriptionAsync(string id, string description);
+
+    public Task UpdateWorkerIdAsync(string id, string workerId);
 }

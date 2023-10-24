@@ -14,12 +14,14 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
     private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly IDistributedCache _cache;
 
-    public RemoveCustomerHandler(ICustomerRepository customerRepository,
-        IProjectRepository projectRepository, IDistributedCache cache,
-        IProjectTaskRepository projectTaskRepository)
+    public RemoveCustomerHandler(
+        ICustomerRepository customerRepository,
+        IProjectRepository projectRepository,
+        IProjectTaskRepository projectTaskRepository,
+        IDistributedCache cache)
     {
-        _projectRepository = projectRepository;
         _customerRepository = customerRepository;
+        _projectRepository = projectRepository;
         _projectTaskRepository = projectTaskRepository;
         _cache = cache;
     }
@@ -38,14 +40,15 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
         if (customer is null) throw new NoCustomerWithSuchIdException();
 
         var projects = await _projectRepository.GetFilteredAsync(p => p.CustomerId == customer.Id);
+        var tasks = await _projectTaskRepository.GetAllAsync();
 
         foreach (var project in projects)
         {
             await _projectRepository.CancelAsync(project.Id);
 
-            var tasks = await _projectTaskRepository.GetFilteredAsync(t => t.ProjectId == project.Id);
+            var projectTasks = tasks.Where(t => t.ProjectId == project.Id);
 
-            foreach (var task in tasks)
+            foreach (var task in projectTasks)
             {
                 await _projectTaskRepository.CancelAsync(task.Id);
             }
@@ -53,7 +56,7 @@ public class RemoveCustomerHandler : IRequestHandler<RemoveCustomerCommand>
 
         await _customerRepository.RemoveAsync(customer.Id);
 
-        await _cache.RemoveAsync(emailKey);
+        await _cache.RemoveRecordAsync(emailKey);
 
         return Unit.Value;
     }

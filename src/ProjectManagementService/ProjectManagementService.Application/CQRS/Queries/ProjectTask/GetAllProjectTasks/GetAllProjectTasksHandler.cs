@@ -10,7 +10,9 @@ public class GetAllProjectTasksHandler : IRequestHandler<GetAllProjectTasksQuery
     private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly IMapper _mapper;
 
-    public GetAllProjectTasksHandler(IProjectTaskRepository repository, IMapper mapper)
+    public GetAllProjectTasksHandler(
+        IProjectTaskRepository repository,
+        IMapper mapper)
     {
         _projectTaskRepository = repository;
         _mapper = mapper;

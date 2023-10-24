@@ -1,10 +1,9 @@
 using HiringService.Application.Cache;
 using HiringService.Application.CQRS.CandidateCommands;
-using HiringService.Application.CQRS.MediatrPipeline;
 using HiringService.Application.Kafka;
 using HiringService.Application.Mapping;
+using HiringService.Application.MediatrPipeline;
 using HiringService.Application.Services;
-using HiringService.Application.Validation;
 using HiringService.Infrastructure.Data;
 using HiringService.Infrastructure.Data.AddTestingData;
 using HiringService.Infrastructure.Data.Extensions;
@@ -28,7 +27,7 @@ builder.Services.AddMediatRPipelineBehaviors();
 
 builder.Services.AddControllers();
 
-builder.Services.AddKafkaBGServices();
+//builder.Services.AddKafkaBGServices();
 
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 

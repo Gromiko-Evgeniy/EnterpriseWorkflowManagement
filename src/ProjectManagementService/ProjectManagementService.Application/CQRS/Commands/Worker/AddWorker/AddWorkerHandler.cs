@@ -15,8 +15,10 @@ public class AddWorkerHandler : IRequestHandler<AddWorkerCommand, string>
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public AddWorkerHandler(IWorkerRepository workerRepository,
-        IDistributedCache cache, IMapper mapper)
+    public AddWorkerHandler(
+        IWorkerRepository workerRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _workerRepository = workerRepository;
         _mapper = mapper;

@@ -12,7 +12,8 @@ public class GetWorkerByEmailHandler : IRequestHandler<GetWorkerByEmailQuery, Wo
     private readonly IWorkerRepository _workerRepository;
     private readonly IDistributedCache _cache;
 
-    public GetWorkerByEmailHandler(IWorkerRepository workerRepository,
+    public GetWorkerByEmailHandler(
+        IWorkerRepository workerRepository,
         IDistributedCache cache)
     {
         _workerRepository = workerRepository;

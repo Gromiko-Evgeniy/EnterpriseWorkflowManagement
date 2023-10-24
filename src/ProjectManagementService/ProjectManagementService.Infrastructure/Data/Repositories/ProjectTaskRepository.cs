@@ -64,4 +64,9 @@ public class ProjectTaskRepository : GenericRepository<ProjectTask>, IProjectTas
     {
         await UpdatePropertyAsync(id, "description", description);
     }
+
+    public async Task UpdateWorkerIdAsync(string id, string workerId)
+    {
+        await UpdatePropertyAsync(id, "workerId", workerId);
+    }
 }

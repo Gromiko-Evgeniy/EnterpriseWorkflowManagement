@@ -24,7 +24,7 @@ public class ExceptionHandlingMiddleware
             context.Response.StatusCode = 400;
             await context.Response.WriteAsync(ex.Message);
         }
-        catch (Exception ex) 
+        catch
         {
             context.Response.StatusCode = 500;
         }

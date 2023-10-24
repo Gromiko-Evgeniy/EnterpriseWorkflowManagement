@@ -15,8 +15,11 @@ public class AddProjectTaskHandler : IRequestHandler<AddProjectTaskCommand, stri
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public AddProjectTaskHandler(IProjectTaskRepository projectTaskRepository,
-        IProjectRepository projectRepository, IDistributedCache cache, IMapper mapper)
+    public AddProjectTaskHandler(
+        IProjectTaskRepository projectTaskRepository,
+        IProjectRepository projectRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _projectTaskRepository = projectTaskRepository;
         _projectRepository = projectRepository;
@@ -28,7 +31,7 @@ public class AddProjectTaskHandler : IRequestHandler<AddProjectTaskCommand, stri
     {
         var projectTaskDTO = request.ProjectTaskDTO;
 
-        var project = _projectRepository.GetByIdAsync(projectTaskDTO.ProjectId);
+        var project = await _projectRepository.GetByIdAsync(projectTaskDTO.ProjectId);
         if (project is null) throw new NoProjectWithSuchIdException();
 
         var newProjectTask = _mapper.Map<ProjectTask>(projectTaskDTO);

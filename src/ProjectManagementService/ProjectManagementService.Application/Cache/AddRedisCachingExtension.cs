@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HiringService.Application.Cache;
+namespace ProjectManagementService.Application.Cache;
 
 public static class AddRedisCachingExtension
 {
@@ -11,7 +11,7 @@ public static class AddRedisCachingExtension
         services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration.GetConnectionString("Redis");
-                options.InstanceName = "HiringService_";
+                options.InstanceName = "ProjectManagementService";
             }
         );
 

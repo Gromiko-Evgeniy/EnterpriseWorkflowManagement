@@ -17,8 +17,10 @@ public class MarkProjectTaskAsReadyToApproveHandler : IRequestHandler<MarkProjec
     private readonly IMapper _mapper;
 
     public MarkProjectTaskAsReadyToApproveHandler(
-        IWorkerRepository workersRepository, IMapper mapper,
-        IProjectTaskRepository taskRepository, IDistributedCache cache)
+        IWorkerRepository workersRepository,
+        IProjectTaskRepository taskRepository,
+        IMapper mapper,
+        IDistributedCache cache)
     {
         _workerRepository = workersRepository;
         _taskRepository = taskRepository;

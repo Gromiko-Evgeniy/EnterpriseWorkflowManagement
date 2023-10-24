@@ -3,7 +3,6 @@ using IdentityService.Application.DTOs;
 using IdentityService.Application.DTOs.CandidateDTO;
 using IdentityService.Application.ServiceAbstractions;
 using Microsoft.AspNetCore.Mvc;
-using IdentityService.Application.KafkaAbstractions;
 
 namespace IdentityService.API.Controllers;
 

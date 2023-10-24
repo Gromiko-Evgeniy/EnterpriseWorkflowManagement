@@ -20,4 +20,7 @@
     <ProjectReference Include="..\ProjectManagementService.Infrastructure\ProjectManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ProjectManagementService.Integration.Tests" />
+  </ItemGroup>
 </Project>

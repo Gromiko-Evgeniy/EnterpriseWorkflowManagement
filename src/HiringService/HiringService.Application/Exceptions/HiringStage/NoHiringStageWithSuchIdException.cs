@@ -1,6 +1,6 @@
 ﻿namespace HiringService.Application.Exceptions.HiringStage;
 
-internal class NoHiringStageWithSuchIdException : CustomException
+public class NoHiringStageWithSuchIdException : CustomException
 {
     private const string _messageText = "Hiring stage With Such id not found";
 

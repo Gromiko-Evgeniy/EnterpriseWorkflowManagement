@@ -17,8 +17,11 @@ public class CancelProjectTaskByIdHandler : IRequestHandler<CancelProjectTaskByI
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public CancelProjectTaskByIdHandler(IProjectTaskRepository taskRepository,
-        IProjectRepository projectRepository, IDistributedCache cache, IMapper mapper)
+    public CancelProjectTaskByIdHandler(
+        IProjectTaskRepository taskRepository,
+        IProjectRepository projectRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _taskRepository = taskRepository;
         _projectRepository = projectRepository;
@@ -41,12 +44,16 @@ public class CancelProjectTaskByIdHandler : IRequestHandler<CancelProjectTaskByI
         if (task is null) throw new NoProjectTaskWithSuchIdException();
 
         var customerProjects = await _projectRepository.GetAllCustomerProjectsAsync(request.CustomerId);
-        if (!customerProjects.Any(p => p.Id == task.ProjectId)) throw new AccessToCancelProjectTaskDeniedException();
+
+        var projectBelongsToTheCustomer = customerProjects.Any(p => p.Id == task.ProjectId);
+        if (!projectBelongsToTheCustomer) throw new AccessToCancelProjectTaskDeniedException();
 
         await _taskRepository.CancelAsync(request.ProjectTaskId);
 
         task.Status = ProjectTaskStatus.Canceled;
-        await _cache.SetRecordAsync(idKey, task);
+
+        taskDTO = _mapper.Map<TaskMainInfoDTO>(task);
+        await _cache.SetRecordAsync(idKey, taskDTO);
 
         return Unit.Value; //fake empty value
     }

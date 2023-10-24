@@ -9,6 +9,6 @@ public class HiringStageRepository : GenericRepository<HiringStage>, IHiringStag
 
     public async Task<List<HiringStage>> GetByIntervierIdAsync(int intervierId)
     {
-        return await GetFilteredAsync(s => s.IntervierId == intervierId);
+        return await GetFilteredAsync(s => s.InterviewerId == intervierId);
     }
 }

@@ -58,15 +58,6 @@ namespace HiringService.API.Controllers
             return Ok(stages);
         }
 
-        [HttpPost]
-        [Authorize(Roles = _depHeadRole)]
-        public async Task<IActionResult> MarkAsPassedSuccessfullyAsync([FromBody] AddHiringStageDTO hiringStageDTO)
-        {
-            var id = await _mediator.Send(new AddHiringStageCommand(hiringStageDTO));
-
-            return Ok(id);
-        }
-
         [HttpPut("mark-as-success/{id}")]
         [Authorize(Roles = $"{_depHeadRole},{_leaderRole},{_workerRole}")]
         public async Task<IActionResult> MarkAsPassedSuccessfullyAsync([FromRoute] int id)

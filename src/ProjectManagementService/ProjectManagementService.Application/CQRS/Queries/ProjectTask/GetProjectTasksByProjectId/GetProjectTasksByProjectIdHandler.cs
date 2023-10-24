@@ -12,8 +12,10 @@ public class GetProjectTasksByProjectIdHandler : IRequestHandler<GetProjectTasks
     private readonly IProjectRepository _projectRepository;
     private readonly IMapper _mapper;
 
-    public GetProjectTasksByProjectIdHandler(IProjectTaskRepository projectTaskRepository,
-        IProjectRepository projectRepository, IMapper mapper)
+    public GetProjectTasksByProjectIdHandler(
+        IProjectTaskRepository projectTaskRepository,
+        IProjectRepository projectRepository,
+        IMapper mapper)
     {
         _projectTaskRepository = projectTaskRepository;
         _projectRepository = projectRepository;
@@ -22,7 +24,7 @@ public class GetProjectTasksByProjectIdHandler : IRequestHandler<GetProjectTasks
 
     public async Task<List<TaskShortInfoDTO>> Handle(GetProjectTasksByProjectIdQuery request, CancellationToken cancellationToken)
     {
-        var project = _projectRepository.GetByIdAsync(request.ProjectId);
+        var project = await _projectRepository.GetByIdAsync(request.ProjectId);
 
         if (project is null) throw new NoProjectWithSuchIdException();
 

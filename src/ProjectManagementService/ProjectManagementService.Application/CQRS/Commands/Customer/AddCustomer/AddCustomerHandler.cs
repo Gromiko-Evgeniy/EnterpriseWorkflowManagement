@@ -13,8 +13,10 @@ public class AddCustomerHandler : IRequestHandler<AddCustomerCommand, string>
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public AddCustomerHandler(ICustomerRepository customerRepository,
-        IDistributedCache cache, IMapper mapper)
+    public AddCustomerHandler(
+        ICustomerRepository customerRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _customerRepository = customerRepository;
         _mapper = mapper;

@@ -24,8 +24,8 @@ internal class WorkerEntityConfiguration : IEntityTypeConfiguration<Worker>
             .IsRequired();
 
         builder.HasMany(m => m.HiringStages)
-            .WithOne(o => o.Intervier)
-            .HasForeignKey(fk => fk.IntervierId)
+            .WithOne(o => o.Interviewer)
+            .HasForeignKey(fk => fk.InterviewerId)
             .IsRequired()
             .OnDelete(DeleteBehavior.SetNull);
     }

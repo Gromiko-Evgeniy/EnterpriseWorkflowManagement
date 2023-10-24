@@ -2,27 +2,29 @@
 using HiringService.Application.Cache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
-using MongoDB.Bson;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
 using ProjectManagementService.Application.TaskDTOs;
 using ProjectManagementService.Application.Exceptions.ProjectTask;
 using ProjectManagementService.Domain.Entities;
+using ProjectManagementService.Application.Exceptions.Worker;
 
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class ChangeTaskWorkerHandler : IRequestHandler<ChangeTaskWorkerCommand>
 {
-    private readonly IWorkerRepository _workerRepository;
     private readonly IProjectTaskRepository _taskRepository;
+    private readonly IWorkerRepository _workerRepository;
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public ChangeTaskWorkerHandler(IWorkerRepository workersRepository,
-        IProjectTaskRepository taskRepository, IDistributedCache cache,
+    public ChangeTaskWorkerHandler(
+        IProjectTaskRepository taskRepository,
+        IWorkerRepository workerRepository,
+        IDistributedCache cache,
         IMapper mapper)
     {
-        _workerRepository = workersRepository;
         _taskRepository = taskRepository;
+        _workerRepository = workerRepository;
         _mapper = mapper;
         _cache = cache;
     }
@@ -38,21 +40,14 @@ public class ChangeTaskWorkerHandler : IRequestHandler<ChangeTaskWorkerCommand>
         {
             task = await _taskRepository.GetByIdAsync(request.TaskId);
         }
-
         if (task is null) throw new NoProjectTaskWithSuchIdException();
 
+        var worker = await _workerRepository.GetByIdAsync(request.WorkerId);
+        if (worker is null) throw new NoWorkerWithSuchIdException();
+
+        await _taskRepository.UpdateWorkerIdAsync(task.Id, request.WorkerId);
+
         await _cache.SetRecordAsync(idKey, task);
-
-        var newTaskDocument = new BsonDocument()
-        {
-            { "currentTaskId", task.Id },
-            { "currentProjectId", task.ProjectId }
-        };
-
-        var update = new BsonDocument("$set", newTaskDocument);
-        await _workerRepository.UpdateAsync(update, worker => worker.Id == request.WorkerId);
-
-        await _cache.RemoveAsync(RedisKeysPrefixes.WorkerPrefix + request.WorkerId);
 
         return Unit.Value;
     }

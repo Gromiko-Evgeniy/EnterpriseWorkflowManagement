@@ -6,7 +6,6 @@ using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HiringService.Application.CQRS.StageNameCommands;
 
@@ -31,7 +30,7 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         var OldStageName = await _nameRepository.GetByNameAsync(addNameDTO.Name);
         if (OldStageName is not null) throw new StageNameAlreadyExistsException();
 
-        var newStageName = new HiringStageName() { Name = addNameDTO.Name, Index = addNameDTO.Index };
+        var newStageName = _mapper.Map<HiringStageName>(addNameDTO);
 
         var stageNames = await _nameRepository.GetAllAsync(); // shifting the indices of all subsequent elements in the list
         if (stageNames.Any(n => n.Index == addNameDTO.Index))
@@ -77,4 +76,3 @@ public class AddStageNameHandler : IRequestHandler<AddStageNameCommand, int>
         }
     }
 }
-
