@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using HiringService.Application.Abstractions.RepositoryAbstractions;
 using HiringService.Application.Abstractions.ServiceAbstractions;
-using HiringService.Application.Cache;
-using HiringService.Application.DTOs.HiringStageDTOs;
 using HiringService.Application.Exceptions.HiringStage;
 using HiringService.Application.Exceptions.HiringStageName;
 using HiringService.Application.Exceptions.Worker;
@@ -19,21 +17,16 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
     private readonly IHiringStageNameRepository _stageNameRepository;
     private readonly ICandidateRepository _candidateRepository;
     private readonly IGRPCService _gRPCService;
-    private readonly IDistributedCache _cache;
-    private readonly IMapper _mapper;
 
     public MarkStageAsPassedSuccessfullyHandler(IHiringStageRepository stageRepository,
         IWorkerRepository workerRepository, IHiringStageNameRepository stageNameRepository,
-        ICandidateRepository candidateRepository, IGRPCService gRPCService,
-        IDistributedCache cache, IMapper mapper)
+        ICandidateRepository candidateRepository, IGRPCService gRPCService)
     {
         _stageRepository = stageRepository;
         _workerRepository = workerRepository;
         _stageNameRepository = stageNameRepository;
         _candidateRepository = candidateRepository;
         _gRPCService = gRPCService;
-        _cache = cache;
-        _mapper = mapper;
     }
 
     public async Task<string> Handle(MarkStageAsPassedSuccessfullyCommand request, CancellationToken cancellationToken)
@@ -55,7 +48,8 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         }
         else
         {
-            newJWT = await RemoveCandidateRemotelyAndLocallyAsync(stage.CandidateId); // make the candidate an employee
+            // make the candidate an employee
+            newJWT = await RemoveCandidateRemotelyAndLocallyAsync(stage.CandidateId); 
         }
 
         stage.PassedSuccessfully = true;
@@ -74,7 +68,7 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         if (intervier is null) throw new NoWorkerWithSuchIdException();
         if (stage is null) throw new NoStageNameWithSuchIdException();
 
-        if (stage.IntervierId != intervierId) throw new AccessToHiringStageDeniedException();
+        if (stage.InterviewerId != intervierId) throw new AccessToHiringStageDeniedException();
 
         return stage;
     }
@@ -84,7 +78,7 @@ public class MarkStageAsPassedSuccessfullyHandler : IRequestHandler<MarkStageAsP
         var newStage = new HiringStage()
         {
             CandidateId = candidateId,
-            IntervierId = intervierId,
+            InterviewerId = intervierId,
             HiringStageNameId = nextStageNameId
         };
 

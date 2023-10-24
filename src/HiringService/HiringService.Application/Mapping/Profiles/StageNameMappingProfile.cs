@@ -9,5 +9,7 @@ public class StageNameMappingProfile : Profile
     public StageNameMappingProfile()
     {
         CreateMap<HiringStageName, GetStageNameDTO>();
+        CreateMap<GetStageNameDTO, GetStageNameDTO>();
+        CreateMap<AddStageNameDTO, HiringStageName>();
     }
 }

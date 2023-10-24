@@ -1,17 +1,15 @@
-﻿using HiringService.Application.CQRS.HiringStageCommands;
-using HiringService.Application.CQRS.StageNameCommands;
+﻿using HiringService.Application.CQRS.StageNameCommands;
 using HiringService.Application.CQRS.StageNameQueries;
-using HiringService.Application.DTOs.HiringStageDTOs;
+using HiringService.Application.DTOs.StageNameDTOs;
 using HiringService.Domain.Enumerations;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiringService.API.Controllers
 {
     [Route("hiring-stage-names")]
     [ApiController]
-    [Authorize(Roles = _depHeadRole)]
+    //[Authorize(Roles = _depHeadRole)]
     public class HiringStageNamesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -39,7 +37,7 @@ namespace HiringService.API.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] string name)
+        public async Task<IActionResult> GetByNamesync([FromRoute] string name)
         {
             var stageName = await _mediator.Send(new GetHiringStageNameByNameQuery(name));
 
@@ -47,9 +45,9 @@ namespace HiringService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddHiringStageDTO hiringStageDTO)
+        public async Task<IActionResult> AddAsync([FromBody] AddStageNameDTO hiringStageDTO)
         {
-            var id = await _mediator.Send(new AddHiringStageCommand(hiringStageDTO));
+            var id = await _mediator.Send(new AddStageNameCommand(hiringStageDTO));
 
             return Ok(id);
         }

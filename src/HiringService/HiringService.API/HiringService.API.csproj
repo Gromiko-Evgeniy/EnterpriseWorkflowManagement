@@ -32,5 +32,9 @@
   <ItemGroup>
     <ProjectReference Include="..\HiringService.Infrastructure\HiringService.Infrastructure.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <InternalsVisibleTo Include="HiringService.Integration.Tests" />
+  </ItemGroup>
 
 </Project>

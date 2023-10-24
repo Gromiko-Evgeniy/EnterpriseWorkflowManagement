@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace HiringService.Application.CQRS.MediatrPipeline;
+namespace ProjectManagementService.Application.MediatrPipeline;
 
 public static class AddMediatRPipelineBehaviorsExtension
 {

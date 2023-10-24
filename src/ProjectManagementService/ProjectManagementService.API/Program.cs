@@ -6,7 +6,6 @@ using ProjectManagementService.Application.CQRS.ProjectQueries;
 using ProjectManagementService.Application.Configuration;
 using IdentityService.Application.Authentication;
 using ProjectManagementService.Application.Kafka;
-using HiringService.Application.Cache;
 using ProjectManagementService.Application.Hangfire;
 using ProjectManagementService.Application.Middleware;
 using ProjectManagementService.Application.Abstractions.RepositoryAbstractions;
@@ -14,7 +13,8 @@ using ProjectManagementService.Application.Hubs;
 using ProjectManagementService.Infrastructure.Data.AddTestingData;
 using ProjectManagementService.Application.Services;
 using ProjectManagementService.Application.CORS;
-using ProjectManagementService.Application.CQRS.MediatrPipeline;
+using ProjectManagementService.Application.MediatrPipeline;
+using ProjectManagementService.Application.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 

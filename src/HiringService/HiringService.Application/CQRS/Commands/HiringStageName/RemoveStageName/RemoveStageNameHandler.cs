@@ -14,17 +14,25 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
 {
     private readonly IHiringStageNameRepository _nameRepository;
     private readonly IHiringStageRepository _stageRepository;
-    private readonly IGRPCService _gRPCService;
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IGRPCService _gRPCService;
+    private readonly IDistributedCache _cache;
+    private readonly IMapper _mapper;
 
-    public RemoveStageNameHandler(IHiringStageNameRepository nameRepository,
-        IHiringStageRepository stageRepository, IGRPCService gRPCService,
-        ICandidateRepository candidateRepository)
+    public RemoveStageNameHandler(
+        IHiringStageNameRepository nameRepository,
+        IHiringStageRepository stageRepository,
+        ICandidateRepository candidateRepository,
+        IDistributedCache cache,
+        IGRPCService gRPCService,
+        IMapper mapper)
     {
         _nameRepository = nameRepository;
         _stageRepository = stageRepository;
-        _gRPCService = gRPCService;
         _candidateRepository = candidateRepository;
+        _gRPCService = gRPCService;
+        _cache = cache;
+        _mapper = mapper;
     }
 
     public async Task<Unit> Handle(RemoveStageNameCommand request, CancellationToken cancellationToken)
@@ -42,7 +50,7 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
         var stageNamesToUpdate = await _nameRepository.GetFilteredAsync(n => n.Index > stageName.Index);
         var hiringStagesToUpdate = await _stageRepository.GetFilteredAsync(s => s.HiringStageNameId == stageName.Id);
 
-        if (stageNamesToUpdate.Count == 0) // no more stages need to be passed, candidates hired = become workers
+        if (stageNamesToUpdate.Count() == 0) // no more stages need to be passed, candidates hired = become workers
         {
             await RemoveStagesAndTheirCandidatesAsync(hiringStagesToUpdate);
         }
@@ -56,9 +64,9 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
         _nameRepository.Remove(stageName);
         await _nameRepository.SaveChangesAsync();
 
-        if (stageNamesToUpdate.Count > 0) 
+        if (stageNamesToUpdate.Count() > 0) 
         {
-            await ShifHiringStageNametIndexesAsync(stageNamesToUpdate);
+            await ShiftHiringStageNametIndexesAsync(stageNamesToUpdate);
         }
 
         return Unit.Value;
@@ -89,15 +97,22 @@ public class RemoveStageNameHandler : IRequestHandler<RemoveStageNameCommand>
     {
         foreach (var stage in hiringStages)
         {
-            stage.HiringStageName = newStageName;
-            stage.HiringStageNameId = newStageName.Id;
+            if (stage.PassedSuccessfully)
+            {
+                _stageRepository.Remove(stage);
+            }
+            else
+            {
+                stage.HiringStageName = newStageName;
+                stage.HiringStageNameId = newStageName.Id;
 
-            _stageRepository.Update(stage);
+                _stageRepository.Update(stage);
+            }
         }
         await _stageRepository.SaveChangesAsync();
     }
 
-    private async Task ShifHiringStageNametIndexesAsync(List<HiringStageName> stageNames)
+    private async Task ShiftHiringStageNametIndexesAsync(List<HiringStageName> stageNames)
     {
         // shifting the indices of all subsequent elements in the list
         foreach (var sName in stageNames)

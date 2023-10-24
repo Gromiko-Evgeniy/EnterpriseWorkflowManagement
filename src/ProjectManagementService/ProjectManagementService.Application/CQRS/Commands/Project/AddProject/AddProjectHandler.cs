@@ -13,8 +13,10 @@ public class AddProjectHandler : IRequestHandler<AddProjectCommand, string>
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public AddProjectHandler(IProjectRepository repository,
-        IDistributedCache cache, IMapper mapper)
+    public AddProjectHandler(
+        IProjectRepository repository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _projectRepository = repository;
         _mapper = mapper;
@@ -26,6 +28,9 @@ public class AddProjectHandler : IRequestHandler<AddProjectCommand, string>
         var projectDTO = request.ProjectDTO;
 
         var newProject = _mapper.Map<Project>(projectDTO);
+
+        //CustomerId is valid due to GetCustomerByEmail checks.
+        newProject.CustomerId = request.CustomerId;
 
         var id = await _projectRepository.AddOneAsync(newProject);
 

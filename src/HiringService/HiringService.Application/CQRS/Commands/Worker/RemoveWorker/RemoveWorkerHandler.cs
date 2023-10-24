@@ -26,8 +26,7 @@ public class RemoveWorkerHandler : IRequestHandler<RemoveWorkerCommand>
 
         if (worker is null)
         {
-            worker = await _workerRepository.
-            GetFirstAsync(worker => worker.Email == request.Email);
+            worker = await _workerRepository.GetByEmailAsync(request.Email);
         }
 
         if (worker is null) throw new NoWorkerWithSuchEmailException();
@@ -35,7 +34,7 @@ public class RemoveWorkerHandler : IRequestHandler<RemoveWorkerCommand>
         _workerRepository.Remove(worker);
         await _workerRepository.SaveChangesAsync();
 
-        await _cache.RemoveAsync(emailKey);
+        await _cache.RemoveRecordAsync(emailKey);
 
         return Unit.Value;
     }

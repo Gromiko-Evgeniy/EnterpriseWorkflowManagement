@@ -14,8 +14,10 @@ public class GetAllCustomerProjectsHandler : IRequestHandler<GetAllCustomerProje
     private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
 
-    public GetAllCustomerProjectsHandler(IProjectRepository projectRepository,
-        ICustomerRepository customerRepository, IMapper mapper)
+    public GetAllCustomerProjectsHandler(
+        IProjectRepository projectRepository,
+        ICustomerRepository customerRepository,
+        IMapper mapper)
     {
         _projectRepository = projectRepository;
         _customerRepository = customerRepository;
@@ -24,7 +26,7 @@ public class GetAllCustomerProjectsHandler : IRequestHandler<GetAllCustomerProje
 
     public async Task<List<ProjectShortInfoDTO>> Handle(GetAllCustomerProjectsQuery request, CancellationToken cancellationToken)
     {
-        var customer = _customerRepository.GetByIdAsync(request.CustomerId);
+        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
 
         if (customer is null) throw new NoCustomerWithSuchIdException();
 

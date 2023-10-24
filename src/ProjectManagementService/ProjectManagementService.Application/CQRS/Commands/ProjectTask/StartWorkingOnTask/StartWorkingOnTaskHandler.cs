@@ -12,16 +12,15 @@ namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskCommand>
 {
-    private readonly IWorkerRepository _workerRepository;
     private readonly IProjectTaskRepository _taskRepository;
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public StartWorkingOnTaskHandler(IWorkerRepository workersRepository,
-        IProjectTaskRepository taskRepository, IDistributedCache cache,
+    public StartWorkingOnTaskHandler(
+        IProjectTaskRepository taskRepository,
+        IDistributedCache cache,
         IMapper mapper)
     {
-        _workerRepository = workersRepository;
         _taskRepository = taskRepository;
         _cache = cache;
         _mapper = mapper;
@@ -29,6 +28,7 @@ public class StartWorkingOnTaskHandler : IRequestHandler<StartWorkingOnTaskComma
 
     public async Task<Unit> Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
     {
+        //WorkerId is valid due to GetWorkerByEmail checks.
         var workerTask = await _taskRepository.GetByWorkerIdAsync(request.WorkerId);
 
         if (workerTask is null) throw new NoTaskWithSuchWorkerIdException();

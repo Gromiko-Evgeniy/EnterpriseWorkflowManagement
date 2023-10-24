@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
-using HiringService.Application.Exceptions.Validation;
+using ProjectManagementService.Application.Exceptions.Validation;
 
-namespace HiringService.Application.CQRS.MediatrPipeline
+namespace ProjectManagementService.Application.MediatrPipeline
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>

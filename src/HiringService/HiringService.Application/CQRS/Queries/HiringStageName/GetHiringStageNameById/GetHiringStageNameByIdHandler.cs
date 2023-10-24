@@ -26,20 +26,20 @@ public class GetHiringStageNameByIdHandler : IRequestHandler<GetHiringStageNameB
 
     public async Task<GetStageNameDTO> Handle(GetHiringStageNameByIdQuery request, CancellationToken cancellationToken)
     {
-        var idKey = RedisKeysPrefixes.StageNamePrefix + request.Id;
-        var cachedStageName = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
+        //var idKey = RedisKeysPrefixes.StageNamePrefix + request.Id;
+        //var cachedStageName = await _cache.GetRecordAsync<GetStageNameDTO>(idKey);
 
-        if (cachedStageName is not null) return cachedStageName;
+        //if (cachedStageName is not null) return cachedStageName;
 
         var stageName = await _nameRepository.GetByIdAsync(request.Id);
         if (stageName == null) throw new NoStageNameWithSuchIdException();
 
         var stageNameDTO = _mapper.Map<GetStageNameDTO>(stageName);
 
-        var nameKey = RedisKeysPrefixes.StageNamePrefix + stageName.Name;
+        //var nameKey = RedisKeysPrefixes.StageNamePrefix + stageName.Name;
 
-        await _cache.SetRecordAsync(nameKey, stageNameDTO);
-        await _cache.SetRecordAsync(idKey, stageNameDTO);
+        //await _cache.SetRecordAsync(nameKey, stageNameDTO);
+        //await _cache.SetRecordAsync(idKey, stageNameDTO);
 
         return stageNameDTO;
     }

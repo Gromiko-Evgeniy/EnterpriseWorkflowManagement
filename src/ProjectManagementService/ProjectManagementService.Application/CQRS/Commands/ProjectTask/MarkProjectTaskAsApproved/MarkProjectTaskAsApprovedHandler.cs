@@ -10,8 +10,6 @@ using ProjectManagementService.Application.Exceptions.ProjectTask;
 using ProjectManagementService.Application.Exceptions.Worker;
 using ProjectManagementService.Domain.Entities;
 using ProjectManagementService.Domain.Enumerations;
-using System;
-
 namespace ProjectManagementService.Application.CQRS.ProjectTaskCommands;
 
 public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskAsApprovedCommand>
@@ -22,9 +20,12 @@ public class MarkProjectTaskAsApprovedHandler : IRequestHandler<MarkProjectTaskA
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public MarkProjectTaskAsApprovedHandler(IProjectTaskRepository tasksRepository,
-        IProjectRepository projectRepository, IWorkerRepository workerRepository,
-        IDistributedCache cache, IMapper mapper)
+    public MarkProjectTaskAsApprovedHandler(
+        IProjectTaskRepository tasksRepository,
+        IProjectRepository projectRepository,
+        IWorkerRepository workerRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _taskRepository = tasksRepository;
         _projectRepository = projectRepository;

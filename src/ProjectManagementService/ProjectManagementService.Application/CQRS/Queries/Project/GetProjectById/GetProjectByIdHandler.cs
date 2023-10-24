@@ -15,8 +15,10 @@ public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, Projec
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
 
-    public GetProjectByIdHandler(IProjectRepository repository,
-        IDistributedCache cache, IMapper mapper)
+    public GetProjectByIdHandler(
+        IProjectRepository repository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _projectRepository = repository;
         _mapper = mapper;

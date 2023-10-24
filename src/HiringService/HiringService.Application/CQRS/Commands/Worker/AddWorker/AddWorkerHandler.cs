@@ -26,8 +26,7 @@ public class AddWorkerHandler : IRequestHandler<AddWorkerCommand, int>
     {
         var workerDTO = request.NameEmailDTO;
 
-        var oldWorker = await _workerRepository.
-            GetFirstAsync(worker => worker.Email == workerDTO.Email);
+        var oldWorker = await _workerRepository.GetByEmailAsync(workerDTO.Email);
 
         if (oldWorker is not null) throw new WorkerAlreadyExistsException();
 

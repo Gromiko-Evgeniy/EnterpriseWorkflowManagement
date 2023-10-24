@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
-using HiringService.Application.CQRS.MediatrPipeline;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace ProjectManagementService.Application.CQRS.MediatrPipeline;
+namespace HiringService.Application.MediatrPipeline;
 
 public static class AddMediatRPipelineBehaviorsExtension
 {
@@ -12,7 +11,7 @@ public static class AddMediatRPipelineBehaviorsExtension
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>)); 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         return services;
     }

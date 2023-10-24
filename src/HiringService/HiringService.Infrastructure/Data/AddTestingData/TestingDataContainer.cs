@@ -45,7 +45,7 @@ public static class TestingDataContainer
                 PassedSuccessfully = true,
                 DateTime = new DateTime(2023, 8, 20, 15, 0, 0),
                 Candidate = Candidate1,
-                Intervier = Worker1,
+                Interviewer = Worker1,
                 HiringStageName = Prescreen
             };
 
@@ -55,7 +55,7 @@ public static class TestingDataContainer
                 PassedSuccessfully = true,
                 DateTime = new DateTime(2023, 8, 23, 15, 0, 0),
                 Candidate = Candidate1,
-                Intervier = Worker1,
+                Interviewer = Worker1,
                 HiringStageName = English
             };
 
@@ -65,7 +65,7 @@ public static class TestingDataContainer
                 PassedSuccessfully = true,
                 DateTime = new DateTime(2023, 9, 2, 13, 0, 0),
                 Candidate = Candidate1,
-                Intervier = Worker2,
+                Interviewer = Worker2,
                 HiringStageName = TechnicalInterview
             };
 
@@ -75,7 +75,7 @@ public static class TestingDataContainer
                 PassedSuccessfully = true,
                 DateTime = new DateTime(2023, 9, 20, 15, 0, 0),
                 Candidate = Candidate2,
-                Intervier = Worker2,
+                Interviewer = Worker2,
                 HiringStageName = Prescreen
             };
         }

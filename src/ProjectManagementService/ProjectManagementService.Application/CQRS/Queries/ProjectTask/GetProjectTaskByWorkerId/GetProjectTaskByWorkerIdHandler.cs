@@ -15,9 +15,12 @@ public class GetProjectTaskByWorkerIdHandler : IRequestHandler<GetProjectTaskByW
     private readonly IMapper _mapper;
 
     public GetProjectTaskByWorkerIdHandler(
-        IProjectTaskRepository projectTaskRepository, IMapper mapper)
+        IProjectTaskRepository projectTaskRepository,
+        IDistributedCache cache,
+        IMapper mapper)
     {
         _projectTaskRepository = projectTaskRepository;
+        _cache = cache;
         _mapper = mapper;
     }
 

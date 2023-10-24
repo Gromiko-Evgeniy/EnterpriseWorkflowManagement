@@ -14,9 +14,9 @@ public class HiringStage
 
     public int CandidateId { get; set; }
 
-    public Worker Intervier { get; set; }
+    public Worker Interviewer { get; set; }
 
-    public int IntervierId { get; set; }
+    public int InterviewerId { get; set; }
 
     public HiringStageName HiringStageName { get; set; }
 

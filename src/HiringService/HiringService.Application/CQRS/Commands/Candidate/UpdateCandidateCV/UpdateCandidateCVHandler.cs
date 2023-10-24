@@ -22,7 +22,7 @@ public class UpdateCandidateCVHandler : IRequestHandler<UpdateCandidateCVCommand
         _cache = cache;
     }
 
-    async Task<Unit> IRequestHandler<UpdateCandidateCVCommand, Unit>.Handle(UpdateCandidateCVCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateCandidateCVCommand request, CancellationToken cancellationToken)
     {
         var candidate = await _candidateRepository.GetByIdAsync(request.Id);
 

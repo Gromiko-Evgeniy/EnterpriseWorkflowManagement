@@ -13,7 +13,8 @@ public class RemoveWorkerHandler : IRequestHandler<RemoveWorkerCommand>
     private readonly IWorkerRepository _workerRepository;
     private readonly IDistributedCache _cache;
 
-    public RemoveWorkerHandler(IWorkerRepository workerRepository,
+    public RemoveWorkerHandler(
+        IWorkerRepository workerRepository,
         IDistributedCache cache)
     {
         _workerRepository = workerRepository;
@@ -35,7 +36,7 @@ public class RemoveWorkerHandler : IRequestHandler<RemoveWorkerCommand>
 
         await _workerRepository.RemoveAsync(worker.Id);
 
-        await _cache.RemoveAsync(emailKey);
+        await _cache.RemoveRecordAsync(emailKey);
 
         return Unit.Value;
     }
